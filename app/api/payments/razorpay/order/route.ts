@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { products } from "@/app/data/products";
-import { createOrderToken, getRazorpayConfig } from "@/app/lib/razorpay";
+import {
+  createOrderToken,
+  getRazorpayConfig,
+  readDeliveryDetails,
+} from "@/app/lib/razorpay";
 
 export const runtime = "nodejs";
 
@@ -27,9 +31,17 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => null);
   const requestedItems = body?.items;
+  const delivery = readDeliveryDetails(body?.delivery);
 
   if (!Array.isArray(requestedItems) || requestedItems.length === 0) {
     return NextResponse.json({ error: "Your basket is empty." }, { status: 400 });
+  }
+
+  if (!delivery) {
+    return NextResponse.json(
+      { error: "Please enter complete delivery details before payment." },
+      { status: 400 },
+    );
   }
 
   const quantities = new Map<string, number>();
@@ -59,6 +71,10 @@ export async function POST(request: Request) {
 
   if (orderItems.some((item) => !item.product)) {
     return NextResponse.json({ error: "Your basket contains an unavailable item." }, { status: 400 });
+  }
+
+  if (orderItems.some((item) => item.product?.availability === "Sold out")) {
+    return NextResponse.json({ error: "One or more items in your basket are sold out." }, { status: 400 });
   }
 
   const amount = orderItems.reduce(
@@ -91,7 +107,19 @@ export async function POST(request: Request) {
   return NextResponse.json({
     keyId: config.keyId,
     orderId: order.id,
-    orderToken: createOrderToken({ orderId: order.id, amount: order.amount }, config.keySecret),
+    orderToken: createOrderToken(
+      {
+        orderId: order.id,
+        amount: order.amount,
+        delivery,
+        items: orderItems.map(({ product, quantity }) => ({
+          name: product!.name,
+          price: product!.price,
+          quantity,
+        })),
+      },
+      config.keySecret,
+    ),
     amount: order.amount,
     currency: order.currency,
   });

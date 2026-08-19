@@ -1,5 +1,6 @@
 import { Catalog } from "./components/catalog";
 import { products } from "./data/products";
+import Image from "next/image";
 
 const categories = [
   {
@@ -74,13 +75,15 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden">
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <a href="#top" className="leading-none" aria-label="Wren and Loom home">
-          <span className="block text-xl font-semibold tracking-tight text-[var(--ink)]">
-            Wren <span className="text-[var(--rose)]">&amp;</span> Loom
-          </span>
-          <span className="mt-1 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
-            Handmade by Shraddha
-          </span>
+        <a href="#top" className="block" aria-label="Wren and Loom home">
+          <Image
+            src="/wren-and-loom-logo.svg"
+            alt="Wren & Loom"
+            width={136}
+            height={88}
+            priority
+            className="h-auto w-24 sm:w-28"
+          />
         </a>
 
         <nav className="hidden items-center gap-7 font-sans text-sm font-medium text-[var(--muted)] md:flex">

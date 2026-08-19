@@ -1,7 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { getCountries, getCountryCallingCode } from "libphonenumber-js";
+import type { CountryCode } from "libphonenumber-js";
 import type { Product } from "../data/products";
 
 type CatalogProps = {
@@ -12,6 +15,33 @@ type CartLine = {
   productId: string;
   quantity: number;
 };
+
+type DeliveryDetails = {
+  fullName: string;
+  country: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+};
+
+const emptyDeliveryDetails: DeliveryDetails = {
+  fullName: "",
+  country: "IN",
+  phone: "",
+  address: "",
+  city: "",
+  state: "",
+  postalCode: "",
+};
+
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+const callingCodeCountries = getCountries().sort((firstCountry, secondCountry) =>
+  (regionNames.of(firstCountry) ?? firstCountry).localeCompare(
+    regionNames.of(secondCountry) ?? secondCountry,
+  ),
+);
 
 type RazorpayOrderResponse = {
   keyId?: string;
@@ -34,6 +64,7 @@ type RazorpayOptions = {
   name: string;
   description: string;
   order_id: string;
+  prefill?: { name: string; contact: string };
   theme: { color: string };
   handler: (response: RazorpayPaymentResponse) => void;
   modal?: {
@@ -81,6 +112,8 @@ export function Catalog({ products }: CatalogProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [isRazorpayLoading, setIsRazorpayLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const [deliveryDetails, setDeliveryDetails] = useState(emptyDeliveryDetails);
+  const [deliveryError, setDeliveryError] = useState<string | null>(null);
   const visibleProducts =
     activeFilter === "All creations"
       ? products
@@ -97,6 +130,12 @@ export function Catalog({ products }: CatalogProps) {
   );
 
   const addToCart = (productId: string) => {
+    const product = products.find((item) => item.id === productId);
+
+    if (product?.availability === "Sold out") {
+      return;
+    }
+
     setCart((currentCart) => {
       const existingLine = currentCart.find((line) => line.productId === productId);
 
@@ -123,8 +162,38 @@ export function Catalog({ products }: CatalogProps) {
     );
   };
 
+  const updateDeliveryDetail = (field: keyof DeliveryDetails, value: string) => {
+    setDeliveryDetails((currentDetails) => ({ ...currentDetails, [field]: value }));
+    setDeliveryError(null);
+  };
+
+  const deliveryDetailsAreComplete = () => {
+    const { fullName, country, phone, address, city, state, postalCode } = deliveryDetails;
+
+    if (!fullName.trim() || !country || !phone.trim() || !address.trim() || !city.trim() || !state.trim()) {
+      return "Please complete all delivery details.";
+    }
+
+    if (!/^\d{6,15}$/.test(phone.trim())) {
+      return "Please enter a valid phone number.";
+    }
+
+    if (!/^\d{6}$/.test(postalCode.trim())) {
+      return "Please enter a valid 6-digit PIN code.";
+    }
+
+    return null;
+  };
+
   const startRazorpayCheckout = async () => {
     if (!RAZORPAY_ENABLED || cart.length === 0) {
+      return;
+    }
+
+    const invalidDeliveryDetails = deliveryDetailsAreComplete();
+
+    if (invalidDeliveryDetails) {
+      setDeliveryError(invalidDeliveryDetails);
       return;
     }
 
@@ -141,7 +210,7 @@ export function Catalog({ products }: CatalogProps) {
       const orderResponse = await fetch("/api/payments/razorpay/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart }),
+        body: JSON.stringify({ delivery: deliveryDetails, items: cart }),
       });
       const order = (await orderResponse.json()) as RazorpayOrderResponse;
 
@@ -164,6 +233,10 @@ export function Catalog({ products }: CatalogProps) {
         name: "Wren & Loom",
         description: "Handmade craft order",
         order_id: order.orderId,
+        prefill: {
+          name: deliveryDetails.fullName.trim(),
+          contact: `+${getCountryCallingCode(deliveryDetails.country as CountryCode)}${deliveryDetails.phone.trim()}`,
+        },
         theme: { color: "#ad5e70" },
         handler: async (response) => {
           paymentCompleted = true;
@@ -189,6 +262,7 @@ export function Catalog({ products }: CatalogProps) {
             }
 
             setCart([]);
+            setDeliveryDetails(emptyDeliveryDetails);
             setPaymentStatus("Payment verified. We will confirm your order shortly.");
           } catch (error) {
             setPaymentStatus(
@@ -297,7 +371,7 @@ export function Catalog({ products }: CatalogProps) {
               <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">
                 {product.description}
               </p>
-              <div className="mt-5 flex items-center justify-between gap-3">
+              <div className="mt-5 flex items-center justify-between gap-2">
                 <div>
                   <p className="font-sans text-lg font-semibold text-[var(--ink)]">
                     {formatPrice(product.price)}
@@ -309,10 +383,17 @@ export function Catalog({ products }: CatalogProps) {
                 <button
                   type="button"
                   onClick={() => addToCart(product.id)}
+                  disabled={product.availability === "Sold out"}
                   className="rounded-full bg-[var(--rose)] px-4 py-2.5 font-sans text-sm font-semibold text-white transition hover:bg-[#95495b]"
                 >
-                  Add
+                  {product.availability === "Sold out" ? "Sold out" : "Add"}
                 </button>
+                <Link
+                  href={`/shop/${product.id}`}
+                  className="rounded-full border border-[var(--border)] px-4 py-2.5 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
+                >
+                  View
+                </Link>
               </div>
             </div>
           </article>
@@ -327,8 +408,8 @@ export function Catalog({ products }: CatalogProps) {
             onClick={() => setCartOpen(false)}
             className="absolute inset-0 bg-[rgba(51,39,34,0.35)] backdrop-blur-sm"
           />
-          <aside className="relative flex h-full w-full max-w-md flex-col bg-[var(--paper)] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
+          <aside className="relative flex h-full w-full max-w-md flex-col overflow-y-auto bg-[var(--paper)] shadow-2xl">
+            <div className="shrink-0 flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
               <div>
                 <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose)]">
                   Your basket
@@ -402,14 +483,111 @@ export function Catalog({ products }: CatalogProps) {
               </div>
             )}
 
-            <div className="border-t border-[var(--border)] bg-white/60 px-6 py-5">
+            <div className="shrink-0 border-t border-[var(--border)] bg-white/60 px-6 py-5">
               <div className="flex items-center justify-between font-sans text-sm text-[var(--muted)]">
                 <span>Subtotal</span>
                 <span className="text-lg font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
               </div>
-              <p className="mt-2 font-sans text-xs leading-5 text-[var(--muted)]">
-                Delivery details are confirmed after your payment is verified.
-              </p>
+              {cartItems.length > 0 ? (
+                <div className="mt-5 space-y-3">
+                  <div>
+                    <p className="font-sans text-sm font-semibold text-[var(--ink)]">Delivery details</p>
+                    <p className="mt-1 font-sans text-xs leading-5 text-[var(--muted)]">
+                      These details are included in the paid-order email.
+                    </p>
+                  </div>
+                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                    Full name
+                    <input
+                      value={deliveryDetails.fullName}
+                      onChange={(event) => updateDeliveryDetail("fullName", event.target.value)}
+                      autoComplete="name"
+                      maxLength={80}
+                      className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                    />
+                  </label>
+                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                    Phone number
+                    <div className="flex rounded-xl border border-[var(--border)] bg-white focus-within:border-[var(--rose)]">
+                      <select
+                        value={deliveryDetails.country}
+                        onChange={(event) => updateDeliveryDetail("country", event.target.value)}
+                        aria-label="Country calling code"
+                        className="max-w-40 border-r border-[var(--border)] bg-transparent px-2 py-2.5 text-sm font-normal text-[var(--muted)] outline-none"
+                      >
+                        {callingCodeCountries.map((country) => (
+                          <option key={country} value={country}>
+                            {regionNames.of(country)} +{getCountryCallingCode(country)}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        value={deliveryDetails.phone}
+                        onChange={(event) =>
+                          updateDeliveryDetail(
+                            "phone",
+                            event.target.value.replace(/\D/g, "").slice(0, 15),
+                          )
+                        }
+                        autoComplete="tel"
+                        inputMode="numeric"
+                        maxLength={15}
+                        placeholder="Phone number"
+                        className="min-w-0 flex-1 rounded-r-xl bg-transparent px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none"
+                      />
+                    </div>
+                  </label>
+                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                    Full address
+                    <textarea
+                      value={deliveryDetails.address}
+                      onChange={(event) => updateDeliveryDetail("address", event.target.value)}
+                      autoComplete="street-address"
+                      maxLength={240}
+                      rows={3}
+                      className="resize-none rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                    />
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                      City
+                      <input
+                        value={deliveryDetails.city}
+                        onChange={(event) => updateDeliveryDetail("city", event.target.value)}
+                        autoComplete="address-level2"
+                        maxLength={80}
+                        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                      />
+                    </label>
+                    <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                      State
+                      <input
+                        value={deliveryDetails.state}
+                        onChange={(event) => updateDeliveryDetail("state", event.target.value)}
+                        autoComplete="address-level1"
+                        maxLength={80}
+                        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                      />
+                    </label>
+                  </div>
+                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
+                    PIN code
+                    <input
+                      value={deliveryDetails.postalCode}
+                      onChange={(event) => updateDeliveryDetail("postalCode", event.target.value.replace(/\D/g, "").slice(0, 6))}
+                      autoComplete="postal-code"
+                      inputMode="numeric"
+                      maxLength={6}
+                      className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                    />
+                  </label>
+                  {deliveryError ? (
+                    <p className="rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-xs leading-5 text-[var(--rose)]" role="alert">
+                      {deliveryError}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               {RAZORPAY_ENABLED ? (
                 <p className="mt-2 font-sans text-xs leading-5 text-[var(--muted)]">
                   Test Razorpay in a full browser such as Chrome or Edge, not the VS Code preview.

@@ -1,0 +1,17 @@
+<svg width="680" height="440" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Wren and Loom logo</title>
+  <desc>A circular badge logo with a stylized wren bird perched on a coiled thread, with the wordmark Wren and Loom below</desc>
+  <circle cx="340" cy="165" r="128" fill="#FBF2E4" stroke="#C1694F" stroke-width="1.5"/>
+  <path d="M 250 210 Q 270 195 292 205 Q 310 213 330 205 Q 350 197 370 207 Q 390 215 410 205" fill="none" stroke="#8A9A5F" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 262 222 Q 285 210 305 218 Q 325 225 345 216 Q 365 208 388 218" fill="none" stroke="#8A9A5F" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <line x1="322" y1="170" x2="316" y2="204" stroke="#C1694F" stroke-width="2" stroke-linecap="round"/>
+  <line x1="336" y1="172" x2="340" y2="205" stroke="#C1694F" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 300 150 Q 296 128 315 118 Q 340 108 365 122 Q 380 132 376 150 Q 372 168 348 174 Q 322 178 306 166 Q 298 160 300 150 Z" fill="#C1694F"/>
+  <circle cx="311" cy="126" r="17" fill="#C1694F"/>
+  <circle cx="306" cy="122" r="2.4" fill="#FBF2E4"/>
+  <path d="M 296 124 L 280 121 L 296 130 Z" fill="#A8522F"/>
+  <path d="M 368 118 Q 384 108 396 90 Q 386 112 372 128 Z" fill="#A8522F"/>
+  <path d="M 320 140 Q 340 134 358 142 Q 342 148 322 148 Z" fill="#A8522F" opacity="0.55"/>
+  <text x="340" y="330" text-anchor="middle" font-family="Georgia, serif" font-size="36" fill="#3A342E">Wren &amp; Loom</text>
+  <text x="340" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7A6F63">Handmade crochet, with care</text>
+</svg>

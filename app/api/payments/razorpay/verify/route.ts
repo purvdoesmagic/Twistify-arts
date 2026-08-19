@@ -4,6 +4,7 @@ import {
   readOrderToken,
   verifyRazorpayPayment,
 } from "@/app/lib/razorpay";
+import { sendPaidOrderNotification } from "@/app/lib/order-notification";
 
 export const runtime = "nodejs";
 
@@ -44,5 +45,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment signature did not match." }, { status: 400 });
   }
 
-  return NextResponse.json({ verified: true, orderId: order.orderId });
+  const notification = await sendPaidOrderNotification({
+    amount: order.amount,
+    delivery: order.delivery,
+    items: order.items,
+    orderId: order.orderId,
+    paymentId: body.paymentId,
+  });
+
+  return NextResponse.json({
+    verified: true,
+    orderId: order.orderId,
+    notificationSent: notification.sent,
+  });
 }
