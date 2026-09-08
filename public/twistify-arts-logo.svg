@@ -1,0 +1,12 @@
+<svg width="680" height="440" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Twistify Arts logo</title>
+  <desc>A circular yarn-twist emblem with the Twistify Arts wordmark</desc>
+  <circle cx="340" cy="165" r="128" fill="#FBF2E4" stroke="#C1694F" stroke-width="1.5"/>
+  <path d="M248 170c28-72 119-91 163-38 39 47-13 121-73 92-42-20-31-76 12-80 31-3 54 22 48 51" fill="none" stroke="#C1694F" stroke-width="13" stroke-linecap="round"/>
+  <path d="M273 204c22 34 66 49 103 27 38-22 45-71 18-102" fill="none" stroke="#8A9A5F" stroke-width="10" stroke-linecap="round"/>
+  <path d="M286 231c32 19 77 17 107-12" fill="none" stroke="#C1694F" stroke-width="7" stroke-linecap="round" opacity="0.72"/>
+  <circle cx="247" cy="172" r="8" fill="#8A9A5F"/>
+  <circle cx="420" cy="126" r="8" fill="#C1694F"/>
+  <text x="340" y="330" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#3A342E">Twistify Arts</text>
+  <text x="340" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7A6F63">Handmade crochet, with care</text>
+</svg>

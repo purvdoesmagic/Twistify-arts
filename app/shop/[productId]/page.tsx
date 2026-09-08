@@ -24,8 +24,8 @@ export async function generateMetadata({
   const product = getProductById(productId);
 
   return product
-    ? { title: `${product.name} | Wren & Loom`, description: product.description }
-    : { title: "Product not found | Wren & Loom" };
+    ? { title: `${product.name} | Twistify Arts`, description: product.description }
+    : { title: "Product not found | Twistify Arts" };
 }
 
 export default async function ProductPage({
@@ -43,10 +43,10 @@ export default async function ProductPage({
   return (
     <main className="min-h-screen bg-[var(--paper)]">
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <Link href="/" className="block" aria-label="Wren and Loom home">
+        <Link href="/" className="block" aria-label="Twistify Arts home">
           <Image
-            src="/wren-and-loom-logo.svg"
-            alt="Wren & Loom"
+            src="/twistify-arts-logo.svg"
+            alt="Twistify Arts"
             width={136}
             height={88}
             priority
@@ -85,7 +85,7 @@ export default async function ProductPage({
           <p className="mt-8 text-3xl font-semibold text-[var(--ink)]">{formatPrice(product.price)}</p>
           <p className="mt-2 font-sans text-sm font-semibold text-[var(--rose)]">{product.availability}</p>
           <div className="mt-9 rounded-2xl border border-[var(--border)] bg-white/70 p-5 font-sans text-sm leading-6 text-[var(--muted)]">
-            Each Wren &amp; Loom piece is handmade. Colours and small details may vary beautifully from the temporary photo shown here.
+            Each Twistify Arts piece is handmade. Colours and small details may vary beautifully from the temporary photo shown here.
           </div>
           <Link
             href="/#catalog"

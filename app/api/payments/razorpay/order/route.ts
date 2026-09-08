@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       amount,
       currency: "INR",
-      receipt: `wren_${Date.now().toString(36)}`,
+      receipt: `twistify_${Date.now().toString(36)}`,
     }),
   });
   const order = (await razorpayResponse.json()) as RazorpayOrder;

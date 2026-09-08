@@ -230,7 +230,7 @@ export function Catalog({ products }: CatalogProps) {
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "Wren & Loom",
+        name: "Twistify Arts",
         description: "Handmade craft order",
         order_id: order.orderId,
         prefill: {

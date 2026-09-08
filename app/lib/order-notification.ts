@@ -57,9 +57,9 @@ export async function sendPaidOrderNotification(order: PaidOrder) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: process.env.ORDER_NOTIFICATION_FROM ?? "Wren & Loom <onboarding@resend.dev>",
+      from: process.env.ORDER_NOTIFICATION_FROM ?? "Twistify Arts <onboarding@resend.dev>",
       to: [recipient],
-      subject: `New paid Wren & Loom order — ${formatPrice(order.amount / 100)}`,
+      subject: `New paid Twistify Arts order — ${formatPrice(order.amount / 100)}`,
       html: `
         <h1>New paid order</h1>
         <p><strong>Razorpay order:</strong> ${order.orderId}</p>

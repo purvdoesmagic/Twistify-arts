@@ -75,10 +75,10 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden">
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <a href="#top" className="block" aria-label="Wren and Loom home">
+        <a href="#top" className="block" aria-label="Twistify Arts home">
           <Image
-            src="/wren-and-loom-logo.svg"
-            alt="Wren & Loom"
+            src="/twistify-arts-logo.svg"
+            alt="Twistify Arts"
             width={136}
             height={88}
             priority
@@ -116,7 +116,7 @@ export default function Home() {
               Little works of warmth, made to be kept.
             </h1>
             <p className="mt-7 max-w-xl font-sans text-base leading-7 text-[var(--muted)] sm:text-lg sm:leading-8">
-              From flower malas to glowing night lamps, Wren &amp; Loom brings
+              From flower malas to glowing night lamps, Twistify Arts brings
               joyful handmade details to gifting, festivals, pooja, and the
               corners you call home.
             </p>
@@ -234,7 +234,7 @@ export default function Home() {
 
           <div>
             <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--sage)]">
-              Why Wren &amp; Loom
+              Why Twistify Arts
             </p>
             <h2 className="mt-4 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
               Soft details, made with intention.
@@ -259,7 +259,7 @@ export default function Home() {
       <footer id="contact" className="border-t border-[var(--border)] bg-white/70">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-10 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
           <div>
-            <p className="text-2xl text-[var(--ink)]">Wren &amp; Loom</p>
+            <p className="text-2xl text-[var(--ink)]">Twistify Arts</p>
             <p className="mt-2 font-sans text-sm text-[var(--muted)]">
               Handmade crochet and woolen crafts by Shraddha Doshi.
             </p>
