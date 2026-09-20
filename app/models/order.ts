@@ -1,5 +1,36 @@
 import { Schema, model, models } from "mongoose";
 
+export const paymentStatuses = ["paid", "failed", "unpaid", "cancelled"] as const;
+export type PaymentStatus = (typeof paymentStatuses)[number];
+
+export const fulfillmentStatuses = [
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;
+export type FulfillmentStatus = (typeof fulfillmentStatuses)[number];
+
+export function normalizeOrderStatuses(
+  legacyStatus: string | undefined,
+  paymentStatus: string | undefined,
+  fulfillmentStatus: string | undefined,
+) {
+  const legacyFulfillmentStatus =
+    legacyStatus === "shipped"
+      ? "shipped"
+      : legacyStatus === "delivered"
+        ? "delivered"
+        : "pending";
+
+  return {
+    paymentStatus: (paymentStatus ?? "paid") as PaymentStatus,
+    fulfillmentStatus: (fulfillmentStatus ?? legacyFulfillmentStatus) as FulfillmentStatus,
+  };
+}
+
 const orderSchema = new Schema(
   {
     items: [
@@ -27,6 +58,16 @@ const orderSchema = new Schema(
       required: true,
       enum: ["paid", "shipped", "delivered"],
       default: "paid",
+    },
+    paymentStatus: {
+      type: String,
+      enum: paymentStatuses,
+      default: "paid",
+    },
+    fulfillmentStatus: {
+      type: String,
+      enum: fulfillmentStatuses,
+      default: "pending",
     },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },

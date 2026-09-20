@@ -109,6 +109,8 @@ export async function POST(request: Request) {
       razorpayPaymentId: body.paymentId,
       amount: order.amount,
       status: "paid",
+      paymentStatus: "paid",
+      fulfillmentStatus: "pending",
       userId: session.user.id,
     });
   } catch (error) {
