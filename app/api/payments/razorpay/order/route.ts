@@ -6,6 +6,7 @@ import {
   readDeliveryDetails,
 } from "@/app/lib/razorpay";
 import { connectToDatabase } from "@/lib/mongodb";
+import { auth } from "@/auth";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,12 @@ type RazorpayOrder = {
 };
 
 export async function POST(request: Request) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Please sign in to complete checkout." }, { status: 401 });
+  }
+
   const config = getRazorpayConfig();
 
   if (!config) {
@@ -120,8 +127,10 @@ export async function POST(request: Request) {
       {
         orderId: order.id,
         amount: order.amount,
+        userId: session.user.id,
         delivery,
         items: orderItems.map(({ product, quantity }) => ({
+          productId: product!.id,
           name: product!.name,
           price: product!.price,
           quantity,

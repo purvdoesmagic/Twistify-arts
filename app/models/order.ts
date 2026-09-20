@@ -28,7 +28,7 @@ const orderSchema = new Schema(
       enum: ["paid", "shipped", "delivered"],
       default: "paid",
     },
-    userId: { type: Schema.Types.ObjectId, ref: "User", default: null },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true, versionKey: false },
 );

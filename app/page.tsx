@@ -1,6 +1,7 @@
 import { Catalog } from "./components/catalog";
 import { products } from "./data/products";
 import Image from "next/image";
+import Link from "next/link";
 
 const categories = [
   {
@@ -98,12 +99,17 @@ export default function Home() {
           </a>
         </nav>
 
-        <a
-          href="#collections"
-          className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-white transition hover:bg-[var(--rose)] sm:px-5 sm:text-sm"
-        >
-          Explore
-        </a>
+        <div className="flex items-center gap-3">
+          <Link href="/login" className="font-sans text-xs font-semibold text-[var(--muted)] transition hover:text-[var(--rose)] sm:text-sm">
+            Sign in
+          </Link>
+          <a
+            href="#collections"
+            className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-white transition hover:bg-[var(--rose)] sm:px-5 sm:text-sm"
+          >
+            Explore
+          </a>
+        </div>
       </header>
 
       <main id="top">

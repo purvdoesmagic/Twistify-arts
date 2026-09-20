@@ -10,11 +10,13 @@ type RazorpayConfig = {
 type OrderTokenPayload = {
   orderId: string;
   amount: number;
+  userId: string;
   items: OrderTokenItem[];
   delivery: DeliveryDetails;
 };
 
 type OrderTokenItem = {
+  productId: string;
   name: string;
   price: number;
   quantity: number;
@@ -124,11 +126,15 @@ export function readOrderToken(token: string, secret: string): OrderTokenPayload
       typeof payload.amount !== "number" ||
       !Number.isInteger(payload.amount) ||
       payload.amount <= 0 ||
+      typeof payload.userId !== "string" ||
+      !payload.userId ||
       !Array.isArray(payload.items) ||
       payload.items.length === 0 ||
       !readDeliveryDetails(payload.delivery) ||
       payload.items.some(
         (item) =>
+          typeof item?.productId !== "string" ||
+          !item.productId ||
           typeof item?.name !== "string" ||
           !item.name ||
           typeof item?.price !== "number" ||

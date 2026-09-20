@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
@@ -106,6 +108,8 @@ const loadRazorpayCheckout = () =>
   });
 
 export function Catalog({ products }: CatalogProps) {
+  const router = useRouter();
+  const { status: sessionStatus } = useSession();
   const filters = ["All creations", ...new Set(products.map((product) => product.category))];
   const [activeFilter, setActiveFilter] = useState(filters[0]);
   const [cart, setCart] = useState<CartLine[]>([]);
@@ -187,6 +191,11 @@ export function Catalog({ products }: CatalogProps) {
 
   const startRazorpayCheckout = async () => {
     if (!RAZORPAY_ENABLED || cart.length === 0) {
+      return;
+    }
+
+    if (sessionStatus !== "authenticated") {
+      router.push("/login?callbackUrl=/");
       return;
     }
 
@@ -607,7 +616,11 @@ export function Catalog({ products }: CatalogProps) {
                       disabled={isRazorpayLoading}
                       className="rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]"
                     >
-                      {isRazorpayLoading ? "Opening Razorpay…" : "Pay securely with Razorpay"}
+                      {isRazorpayLoading
+                        ? "Opening Razorpay…"
+                        : sessionStatus === "authenticated"
+                          ? "Pay securely with Razorpay"
+                          : "Sign in to checkout"}
                     </button>
                   ) : (
                     <p className="rounded-2xl bg-[#f8eee7] px-4 py-3 font-sans text-sm leading-6 text-[var(--muted)]">
