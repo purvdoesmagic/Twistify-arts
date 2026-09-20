@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { products } from "@/app/data/products";
+import { Product } from "@/app/models/product";
 import {
   createOrderToken,
   getRazorpayConfig,
   readDeliveryDetails,
 } from "@/app/lib/razorpay";
+import { connectToDatabase } from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 
@@ -64,8 +65,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Please reduce the quantity and try again." }, { status: 400 });
   }
 
+  await connectToDatabase();
+
+  const databaseProducts = await Product.find({
+    id: { $in: [...quantities.keys()] },
+  })
+    .select("id name price availability")
+    .lean();
+  const productsById = new Map(databaseProducts.map((product) => [product.id, product]));
   const orderItems = [...quantities.entries()].map(([productId, quantity]) => ({
-    product: products.find((item) => item.id === productId),
+    product: productsById.get(productId),
     quantity,
   }));
 
