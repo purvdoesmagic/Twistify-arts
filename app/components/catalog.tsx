@@ -114,6 +114,7 @@ export function Catalog({ products }: CatalogProps) {
   const [activeFilter, setActiveFilter] = useState(filters[0]);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [isRazorpayLoading, setIsRazorpayLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const [deliveryDetails, setDeliveryDetails] = useState(emptyDeliveryDetails);
@@ -414,10 +415,13 @@ export function Catalog({ products }: CatalogProps) {
           <button
             type="button"
             aria-label="Close basket"
-            onClick={() => setCartOpen(false)}
+            onClick={() => {
+              setCartOpen(false);
+              setCheckoutOpen(false);
+            }}
             className="absolute inset-0 bg-[rgba(51,39,34,0.35)] backdrop-blur-sm"
           />
-          <aside className="relative flex h-full w-full max-w-md flex-col overflow-y-auto bg-[var(--paper)] shadow-2xl">
+          <aside className="relative flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden bg-[var(--paper)] shadow-2xl">
             <div className="shrink-0 flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
               <div>
                 <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose)]">
@@ -429,7 +433,10 @@ export function Catalog({ products }: CatalogProps) {
               </div>
               <button
                 type="button"
-                onClick={() => setCartOpen(false)}
+                onClick={() => {
+                  setCartOpen(false);
+                  setCheckoutOpen(false);
+                }}
                 className="grid size-10 place-items-center rounded-full border border-[var(--border)] font-sans text-lg text-[var(--ink)] transition hover:bg-white"
                 aria-label="Close basket"
               >
@@ -438,7 +445,7 @@ export function Catalog({ products }: CatalogProps) {
             </div>
 
             {cartItems.length === 0 ? (
-              <div className="grid flex-1 place-items-center px-8 text-center">
+              <div className="grid min-h-0 flex-1 place-items-center px-8 text-center">
                 <div>
                   <p className="text-3xl text-[var(--ink)]">Your basket is waiting.</p>
                   <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">
@@ -446,65 +453,22 @@ export function Catalog({ products }: CatalogProps) {
                   </p>
                 </div>
               </div>
-            ) : (
-              <div className="flex-1 overflow-y-auto px-6 py-5">
-                <div className="space-y-5">
-                  {cartItems.map((item) => (
-                    <article key={item.productId} className="flex gap-4">
-                      <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-[#f4e8dd]">
-                        <Image src={item.product.image} alt="" fill sizes="80px" className="object-cover" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-lg leading-tight text-[var(--ink)]">{item.product.name}</p>
-                        <p className="mt-1 font-sans text-sm font-semibold text-[var(--rose)]">
-                          {formatPrice(item.product.price)}
-                        </p>
-                        <div className="mt-3 flex items-center justify-between">
-                          <div className="flex items-center rounded-full border border-[var(--border)] bg-white">
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                              className="grid size-8 place-items-center font-sans text-lg text-[var(--ink)]"
-                              aria-label={`Remove one ${item.product.name}`}
-                            >
-                              −
-                            </button>
-                            <span className="grid min-w-8 place-items-center font-sans text-sm font-semibold text-[var(--ink)]">
-                              {item.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                              className="grid size-8 place-items-center font-sans text-lg text-[var(--ink)]"
-                              aria-label={`Add one ${item.product.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-                          <p className="font-sans text-sm font-semibold text-[var(--ink)]">
-                            {formatPrice(item.product.price * item.quantity)}
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
+            ) : checkoutOpen ? (
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+                <div className="mb-5 flex items-center justify-between">
+                  <p className="font-sans text-sm font-semibold text-[var(--ink)]">Delivery details</p>
+                  <button
+                    type="button"
+                    onClick={() => setCheckoutOpen(false)}
+                    className="font-sans text-sm font-semibold text-[var(--rose)] transition hover:text-[var(--ink)]"
+                  >
+                    Back to Basket
+                  </button>
                 </div>
-              </div>
-            )}
-
-            <div className="shrink-0 border-t border-[var(--border)] bg-white/60 px-6 py-5">
-              <div className="flex items-center justify-between font-sans text-sm text-[var(--muted)]">
-                <span>Subtotal</span>
-                <span className="text-lg font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
-              </div>
-              {cartItems.length > 0 ? (
-                <div className="mt-5 space-y-3">
-                  <div>
-                    <p className="font-sans text-sm font-semibold text-[var(--ink)]">Delivery details</p>
-                    <p className="mt-1 font-sans text-xs leading-5 text-[var(--muted)]">
-                      These details are included in the paid-order email.
-                    </p>
-                  </div>
+                <p className="mb-5 font-sans text-xs leading-5 text-[var(--muted)]">
+                  These details are included in the paid-order email.
+                </p>
+                <div className="space-y-3">
                   <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
                     Full name
                     <input
@@ -596,39 +560,103 @@ export function Catalog({ products }: CatalogProps) {
                     </p>
                   ) : null}
                 </div>
-              ) : null}
-              {RAZORPAY_ENABLED ? (
-                <p className="mt-2 font-sans text-xs leading-5 text-[var(--muted)]">
-                  Test Razorpay in a full browser such as Chrome or Edge, not the VS Code preview.
-                </p>
-              ) : null}
-              {paymentStatus ? (
-                <p className="mt-3 rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-xs leading-5 text-[var(--muted)]" role="status">
-                  {paymentStatus}
-                </p>
-              ) : null}
-              {cartItems.length > 0 ? (
-                <div className="mt-5 grid gap-3">
-                  {RAZORPAY_ENABLED ? (
-                    <button
-                      type="button"
-                      onClick={startRazorpayCheckout}
-                      disabled={isRazorpayLoading}
-                      className="rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]"
-                    >
-                      {isRazorpayLoading
-                        ? "Opening Razorpay…"
-                        : sessionStatus === "authenticated"
-                          ? "Pay securely with Razorpay"
-                          : "Sign in to checkout"}
-                    </button>
-                  ) : (
-                    <p className="rounded-2xl bg-[#f8eee7] px-4 py-3 font-sans text-sm leading-6 text-[var(--muted)]">
-                      Online payments are temporarily unavailable.
-                    </p>
-                  )}
+              </div>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+                <div className="space-y-5">
+                  {cartItems.map((item) => (
+                    <article key={item.productId} className="flex gap-4">
+                      <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-[#f4e8dd]">
+                        <Image src={item.product.image} alt="" fill sizes="80px" className="object-cover" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-lg leading-tight text-[var(--ink)]">{item.product.name}</p>
+                        <p className="mt-1 font-sans text-sm font-semibold text-[var(--rose)]">
+                          {formatPrice(item.product.price)}
+                        </p>
+                        <div className="mt-3 flex items-center justify-between">
+                          <div className="flex items-center rounded-full border border-[var(--border)] bg-white">
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                              className="grid size-8 place-items-center font-sans text-lg text-[var(--ink)]"
+                              aria-label={`Remove one ${item.product.name}`}
+                            >
+                              −
+                            </button>
+                            <span className="grid min-w-8 place-items-center font-sans text-sm font-semibold text-[var(--ink)]">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                              className="grid size-8 place-items-center font-sans text-lg text-[var(--ink)]"
+                              aria-label={`Add one ${item.product.name}`}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <p className="font-sans text-sm font-semibold text-[var(--ink)]">
+                            {formatPrice(item.product.price * item.quantity)}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
                 </div>
-              ) : (
+              </div>
+            )}
+
+            <div className="shrink-0 border-t border-[var(--border)] bg-white/60 px-6 py-5">
+              <div className="flex items-center justify-between font-sans text-sm text-[var(--muted)]">
+                <span>Subtotal</span>
+                <span className="text-lg font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
+              </div>
+              {cartItems.length > 0 && checkoutOpen ? (
+                <>
+                  {RAZORPAY_ENABLED ? (
+                    <p className="mt-2 font-sans text-xs leading-5 text-[var(--muted)]">
+                      Test Razorpay in a full browser such as Chrome or Edge, not the VS Code preview.
+                    </p>
+                  ) : null}
+                  {paymentStatus ? (
+                    <p className="mt-3 rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-xs leading-5 text-[var(--muted)]" role="status">
+                      {paymentStatus}
+                    </p>
+                  ) : null}
+                  <div className="mt-5 grid gap-3">
+                    {RAZORPAY_ENABLED ? (
+                      <button
+                        type="button"
+                        onClick={startRazorpayCheckout}
+                        disabled={isRazorpayLoading}
+                        className="rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]"
+                      >
+                        {isRazorpayLoading
+                          ? "Opening Razorpay…"
+                          : sessionStatus === "authenticated"
+                            ? "Pay securely with Razorpay"
+                            : "Sign in to checkout"}
+                      </button>
+                    ) : (
+                      <p className="rounded-2xl bg-[#f8eee7] px-4 py-3 font-sans text-sm leading-6 text-[var(--muted)]">
+                        Online payments are temporarily unavailable.
+                      </p>
+                    )}
+                  </div>
+                </>
+              ) : cartItems.length > 0 ? (
+                <div className="mt-5 space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setCheckoutOpen(true)}
+                    className="w-full rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
+                  >
+                    Continue to Checkout
+                  </button>
+                </div>
+              ) : null}
+              {cartItems.length === 0 ? (
                 <button
                   type="button"
                   disabled
@@ -636,7 +664,7 @@ export function Catalog({ products }: CatalogProps) {
                 >
                   Add an item to continue
                 </button>
-              )}
+              ) : null}
             </div>
           </aside>
         </div>

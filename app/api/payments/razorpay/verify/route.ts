@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {
+  fetchRazorpayPaymentDetails,
   getRazorpayConfig,
   readOrderToken,
   verifyRazorpayPayment,
@@ -10,6 +11,10 @@ import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 
 export const runtime = "nodejs";
+
+function isDuplicateKeyError(error: unknown) {
+  return typeof error === "object" && error !== null && "code" in error && error.code === 11000;
+}
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -58,6 +63,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment signature did not match." }, { status: 400 });
   }
 
+  const expectedAmount = order.items.reduce(
+    (total, item) => total + item.price * item.quantity * 100,
+    0,
+  );
+  const paymentDetails = await fetchRazorpayPaymentDetails(config, order.orderId, body.paymentId);
+
+  if (
+    !paymentDetails ||
+    paymentDetails.order.id !== order.orderId ||
+    paymentDetails.payment.id !== body.paymentId ||
+    paymentDetails.payment.orderId !== order.orderId ||
+    order.amount !== expectedAmount ||
+    paymentDetails.order.amount !== expectedAmount ||
+    paymentDetails.payment.amount !== expectedAmount ||
+    paymentDetails.order.currency !== "INR" ||
+    paymentDetails.payment.currency !== "INR" ||
+    paymentDetails.payment.status !== "captured"
+  ) {
+    return NextResponse.json({ error: "Payment could not be verified." }, { status: 400 });
+  }
+
   await connectToDatabase();
   const existingOrder = await Order.findOne({
     $or: [{ razorpayOrderId: order.orderId }, { razorpayPaymentId: body.paymentId }],
@@ -67,7 +93,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment order could not be verified." }, { status: 400 });
   }
 
-  if (!existingOrder) {
+  if (existingOrder) {
+    return NextResponse.json({
+      verified: true,
+      orderId: order.orderId,
+      notificationSent: false,
+    });
+  }
+
+  try {
     await Order.create({
       items: order.items,
       delivery: order.delivery,
@@ -76,6 +110,24 @@ export async function POST(request: Request) {
       amount: order.amount,
       status: "paid",
       userId: session.user.id,
+    });
+  } catch (error) {
+    if (!isDuplicateKeyError(error)) {
+      throw error;
+    }
+
+    const duplicateOrder = await Order.findOne({
+      $or: [{ razorpayOrderId: order.orderId }, { razorpayPaymentId: body.paymentId }],
+    }).select("userId").lean();
+
+    if (!duplicateOrder || duplicateOrder.userId.toString() !== session.user.id) {
+      return NextResponse.json({ error: "Payment order could not be verified." }, { status: 400 });
+    }
+
+    return NextResponse.json({
+      verified: true,
+      orderId: order.orderId,
+      notificationSent: false,
     });
   }
 

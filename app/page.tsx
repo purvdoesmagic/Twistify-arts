@@ -1,7 +1,8 @@
 import { Catalog } from "./components/catalog";
-import { products } from "./data/products";
 import Image from "next/image";
 import Link from "next/link";
+import { Product } from "@/app/models/product";
+import { connectToDatabase } from "@/lib/mongodb";
 
 const categories = [
   {
@@ -72,7 +73,10 @@ const values = [
   ["Made to order", "Some favourites are crafted especially for you."],
 ];
 
-export default function Home() {
+export default async function Home() {
+  await connectToDatabase();
+  const products = await Product.find().select("-_id").lean();
+
   return (
     <div className="overflow-x-hidden">
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">

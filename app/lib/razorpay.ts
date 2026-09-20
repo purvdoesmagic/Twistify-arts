@@ -7,6 +7,35 @@ type RazorpayConfig = {
   keySecret: string;
 };
 
+type RazorpayOrderResponse = {
+  id?: unknown;
+  amount?: unknown;
+  currency?: unknown;
+};
+
+type RazorpayPaymentResponse = {
+  id?: unknown;
+  order_id?: unknown;
+  amount?: unknown;
+  currency?: unknown;
+  status?: unknown;
+};
+
+export type RazorpayPaymentDetails = {
+  order: {
+    id: string;
+    amount: number;
+    currency: string;
+  };
+  payment: {
+    id: string;
+    orderId: string;
+    amount: number;
+    currency: string;
+    status: string;
+  };
+};
+
 type OrderTokenPayload = {
   orderId: string;
   amount: number;
@@ -81,6 +110,56 @@ export function getRazorpayConfig(): RazorpayConfig | null {
   }
 
   return { keyId, keySecret };
+}
+
+export async function fetchRazorpayPaymentDetails(
+  config: RazorpayConfig,
+  orderId: string,
+  paymentId: string,
+): Promise<RazorpayPaymentDetails | null> {
+  try {
+    const authorization = `Basic ${Buffer.from(`${config.keyId}:${config.keySecret}`).toString("base64")}`;
+    const headers = { Authorization: authorization };
+    const [orderResponse, paymentResponse] = await Promise.all([
+      fetch(`https://api.razorpay.com/v1/orders/${encodeURIComponent(orderId)}`, { headers }),
+      fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}`, { headers }),
+    ]);
+
+    if (!orderResponse.ok || !paymentResponse.ok) {
+      return null;
+    }
+
+    const [order, payment] = (await Promise.all([
+      orderResponse.json().catch(() => null),
+      paymentResponse.json().catch(() => null),
+    ])) as [RazorpayOrderResponse | null, RazorpayPaymentResponse | null];
+
+    if (
+      typeof order?.id !== "string" ||
+      typeof order.amount !== "number" ||
+      typeof order.currency !== "string" ||
+      typeof payment?.id !== "string" ||
+      typeof payment.order_id !== "string" ||
+      typeof payment.amount !== "number" ||
+      typeof payment.currency !== "string" ||
+      typeof payment.status !== "string"
+    ) {
+      return null;
+    }
+
+    return {
+      order: { id: order.id, amount: order.amount, currency: order.currency },
+      payment: {
+        id: payment.id,
+        orderId: payment.order_id,
+        amount: payment.amount,
+        currency: payment.currency,
+        status: payment.status,
+      },
+    };
+  } catch {
+    return null;
+  }
 }
 
 function sign(value: string, secret: string) {

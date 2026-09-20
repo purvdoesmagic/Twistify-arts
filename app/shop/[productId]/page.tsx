@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductById, products } from "@/app/data/products";
+import { Product } from "@/app/models/product";
+import { connectToDatabase } from "@/lib/mongodb";
+
+export const dynamic = "force-dynamic";
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -11,17 +14,14 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price);
 
-export function generateStaticParams() {
-  return products.map((product) => ({ productId: product.id }));
-}
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ productId: string }>;
 }): Promise<Metadata> {
   const { productId } = await params;
-  const product = getProductById(productId);
+  await connectToDatabase();
+  const product = await Product.findOne({ id: productId }).select("-_id").lean();
 
   return product
     ? { title: `${product.name} | Twistify Arts`, description: product.description }
@@ -34,7 +34,8 @@ export default async function ProductPage({
   params: Promise<{ productId: string }>;
 }) {
   const { productId } = await params;
-  const product = getProductById(productId);
+  await connectToDatabase();
+  const product = await Product.findOne({ id: productId }).select("-_id").lean();
 
   if (!product) {
     notFound();
