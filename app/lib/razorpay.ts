@@ -103,9 +103,18 @@ export function getRazorpayConfig(): RazorpayConfig | null {
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   const isEnabled = process.env.RAZORPAY_ENABLED === "true";
-  const isTestMode = process.env.RAZORPAY_MODE === "test";
+  const mode = process.env.RAZORPAY_MODE;
+  const validMode = mode === "test" || mode === "live";
+  const expectedKeyPrefix = mode === "test" ? "rzp_test_" : mode === "live" ? "rzp_live_" : null;
 
-  if (!isEnabled || !isTestMode || !keyId || !keySecret) {
+  if (
+    !isEnabled ||
+    !validMode ||
+    !expectedKeyPrefix ||
+    !keyId ||
+    !keySecret ||
+    !keyId.startsWith(expectedKeyPrefix)
+  ) {
     return null;
   }
 

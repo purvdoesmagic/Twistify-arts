@@ -2,89 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { getCountries, getCountryCallingCode } from "libphonenumber-js";
-import type { CountryCode } from "libphonenumber-js";
+import { useCart } from "./cart-provider";
 import type { Product } from "../data/products";
 
 type CatalogProps = {
   products: Product[];
 };
-
-type CartLine = {
-  productId: string;
-  quantity: number;
-};
-
-type DeliveryDetails = {
-  fullName: string;
-  country: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-};
-
-const emptyDeliveryDetails: DeliveryDetails = {
-  fullName: "",
-  country: "IN",
-  phone: "",
-  address: "",
-  city: "",
-  state: "",
-  postalCode: "",
-};
-
-const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-const callingCodeCountries = getCountries().sort((firstCountry, secondCountry) =>
-  (regionNames.of(firstCountry) ?? firstCountry).localeCompare(
-    regionNames.of(secondCountry) ?? secondCountry,
-  ),
-);
-
-type RazorpayOrderResponse = {
-  keyId?: string;
-  orderId?: string;
-  orderToken?: string;
-  amount?: number;
-  currency?: string;
-  error?: string;
-};
-
-type RazorpayPaymentResponse = {
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-};
-
-type RazorpayOptions = {
-  key: string;
-  amount: number;
-  currency: string;
-  name: string;
-  description: string;
-  order_id: string;
-  prefill?: { name: string; contact: string };
-  theme: { color: string };
-  handler: (response: RazorpayPaymentResponse) => void;
-  modal?: {
-    ondismiss: () => void;
-  };
-};
-
-type RazorpayCheckout = {
-  open: () => void;
-};
-
-declare global {
-  interface Window {
-    Razorpay?: new (options: RazorpayOptions) => RazorpayCheckout;
-  }
-}
-
-const RAZORPAY_ENABLED = process.env.NEXT_PUBLIC_ENABLE_RAZORPAY === "true";
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -93,32 +17,11 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price);
 
-const loadRazorpayCheckout = () =>
-  new Promise<boolean>((resolve) => {
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = () => resolve(Boolean(window.Razorpay));
-    script.onerror = () => resolve(false);
-    document.body.append(script);
-  });
-
 export function Catalog({ products }: CatalogProps) {
-  const router = useRouter();
-  const { status: sessionStatus } = useSession();
+  const { cart, cartCount, addToCart: addCartLine, updateQuantity } = useCart();
   const filters = ["All creations", ...new Set(products.map((product) => product.category))];
   const [activeFilter, setActiveFilter] = useState(filters[0]);
-  const [cart, setCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [isRazorpayLoading, setIsRazorpayLoading] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
-  const [deliveryDetails, setDeliveryDetails] = useState(emptyDeliveryDetails);
-  const [deliveryError, setDeliveryError] = useState<string | null>(null);
   const visibleProducts =
     activeFilter === "All creations"
       ? products
@@ -128,7 +31,6 @@ export function Catalog({ products }: CatalogProps) {
 
     return product ? [{ ...line, product }] : [];
   });
-  const cartCount = cart.reduce((sum, line) => sum + line.quantity, 0);
   const cartTotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,
@@ -141,166 +43,8 @@ export function Catalog({ products }: CatalogProps) {
       return;
     }
 
-    setCart((currentCart) => {
-      const existingLine = currentCart.find((line) => line.productId === productId);
-
-      if (existingLine) {
-        return currentCart.map((line) =>
-          line.productId === productId
-            ? { ...line, quantity: line.quantity + 1 }
-            : line,
-        );
-      }
-
-      return [...currentCart, { productId, quantity: 1 }];
-    });
+    addCartLine(productId);
     setCartOpen(true);
-  };
-
-  const updateQuantity = (productId: string, quantity: number) => {
-    setCart((currentCart) =>
-      quantity <= 0
-        ? currentCart.filter((line) => line.productId !== productId)
-        : currentCart.map((line) =>
-            line.productId === productId ? { ...line, quantity } : line,
-          ),
-    );
-  };
-
-  const updateDeliveryDetail = (field: keyof DeliveryDetails, value: string) => {
-    setDeliveryDetails((currentDetails) => ({ ...currentDetails, [field]: value }));
-    setDeliveryError(null);
-  };
-
-  const deliveryDetailsAreComplete = () => {
-    const { fullName, country, phone, address, city, state, postalCode } = deliveryDetails;
-
-    if (!fullName.trim() || !country || !phone.trim() || !address.trim() || !city.trim() || !state.trim()) {
-      return "Please complete all delivery details.";
-    }
-
-    if (!/^\d{6,15}$/.test(phone.trim())) {
-      return "Please enter a valid phone number.";
-    }
-
-    if (!/^\d{6}$/.test(postalCode.trim())) {
-      return "Please enter a valid 6-digit PIN code.";
-    }
-
-    return null;
-  };
-
-  const startRazorpayCheckout = async () => {
-    if (!RAZORPAY_ENABLED || cart.length === 0) {
-      return;
-    }
-
-    if (sessionStatus !== "authenticated") {
-      router.push("/login?callbackUrl=/");
-      return;
-    }
-
-    const invalidDeliveryDetails = deliveryDetailsAreComplete();
-
-    if (invalidDeliveryDetails) {
-      setDeliveryError(invalidDeliveryDetails);
-      return;
-    }
-
-    setIsRazorpayLoading(true);
-    setPaymentStatus(null);
-
-    try {
-      const checkoutLoaded = await loadRazorpayCheckout();
-
-      if (!checkoutLoaded || !window.Razorpay) {
-        throw new Error("Razorpay checkout could not be loaded. Please try again.");
-      }
-
-      const orderResponse = await fetch("/api/payments/razorpay/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ delivery: deliveryDetails, items: cart }),
-      });
-      const order = (await orderResponse.json()) as RazorpayOrderResponse;
-
-      if (
-        !orderResponse.ok ||
-        !order.keyId ||
-        !order.orderId ||
-        !order.orderToken ||
-        !order.amount ||
-        !order.currency
-      ) {
-        throw new Error(order.error ?? "Unable to start Razorpay checkout.");
-      }
-
-      let paymentCompleted = false;
-      const checkout = new window.Razorpay({
-        key: order.keyId,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Twistify Arts",
-        description: "Handmade craft order",
-        order_id: order.orderId,
-        prefill: {
-          name: deliveryDetails.fullName.trim(),
-          contact: `+${getCountryCallingCode(deliveryDetails.country as CountryCode)}${deliveryDetails.phone.trim()}`,
-        },
-        theme: { color: "#ad5e70" },
-        handler: async (response) => {
-          paymentCompleted = true;
-          setPaymentStatus("Verifying your payment…");
-
-          try {
-            const verifyResponse = await fetch("/api/payments/razorpay/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                paymentId: response.razorpay_payment_id,
-                signature: response.razorpay_signature,
-                orderToken: order.orderToken,
-              }),
-            });
-            const verification = (await verifyResponse.json()) as {
-              verified?: boolean;
-              error?: string;
-            };
-
-            if (!verifyResponse.ok || !verification.verified) {
-              throw new Error(verification.error ?? "Payment verification failed.");
-            }
-
-            setCart([]);
-            setDeliveryDetails(emptyDeliveryDetails);
-            setPaymentStatus("Payment verified. We will confirm your order shortly.");
-          } catch (error) {
-            setPaymentStatus(
-              error instanceof Error
-                ? error.message
-                : "Payment verification failed. Please try again.",
-            );
-          }
-        },
-        modal: {
-          ondismiss: () => {
-            if (!paymentCompleted) {
-              setPaymentStatus(
-                "Razorpay was closed before payment. Open this site in Chrome or Edge and try again.",
-              );
-            }
-          },
-        },
-      });
-
-      checkout.open();
-    } catch (error) {
-      setPaymentStatus(
-        error instanceof Error ? error.message : "Unable to start Razorpay checkout.",
-      );
-    } finally {
-      setIsRazorpayLoading(false);
-    }
   };
 
   return (
@@ -417,7 +161,6 @@ export function Catalog({ products }: CatalogProps) {
             aria-label="Close basket"
             onClick={() => {
               setCartOpen(false);
-              setCheckoutOpen(false);
             }}
             className="absolute inset-0 bg-[rgba(51,39,34,0.35)] backdrop-blur-sm"
           />
@@ -435,7 +178,6 @@ export function Catalog({ products }: CatalogProps) {
                 type="button"
                 onClick={() => {
                   setCartOpen(false);
-                  setCheckoutOpen(false);
                 }}
                 className="grid size-10 place-items-center rounded-full border border-[var(--border)] font-sans text-lg text-[var(--ink)] transition hover:bg-white"
                 aria-label="Close basket"
@@ -451,114 +193,6 @@ export function Catalog({ products }: CatalogProps) {
                   <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">
                     Add a handmade favourite, then complete your secure checkout.
                   </p>
-                </div>
-              </div>
-            ) : checkoutOpen ? (
-              <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
-                <div className="mb-5 flex items-center justify-between">
-                  <p className="font-sans text-sm font-semibold text-[var(--ink)]">Delivery details</p>
-                  <button
-                    type="button"
-                    onClick={() => setCheckoutOpen(false)}
-                    className="font-sans text-sm font-semibold text-[var(--rose)] transition hover:text-[var(--ink)]"
-                  >
-                    Back to Basket
-                  </button>
-                </div>
-                <p className="mb-5 font-sans text-xs leading-5 text-[var(--muted)]">
-                  These details are included in the paid-order email.
-                </p>
-                <div className="space-y-3">
-                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                    Full name
-                    <input
-                      value={deliveryDetails.fullName}
-                      onChange={(event) => updateDeliveryDetail("fullName", event.target.value)}
-                      autoComplete="name"
-                      maxLength={80}
-                      className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
-                    />
-                  </label>
-                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                    Phone number
-                    <div className="flex rounded-xl border border-[var(--border)] bg-white focus-within:border-[var(--rose)]">
-                      <select
-                        value={deliveryDetails.country}
-                        onChange={(event) => updateDeliveryDetail("country", event.target.value)}
-                        aria-label="Country calling code"
-                        className="max-w-40 border-r border-[var(--border)] bg-transparent px-2 py-2.5 text-sm font-normal text-[var(--muted)] outline-none"
-                      >
-                        {callingCodeCountries.map((country) => (
-                          <option key={country} value={country}>
-                            {regionNames.of(country)} +{getCountryCallingCode(country)}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        value={deliveryDetails.phone}
-                        onChange={(event) =>
-                          updateDeliveryDetail(
-                            "phone",
-                            event.target.value.replace(/\D/g, "").slice(0, 15),
-                          )
-                        }
-                        autoComplete="tel"
-                        inputMode="numeric"
-                        maxLength={15}
-                        placeholder="Phone number"
-                        className="min-w-0 flex-1 rounded-r-xl bg-transparent px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none"
-                      />
-                    </div>
-                  </label>
-                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                    Full address
-                    <textarea
-                      value={deliveryDetails.address}
-                      onChange={(event) => updateDeliveryDetail("address", event.target.value)}
-                      autoComplete="street-address"
-                      maxLength={240}
-                      rows={3}
-                      className="resize-none rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
-                    />
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                      City
-                      <input
-                        value={deliveryDetails.city}
-                        onChange={(event) => updateDeliveryDetail("city", event.target.value)}
-                        autoComplete="address-level2"
-                        maxLength={80}
-                        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
-                      />
-                    </label>
-                    <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                      State
-                      <input
-                        value={deliveryDetails.state}
-                        onChange={(event) => updateDeliveryDetail("state", event.target.value)}
-                        autoComplete="address-level1"
-                        maxLength={80}
-                        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
-                      />
-                    </label>
-                  </div>
-                  <label className="grid gap-1.5 font-sans text-xs font-semibold text-[var(--muted)]">
-                    PIN code
-                    <input
-                      value={deliveryDetails.postalCode}
-                      onChange={(event) => updateDeliveryDetail("postalCode", event.target.value.replace(/\D/g, "").slice(0, 6))}
-                      autoComplete="postal-code"
-                      inputMode="numeric"
-                      maxLength={6}
-                      className="rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
-                    />
-                  </label>
-                  {deliveryError ? (
-                    <p className="rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-xs leading-5 text-[var(--rose)]" role="alert">
-                      {deliveryError}
-                    </p>
-                  ) : null}
                 </div>
               </div>
             ) : (
@@ -612,49 +246,13 @@ export function Catalog({ products }: CatalogProps) {
                 <span>Subtotal</span>
                 <span className="text-lg font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
               </div>
-              {cartItems.length > 0 && checkoutOpen ? (
-                <>
-                  {RAZORPAY_ENABLED ? (
-                    <p className="mt-2 font-sans text-xs leading-5 text-[var(--muted)]">
-                      Test Razorpay in a full browser such as Chrome or Edge, not the VS Code preview.
-                    </p>
-                  ) : null}
-                  {paymentStatus ? (
-                    <p className="mt-3 rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-xs leading-5 text-[var(--muted)]" role="status">
-                      {paymentStatus}
-                    </p>
-                  ) : null}
-                  <div className="mt-5 grid gap-3">
-                    {RAZORPAY_ENABLED ? (
-                      <button
-                        type="button"
-                        onClick={startRazorpayCheckout}
-                        disabled={isRazorpayLoading}
-                        className="rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]"
-                      >
-                        {isRazorpayLoading
-                          ? "Opening Razorpay…"
-                          : sessionStatus === "authenticated"
-                            ? "Pay securely with Razorpay"
-                            : "Sign in to checkout"}
-                      </button>
-                    ) : (
-                      <p className="rounded-2xl bg-[#f8eee7] px-4 py-3 font-sans text-sm leading-6 text-[var(--muted)]">
-                        Online payments are temporarily unavailable.
-                      </p>
-                    )}
-                  </div>
-                </>
-              ) : cartItems.length > 0 ? (
-                <div className="mt-5 space-y-3">
-                  <button
-                    type="button"
-                    onClick={() => setCheckoutOpen(true)}
-                    className="w-full rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
-                  >
-                    Continue to Checkout
-                  </button>
-                </div>
+              {cartItems.length > 0 ? (
+                <Link
+                  href="/checkout"
+                  className="mt-5 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
+                >
+                  Continue to Checkout
+                </Link>
               ) : null}
               {cartItems.length === 0 ? (
                 <button

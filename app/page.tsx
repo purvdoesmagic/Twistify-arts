@@ -1,6 +1,4 @@
 import { Catalog } from "./components/catalog";
-import Image from "next/image";
-import Link from "next/link";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -79,43 +77,6 @@ export default async function Home() {
 
   return (
     <div className="overflow-x-hidden">
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <a href="#top" className="block" aria-label="Twistify Arts home">
-          <Image
-            src="/twistify-arts-logo.svg"
-            alt="Twistify Arts"
-            width={136}
-            height={88}
-            priority
-            className="h-auto w-24 sm:w-28"
-          />
-        </a>
-
-        <nav className="hidden items-center gap-7 font-sans text-sm font-medium text-[var(--muted)] md:flex">
-          <a className="transition hover:text-[var(--rose)]" href="#collections">
-            Collections
-          </a>
-          <a className="transition hover:text-[var(--rose)]" href="#story">
-            Our story
-          </a>
-          <a className="transition hover:text-[var(--rose)]" href="#contact">
-            Contact
-          </a>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="font-sans text-xs font-semibold text-[var(--muted)] transition hover:text-[var(--rose)] sm:text-sm">
-            Sign in
-          </Link>
-          <a
-            href="#collections"
-            className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-white transition hover:bg-[var(--rose)] sm:px-5 sm:text-sm"
-          >
-            Explore
-          </a>
-        </div>
-      </header>
-
       <main id="top">
         <section className="mx-auto grid w-full max-w-7xl gap-12 px-5 pb-20 pt-10 sm:px-8 sm:pb-24 sm:pt-14 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-32">
           <div className="max-w-2xl">
@@ -266,19 +227,6 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer id="contact" className="border-t border-[var(--border)] bg-white/70">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-10 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
-          <div>
-            <p className="text-2xl text-[var(--ink)]">Twistify Arts</p>
-            <p className="mt-2 font-sans text-sm text-[var(--muted)]">
-              Handmade crochet and woolen crafts by Shraddha Doshi.
-            </p>
-          </div>
-          <p className="font-sans text-sm font-semibold text-[var(--rose)]">
-            Secure checkout powered by Razorpay
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

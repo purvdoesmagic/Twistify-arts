@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCartButton } from "@/app/components/add-to-cart-button";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -24,8 +25,8 @@ export async function generateMetadata({
   const product = await Product.findOne({ id: productId }).select("-_id").lean();
 
   return product
-    ? { title: `${product.name} | Twistify Arts`, description: product.description }
-    : { title: "Product not found | Twistify Arts" };
+    ? { title: product.name, description: product.description }
+    : { title: "Product not found" };
 }
 
 export default async function ProductPage({
@@ -43,25 +44,6 @@ export default async function ProductPage({
 
   return (
     <main className="min-h-screen bg-[var(--paper)]">
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <Link href="/" className="block" aria-label="Twistify Arts home">
-          <Image
-            src="/twistify-arts-logo.svg"
-            alt="Twistify Arts"
-            width={136}
-            height={88}
-            priority
-            className="h-auto w-24 sm:w-28"
-          />
-        </Link>
-        <Link
-          href="/#catalog"
-          className="rounded-full border border-[var(--border)] bg-white px-4 py-2 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
-        >
-          Back to shop
-        </Link>
-      </header>
-
       <section className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-10 sm:px-8 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-10">
         <div className="overflow-hidden rounded-[2rem] border border-[var(--border)] bg-white">
           <div className="relative aspect-square bg-[#f7eee6]">
@@ -73,7 +55,7 @@ export default async function ProductPage({
         </div>
 
         <div className="self-center">
-          <Link href="/#catalog" className="font-sans text-sm font-semibold text-[var(--rose)]">
+          <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
             ← All creations
           </Link>
           <p className="mt-7 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--sage)]">
@@ -88,12 +70,7 @@ export default async function ProductPage({
           <div className="mt-9 rounded-2xl border border-[var(--border)] bg-white/70 p-5 font-sans text-sm leading-6 text-[var(--muted)]">
             Each Twistify Arts piece is handmade. Colours and small details may vary beautifully from the temporary photo shown here.
           </div>
-          <Link
-            href="/#catalog"
-            className="mt-7 inline-flex rounded-full bg-[var(--rose)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[#95495b]"
-          >
-            {product.availability === "Sold out" ? "Explore other creations" : "Add from the shop"}
-          </Link>
+          <AddToCartButton productId={product.id} availability={product.availability} />
         </div>
       </section>
     </main>

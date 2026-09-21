@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   await connectToDatabase();
   const existingOrder = await Order.findOne({
     $or: [{ razorpayOrderId: order.orderId }, { razorpayPaymentId: body.paymentId }],
-  }).select("userId").lean();
+  }).select("_id userId").lean();
 
   if (existingOrder && existingOrder.userId.toString() !== session.user.id) {
     return NextResponse.json({ error: "Payment order could not be verified." }, { status: 400 });
@@ -96,13 +96,15 @@ export async function POST(request: Request) {
   if (existingOrder) {
     return NextResponse.json({
       verified: true,
-      orderId: order.orderId,
+      orderId: existingOrder._id.toString(),
       notificationSent: false,
     });
   }
 
+  let createdOrder!: { _id: { toString(): string } };
+
   try {
-    await Order.create({
+    createdOrder = await Order.create({
       items: order.items,
       delivery: order.delivery,
       razorpayOrderId: order.orderId,
@@ -120,7 +122,7 @@ export async function POST(request: Request) {
 
     const duplicateOrder = await Order.findOne({
       $or: [{ razorpayOrderId: order.orderId }, { razorpayPaymentId: body.paymentId }],
-    }).select("userId").lean();
+    }).select("_id userId").lean();
 
     if (!duplicateOrder || duplicateOrder.userId.toString() !== session.user.id) {
       return NextResponse.json({ error: "Payment order could not be verified." }, { status: 400 });
@@ -128,7 +130,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       verified: true,
-      orderId: order.orderId,
+      orderId: duplicateOrder._id.toString(),
       notificationSent: false,
     });
   }
@@ -143,7 +145,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     verified: true,
-    orderId: order.orderId,
+    orderId: createdOrder._id.toString(),
     notificationSent: notification.sent,
   });
 }
