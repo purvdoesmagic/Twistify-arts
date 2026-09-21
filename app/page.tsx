@@ -78,7 +78,7 @@ export default async function Home() {
   return (
     <div className="overflow-x-hidden">
       <main id="top">
-        <section className="mx-auto grid w-full max-w-7xl gap-12 px-5 pb-20 pt-10 sm:px-8 sm:pb-24 sm:pt-14 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-32">
+        <section className="hero-section mx-auto grid w-full max-w-7xl gap-12 px-5 pb-20 pt-12 sm:px-8 sm:pb-24 sm:pt-16 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-32">
           <div className="max-w-2xl">
             <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
               Handmade for homes, hearts &amp; holy days
@@ -107,7 +107,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-xl">
+          <div className="hero-art relative mx-auto w-full max-w-xl">
             <div className="rounded-[2.5rem] border border-white/90 bg-[#f3e5d5] p-5 shadow-[0_25px_70px_rgba(84,51,44,0.16)] sm:p-7">
               <div className="min-h-[25rem] rounded-[2rem] bg-[linear-gradient(145deg,#f8d8d4_0%,#fcebd8_46%,#dce8d6_100%)] p-6 sm:min-h-[31rem] sm:p-8">
                 <div className="flex items-start justify-between font-sans">
@@ -140,7 +140,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section id="collections" className="bg-white/65 py-20 sm:py-24">
+        <section id="collections" className="section-band bg-[rgba(255,255,255,0.54)] py-20 sm:py-24">
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="max-w-2xl">
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
@@ -161,7 +161,7 @@ export default async function Home() {
                 <a
                   key={category.number}
                   href="#catalog"
-                  className="group rounded-[1.6rem] border border-[var(--border)] bg-white p-3 transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(84,51,44,0.12)]"
+                  className="category-card group rounded-[1.25rem] border border-[var(--border)] bg-white p-3 transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(84,51,44,0.12)]"
                 >
                   <div
                     className={`relative aspect-[5/4] overflow-hidden rounded-[1.1rem] bg-gradient-to-br ${category.tone} p-4`}
@@ -194,7 +194,7 @@ export default async function Home() {
         <Catalog products={products} />
 
         <section id="story" className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16 lg:px-10">
-          <div className="rounded-[2rem] bg-[var(--ink)] p-7 text-white sm:p-10">
+          <div className="relative overflow-hidden rounded-[1.5rem] bg-[var(--ink)] p-7 text-white shadow-[var(--shadow-soft)] sm:p-10">
             <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-[#f6c6d1]">
               Made by Shraddha Doshi
             </p>
@@ -214,7 +214,7 @@ export default async function Home() {
               {values.map(([title, description]) => (
                 <article
                   key={title}
-                  className="rounded-2xl border border-[var(--border)] bg-white/70 p-5"
+                  className="rounded-xl border border-[var(--border)] bg-white/70 p-5"
                 >
                   <h3 className="text-xl text-[var(--ink)]">{title}</h3>
                   <p className="mt-2 font-sans text-sm leading-6 text-[var(--muted)]">

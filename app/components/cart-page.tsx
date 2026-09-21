@@ -45,7 +45,7 @@ export function CartPage({ products }: CartPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+    <main className="section-band min-h-screen bg-[var(--paper)] px-5 py-14 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-5xl">
         <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
           ← Continue shopping
@@ -83,7 +83,7 @@ export function CartPage({ products }: CartPageProps) {
         ) : null}
 
         {cartItems.length === 0 ? (
-          <section className="mt-8 rounded-[2rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:px-10">
+          <section className="info-section mt-8 rounded-[1.5rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center sm:px-10">
             <h2 className="text-3xl text-[var(--ink)]">Your basket is waiting.</h2>
             <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
               Add a handmade favourite from the shop to begin your order.
@@ -97,7 +97,7 @@ export function CartPage({ products }: CartPageProps) {
           </section>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
-            <section className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-5 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-6">
+            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-5 sm:p-6">
               <div className="grid gap-5">
                 {cartItems.map((item) => (
                   <article
@@ -162,7 +162,7 @@ export function CartPage({ products }: CartPageProps) {
               </div>
             </section>
 
-            <aside className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-5 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-6">
+            <aside className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-5 sm:p-6">
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
                 Order summary
               </p>

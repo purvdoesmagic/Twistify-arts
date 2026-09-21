@@ -271,7 +271,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
   if (cartItems.length === 0) {
     return (
       <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
-        <div className="mx-auto max-w-3xl rounded-[2rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:px-10">
+        <div className="info-section mx-auto max-w-3xl rounded-[1.5rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center sm:px-10">
           <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
             Checkout
           </p>
@@ -339,7 +339,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
         ) : null}
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_21rem] lg:items-start">
-          <section className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-6 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-8">
+          <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
             <h2 className="text-2xl text-[var(--ink)]">Delivery details</h2>
             <p className="mt-2 font-sans text-sm leading-6 text-[var(--muted)]">
               These details are included in the paid-order email.
@@ -443,7 +443,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
             </div>
           </section>
 
-          <aside className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-5 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-6">
+          <aside className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-5 sm:p-6">
             <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
               Order summary
             </p>

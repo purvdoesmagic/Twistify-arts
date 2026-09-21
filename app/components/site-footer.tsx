@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--border)] bg-white/70">
-      <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 py-10 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
+    <footer className="site-footer border-t border-[var(--border)]">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.5fr_1fr_1fr] lg:px-10 lg:py-14">
         <div>
-          <p className="text-2xl text-[var(--ink)]">Twistify Arts</p>
-          <p className="mt-2 max-w-sm font-sans text-sm leading-6 text-[var(--muted)]">
+          <p className="text-3xl tracking-[-0.03em] text-[var(--ink)]">Twistify Arts</p>
+          <p className="mt-3 max-w-sm font-sans text-sm leading-7 text-[var(--muted)]">
             Handmade crochet and woolen crafts by Shraddha Doshi, made for gifting, celebrations, and joyful corners at home.
           </p>
         </div>
@@ -44,7 +44,7 @@ export function SiteFooter() {
           </Link>
         </nav>
       </div>
-      <div className="border-t border-[var(--border)] px-5 py-4 sm:px-8 lg:px-10">
+      <div className="border-t border-[rgba(234,216,202,0.8)] px-5 py-4 sm:px-8 lg:px-10">
         <p className="mx-auto max-w-7xl font-sans text-xs text-[var(--muted)]">
           © {new Date().getFullYear()} Twistify Arts. Handmade with care.
         </p>

@@ -9,12 +9,12 @@ type InfoPageProps = {
 
 export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+    <main className="min-h-screen bg-[var(--paper)] px-5 py-14 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-4xl">
         <Link href="/" className="font-sans text-sm font-semibold text-[var(--rose)]">
           ← Back home
         </Link>
-        <header className="mt-8 max-w-3xl">
+        <header className="info-page-heading relative mt-10 max-w-3xl">
           <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
             {eyebrow}
           </p>
@@ -33,7 +33,7 @@ export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
 
 export function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-[1.6rem] border border-[var(--border)] bg-white/80 p-6 shadow-[0_12px_26px_rgba(84,51,44,0.05)] sm:p-8">
+    <section className="info-section rounded-[1.25rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
       <h2 className="text-2xl text-[var(--ink)]">{title}</h2>
       <div className="mt-3 space-y-3 font-sans text-sm leading-7 text-[var(--muted)]">{children}</div>
     </section>

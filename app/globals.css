@@ -7,6 +7,8 @@
   --rose: #ad5e70;
   --sage: #748a70;
   --border: #ead8ca;
+  --shadow-soft: 0 18px 50px rgba(84, 51, 44, 0.08);
+  --shadow-lift: 0 22px 50px rgba(84, 51, 44, 0.13);
 }
 
 * {
@@ -22,8 +24,9 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(255, 220, 211, 0.7), transparent 34rem),
-    radial-gradient(circle at bottom right, rgba(222, 236, 215, 0.6), transparent 30rem),
+    radial-gradient(circle at 8% 0%, rgba(255, 220, 211, 0.52), transparent 30rem),
+    radial-gradient(circle at 94% 42%, rgba(222, 236, 215, 0.46), transparent 28rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 34rem),
     var(--paper);
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
@@ -39,4 +42,118 @@ select {
 ::selection {
   background: #f2ccd4;
   color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+p {
+  text-wrap: pretty;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+}
+
+.hero-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-section::before,
+.hero-section::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  border: 1px solid rgba(173, 94, 112, 0.16);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-section::before {
+  top: 5rem;
+  right: -5rem;
+  width: 15rem;
+  height: 15rem;
+}
+
+.hero-section::after {
+  bottom: 3rem;
+  left: -7rem;
+  width: 11rem;
+  height: 11rem;
+  border-color: rgba(116, 138, 112, 0.18);
+}
+
+.hero-art {
+  position: relative;
+}
+
+.hero-art::before {
+  position: absolute;
+  top: -1.5rem;
+  right: 8%;
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid rgba(116, 138, 112, 0.3);
+  border-radius: 48% 52% 58% 42%;
+  content: "";
+  transform: rotate(18deg);
+}
+
+.section-band {
+  position: relative;
+  border-top: 1px solid rgba(234, 216, 202, 0.8);
+  border-bottom: 1px solid rgba(234, 216, 202, 0.8);
+}
+
+.category-card:nth-child(3n + 2) {
+  transform: translateY(1.25rem);
+}
+
+.category-card:nth-child(3n + 2):hover {
+  transform: translateY(0.75rem);
+}
+
+.product-card {
+  box-shadow: var(--shadow-soft);
+}
+
+.product-card:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+.site-footer {
+  background: #f1e4da;
+}
+
+.info-section {
+  box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 640px) {
+  .hero-section::before {
+    top: 2rem;
+    right: -7rem;
+    width: 12rem;
+    height: 12rem;
+  }
+
+  .category-card:nth-child(3n + 2) {
+    transform: none;
+  }
 }

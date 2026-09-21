@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
@@ -14,13 +15,10 @@ export function SiteHeader() {
   const cartLabel = isHydrated ? `Cart (${cartCount})` : "Cart";
 
   return (
-    <header className="border-b border-[var(--border)] bg-[var(--paper)]/95 backdrop-blur">
+    <header className="border-b border-[var(--border)] bg-[rgba(255,250,246,0.9)] shadow-[0_4px_18px_rgba(84,51,44,0.04)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:px-10">
         <Link href="/" className="shrink-0" aria-label="Twistify Arts home">
-          <span className="block text-2xl leading-none text-[var(--ink)]">Twistify Arts</span>
-          <span className="mt-1 block font-sans text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--rose)]">
-            Handmade with care
-          </span>
+          <Image src="/twistify-arts-logo.svg" alt="Twistify Arts" width={136} height={88} priority className="h-auto w-24 sm:w-28" />
         </Link>
 
         <nav className="hidden items-center gap-6 font-sans text-sm font-medium text-[var(--muted)] md:flex" aria-label="Main navigation">

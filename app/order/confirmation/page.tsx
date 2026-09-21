@@ -118,7 +118,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl">
-        <section className="rounded-[2rem] bg-[var(--ink)] px-6 py-10 text-white sm:px-10">
+            <section className="rounded-[1.5rem] bg-[var(--ink)] px-6 py-10 text-white shadow-[var(--shadow-soft)] sm:px-10">
           <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c6d1]">
             Thank you for your order
           </p>
@@ -132,7 +132,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
           <div className="grid gap-6">
-            <section className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-6 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-8">
+            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
               <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose)]">
@@ -180,7 +180,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               </div>
             </section>
 
-            <section className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-6 shadow-[0_12px_26px_rgba(84,51,44,0.06)] sm:p-8">
+            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
               <h2 className="text-2xl text-[var(--ink)]">Delivery details</h2>
               <div className="mt-4 font-sans text-sm leading-7 text-[var(--muted)]">
                 <p className="font-semibold text-[var(--ink)]">{order.delivery.fullName}</p>
@@ -194,7 +194,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
             </section>
           </div>
 
-          <aside className="rounded-[2rem] border border-[var(--border)] bg-white/80 p-6 shadow-[0_12px_26px_rgba(84,51,44,0.06)]">
+          <aside className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6">
             <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
               Order total
             </p>

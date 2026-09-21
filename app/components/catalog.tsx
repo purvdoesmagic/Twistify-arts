@@ -48,7 +48,7 @@ export function Catalog({ products }: CatalogProps) {
   };
 
   return (
-    <section id="catalog" className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
+    <section id="catalog" className="section-band mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
       <div className="rounded-2xl border border-[#efd9a9] bg-[#fff5df] px-4 py-3 font-sans text-sm leading-6 text-[#72573d]">
         Demo catalogue: images and prices are temporary placeholders until Shraddha confirms them.
       </div>
@@ -103,7 +103,7 @@ export function Catalog({ products }: CatalogProps) {
         {visibleProducts.map((product) => (
           <article
             key={product.id}
-            className="overflow-hidden rounded-[1.6rem] border border-[var(--border)] bg-white shadow-[0_12px_26px_rgba(84,51,44,0.06)] transition hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(84,51,44,0.13)]"
+            className="product-card overflow-hidden rounded-[1.25rem] border border-[var(--border)] bg-white transition hover:-translate-y-1"
           >
             <div className="relative aspect-[4/5] overflow-hidden bg-[#f7eee6]">
               <Image
