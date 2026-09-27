@@ -110,7 +110,6 @@ export async function POST(request: Request) {
       razorpayOrderId: order.orderId,
       razorpayPaymentId: body.paymentId,
       amount: order.amount,
-      status: "paid",
       paymentStatus: "paid",
       fulfillmentStatus: "pending",
       userId: session.user.id,
