@@ -297,7 +297,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
           ← Edit your basket
         </Link>
         <div className="mt-6">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
+          <p className="font-sans text-sm font-semibold text-[var(--muted)]">
             Secure checkout
           </p>
           <h1 className="mt-3 text-5xl tracking-[-0.04em] text-[var(--ink)]">Complete your order</h1>

@@ -45,25 +45,23 @@ export function CartPage({ products }: CartPageProps) {
   }
 
   return (
-    <main className="section-band min-h-screen bg-[var(--paper)] px-5 py-14 sm:px-8 sm:py-20">
+    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl">
         <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
           ← Continue shopping
         </Link>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
-              Your basket
+        <header className="mt-10 max-w-3xl">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <h1 className="text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">Cart</h1>
+            <p className="font-sans text-sm text-[var(--muted)]">
+              {itemCount} item{itemCount === 1 ? "" : "s"}
             </p>
-            <h1 className="mt-3 text-5xl tracking-[-0.04em] text-[var(--ink)]">Cart</h1>
           </div>
-          <p className="font-sans text-sm text-[var(--muted)]">
-            {itemCount} item{itemCount === 1 ? "" : "s"}
-          </p>
-        </div>
+          <div className="mt-8 h-px w-full bg-[var(--border)]" aria-hidden="true" />
+        </header>
 
         {missingItems.length > 0 ? (
-          <section className="mt-8 rounded-2xl border border-[#efd9a9] bg-[#fff5df] px-4 py-4 font-sans text-sm leading-6 text-[#72573d]">
+          <section className="mt-8 rounded-xl border border-[#efd9a9] bg-[#fff5df] px-4 py-4 font-sans text-sm leading-6 text-[#72573d]">
             <p>Some items in your basket are no longer available.</p>
             <div className="mt-3 grid gap-2">
               {missingItems.map((item) => (
@@ -83,7 +81,7 @@ export function CartPage({ products }: CartPageProps) {
         ) : null}
 
         {cartItems.length === 0 ? (
-          <section className="info-section mt-8 rounded-[1.5rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center sm:px-10">
+          <section className="mt-8 rounded-xl border border-[var(--border)] bg-white/70 px-6 py-12 text-center shadow-[var(--shadow-soft)] sm:px-10">
             <h2 className="text-3xl text-[var(--ink)]">Your basket is waiting.</h2>
             <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
               Add a handmade favourite from the shop to begin your order.
@@ -97,14 +95,14 @@ export function CartPage({ products }: CartPageProps) {
           </section>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
-            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-5 sm:p-6">
+            <section className="rounded-xl border border-[var(--border)] bg-white/70 p-5 shadow-[var(--shadow-soft)] sm:p-6">
               <div className="grid gap-5">
                 {cartItems.map((item) => (
                   <article
                     key={item.productId}
-                    className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 last:border-b-0 last:pb-0 sm:flex-row"
+                    className="flex gap-4 border-b border-[var(--border)] pb-5 last:border-b-0 last:pb-0 sm:gap-5"
                   >
-                    <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#f4e8dd] sm:size-28">
+                    <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-[#f4e8dd] sm:size-28">
                       <Image
                         src={item.product.image}
                         alt={item.product.imageAlt}
@@ -162,10 +160,8 @@ export function CartPage({ products }: CartPageProps) {
               </div>
             </section>
 
-            <aside className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-5 sm:p-6">
-              <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">
-                Order summary
-              </p>
+            <aside className="rounded-xl border border-[var(--border)] bg-white/70 p-5 shadow-[var(--shadow-soft)] sm:p-6">
+              <h2 className="text-2xl text-[var(--ink)]">Order summary</h2>
               <div className="mt-5 flex items-center justify-between font-sans text-sm text-[var(--muted)]">
                 <span>Total items</span>
                 <span className="font-semibold text-[var(--ink)]">{itemCount}</span>
