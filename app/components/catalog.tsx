@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "./cart-provider";
+import { ProductPlaceholder } from "./product-placeholder";
 import type { Product } from "../data/products";
 
 type CatalogProps = {
@@ -48,9 +48,9 @@ export function Catalog({ products }: CatalogProps) {
   };
 
   return (
-    <section id="catalog" className="section-band mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
-      <div className="rounded-2xl border border-[#efd9a9] bg-[#fff5df] px-4 py-3 font-sans text-sm leading-6 text-[#72573d]">
-        Demo catalogue: images and prices are temporary placeholders until Shraddha confirms them.
+    <section id="catalog" className="catalog-section mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
+      <div className="catalogue-notice max-w-2xl font-sans text-sm leading-6 text-[var(--muted)]">
+        Original studio photography is coming soon. These designed placeholders are not product photographs; prices and availability are current.
       </div>
 
       <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -68,12 +68,9 @@ export function Catalog({ products }: CatalogProps) {
         <button
           type="button"
           onClick={() => setCartOpen(true)}
-          className="inline-flex w-fit items-center gap-3 rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
+          className="border-b border-[var(--ink)] pb-1 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--rose)] hover:text-[var(--rose)]"
         >
-          Basket
-          <span className="grid size-6 place-items-center rounded-full bg-white/20 text-xs">
-            {cartCount}
-          </span>
+          Basket ({cartCount})
         </button>
       </div>
 
@@ -87,10 +84,10 @@ export function Catalog({ products }: CatalogProps) {
               type="button"
               aria-pressed={isActive}
               onClick={() => setActiveFilter(filter)}
-              className={`shrink-0 rounded-full px-4 py-2 font-sans text-sm font-semibold transition ${
+              className={`shrink-0 border-b px-1 py-2 font-sans text-sm font-semibold transition ${
                 isActive
-                  ? "bg-[var(--ink)] text-white"
-                  : "border border-[var(--border)] bg-white/70 text-[var(--muted)] hover:border-[var(--sage)] hover:text-[var(--ink)]"
+                  ? "border-[var(--ink)] text-[var(--ink)]"
+                  : "border-transparent text-[var(--muted)] hover:border-[var(--sage)] hover:text-[var(--ink)]"
               }`}
             >
               {filter}
@@ -103,21 +100,14 @@ export function Catalog({ products }: CatalogProps) {
         {visibleProducts.map((product) => (
           <article
             key={product.id}
-            className="product-card overflow-hidden rounded-[1.25rem] border border-[var(--border)] bg-white transition hover:-translate-y-1"
+            className="product-card overflow-hidden bg-transparent pt-5"
           >
-            <div className="relative aspect-[4/5] overflow-hidden bg-[#f7eee6]">
-              <Image
-                src={product.image}
-                alt={product.imageAlt}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover"
-              />
-              <span className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 font-sans text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
-                Temporary image
-              </span>
-            </div>
-            <div className="p-5">
+            <ProductPlaceholder
+              name={product.name}
+              category={product.category}
+              className="aspect-[4/5]"
+            />
+            <div className="pb-2 pt-5">
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-[var(--sage)]">
                 {product.category}
               </p>
@@ -125,7 +115,7 @@ export function Catalog({ products }: CatalogProps) {
               <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">
                 {product.description}
               </p>
-              <div className="mt-5 flex items-center justify-between gap-2">
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <div>
                   <p className="font-sans text-lg font-semibold text-[var(--ink)]">
                     {formatPrice(product.price)}
@@ -138,15 +128,15 @@ export function Catalog({ products }: CatalogProps) {
                   type="button"
                   onClick={() => addToCart(product.id)}
                   disabled={product.availability === "Sold out"}
-                  className="rounded-full bg-[var(--rose)] px-4 py-2.5 font-sans text-sm font-semibold text-white transition hover:bg-[#95495b]"
+                  className="border-b border-[var(--rose)] pb-1 font-sans text-sm font-semibold text-[var(--rose)] transition hover:text-[#95495b] disabled:cursor-not-allowed disabled:border-[var(--muted)] disabled:text-[var(--muted)]"
                 >
                   {product.availability === "Sold out" ? "Sold out" : "Add"}
                 </button>
                 <Link
                   href={`/shop/${product.id}`}
-                  className="rounded-full border border-[var(--border)] px-4 py-2.5 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
+                  className="border-b border-[var(--ink)] pb-1 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)] hover:text-[var(--sage)]"
                 >
-                  View
+                  View listing
                 </Link>
               </div>
             </div>
@@ -200,9 +190,12 @@ export function Catalog({ products }: CatalogProps) {
                 <div className="space-y-5">
                   {cartItems.map((item) => (
                     <article key={item.productId} className="flex gap-4">
-                      <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-[#f4e8dd]">
-                        <Image src={item.product.image} alt="" fill sizes="80px" className="object-cover" />
-                      </div>
+                      <ProductPlaceholder
+                        name={item.product.name}
+                        category={item.product.category}
+                        compact
+                        className="size-20 shrink-0"
+                      />
                       <div className="min-w-0 flex-1">
                         <p className="text-lg leading-tight text-[var(--ink)]">{item.product.name}</p>
                         <p className="mt-1 font-sans text-sm font-semibold text-[var(--rose)]">

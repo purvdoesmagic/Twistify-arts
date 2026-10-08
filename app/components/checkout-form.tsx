@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
+import { ProductPlaceholder } from "./product-placeholder";
 
 type CheckoutFormProps = {
   products: Product[];
@@ -450,9 +450,12 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
             <div className="mt-5 space-y-4">
               {cartItems.map((item) => (
                 <div key={item.productId} className="flex gap-3">
-                  <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#f4e8dd]">
-                    <Image src={item.product.image} alt="" fill sizes="64px" className="object-cover" />
-                  </div>
+                  <ProductPlaceholder
+                    name={item.product.name}
+                    category={item.product.category}
+                    compact
+                    className="size-16 shrink-0"
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="font-sans text-sm font-semibold text-[var(--ink)]">{item.product.name}</p>
                     <p className="mt-1 font-sans text-xs text-[var(--muted)]">

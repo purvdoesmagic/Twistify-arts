@@ -1,232 +1,140 @@
+import Link from "next/link";
 import { Catalog } from "./components/catalog";
+import { ProductPlaceholder } from "./components/product-placeholder";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
 
-const categories = [
-  {
-    name: "Flower garlands & malas",
-    description: "Hibiscus, jasmine, leaves, and blooms for every celebration.",
-    number: "01",
-    tone: "from-[#f9d7da] via-[#fdf0e9] to-[#f7ddbd]",
-  },
-  {
-    name: "Floral necklaces",
-    description: "Wearable blooms, carefully shaped one petal at a time.",
-    number: "02",
-    tone: "from-[#f5ddec] via-[#f9f1f7] to-[#e4d9f0]",
-  },
-  {
-    name: "LED flower night lamps",
-    description: "Soft glowing lotus, sunflower, daisy, and blooming-duo lights.",
-    number: "03",
-    tone: "from-[#f8e4ae] via-[#fff5d8] to-[#f5d9ad]",
-  },
-  {
-    name: "Pooja & festival décor",
-    description: "Woolen rangoli, Shree, Swastik, and thoughtful festive details.",
-    number: "04",
-    tone: "from-[#f4d6c9] via-[#fff0e7] to-[#efc7ac]",
-  },
-  {
-    name: "Keychains",
-    description: "Little flowers, fruits, and novelty pieces to brighten everyday things.",
-    number: "05",
-    tone: "from-[#dcebd2] via-[#f5fae8] to-[#f4e7ac]",
-  },
-  {
-    name: "Hair accessories",
-    description: "Flower hairbands, playful animal bands, and handmade clips.",
-    number: "06",
-    tone: "from-[#dce8f4] via-[#edf5fb] to-[#e7dbf0]",
-  },
-  {
-    name: "Flower bouquets",
-    description: "Pipe-cleaner sunflowers, lavender, iris, tulips, and more.",
-    number: "07",
-    tone: "from-[#f8d9c6] via-[#fff0df] to-[#f7dfa5]",
-  },
-  {
-    name: "Flower pot décor",
-    description: "Everlasting arrangements that keep a corner feeling cheerful.",
-    number: "08",
-    tone: "from-[#d6e6d0] via-[#f1f6e9] to-[#f1e1bb]",
-  },
-  {
-    name: "Home details",
-    description: "Pen holders, curtain holders, torans, and wall-door hangings.",
-    number: "09",
-    tone: "from-[#eadbc8] via-[#fbf2e7] to-[#d9e6dc]",
-  },
-  {
-    name: "Decorated phone cases",
-    description: "A tiny dose of handmade character for the things you carry.",
-    number: "10",
-    tone: "from-[#eadcf0] via-[#f9eef3] to-[#f9dfcb]",
-  },
-];
-
-const values = [
-  ["100% handmade", "Every piece begins with patient hands."],
-  ["Small batches", "Limited stock keeps each creation special."],
-  ["Made to order", "Some favourites are crafted especially for you."],
-];
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(price);
 
 export default async function Home() {
   await connectToDatabase();
   const products = await Product.find().select("-_id").lean();
+  const featuredProducts = products.slice(0, 4);
+  const collections = [...new Set(products.map((product) => product.category))];
 
   return (
-    <div className="overflow-x-hidden">
-      <main id="top">
-        <section className="hero-section mx-auto grid w-full max-w-7xl gap-12 px-5 pb-20 pt-12 sm:px-8 sm:pb-24 sm:pt-16 lg:grid-cols-[1.06fr_0.94fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-32">
-          <div className="max-w-2xl">
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
-              Handmade for homes, hearts &amp; holy days
-            </p>
-            <h1 className="mt-5 text-5xl leading-[0.96] tracking-[-0.045em] text-[var(--ink)] sm:text-6xl lg:text-7xl">
-              Little works of warmth, made to be kept.
-            </h1>
-            <p className="mt-7 max-w-xl font-sans text-base leading-7 text-[var(--muted)] sm:text-lg sm:leading-8">
-              From flower malas to glowing night lamps, Twistify Arts brings
-              joyful handmade details to gifting, festivals, pooja, and the
-              corners you call home.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#collections"
-                className="rounded-full bg-[var(--rose)] px-6 py-3 font-sans text-sm font-semibold text-white shadow-[0_10px_24px_rgba(173,94,112,0.25)] transition hover:-translate-y-0.5 hover:bg-[#95495b]"
-              >
-                Browse creations <span aria-hidden="true">→</span>
-              </a>
-              <a
-                href="#story"
-                className="rounded-full border border-[var(--border)] bg-white/60 px-6 py-3 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)] hover:bg-white"
-              >
-                Meet the maker
-              </a>
-            </div>
+    <main id="top">
+      <section className="studio-hero mx-auto grid w-full max-w-7xl gap-12 px-5 pb-20 pt-14 sm:px-8 sm:pb-28 sm:pt-20 lg:grid-cols-12 lg:gap-x-10 lg:px-10 lg:pb-36">
+        <div className="lg:col-span-8">
+          <p className="eyebrow">Twistify Arts · Made by Shraddha Doshi</p>
+          <h1 className="mt-6 max-w-4xl text-5xl leading-[0.98] tracking-[-0.045em] text-[var(--ink)] sm:text-6xl lg:text-7xl">
+            Handmade details for the moments people keep.
+          </h1>
+          <p className="mt-7 max-w-2xl font-sans text-base leading-7 text-[var(--muted)] sm:text-lg sm:leading-8">
+            Crochet, woolen, floral, and festive creations for gifting, celebrations, pooja, and joyful corners at home.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 font-sans text-sm font-semibold">
+            <Link href="/shop" className="studio-link studio-link-primary">
+              Shop all creations
+            </Link>
+            <a href="#maker" className="studio-link studio-link-quiet">
+              A note from the maker
+            </a>
           </div>
+        </div>
 
-          <div className="hero-art relative mx-auto w-full max-w-xl">
-            <div className="rounded-[2.5rem] border border-white/90 bg-[#f3e5d5] p-5 shadow-[0_25px_70px_rgba(84,51,44,0.16)] sm:p-7">
-              <div className="min-h-[25rem] rounded-[2rem] bg-[linear-gradient(145deg,#f8d8d4_0%,#fcebd8_46%,#dce8d6_100%)] p-6 sm:min-h-[31rem] sm:p-8">
-                <div className="flex items-start justify-between font-sans">
-                  <span className="rounded-full bg-white/70 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--rose)]">
-                    Made in India
-                  </span>
-                  <span className="grid size-12 place-items-center rounded-full border border-white/80 bg-white/40 text-lg text-[var(--sage)]">
-                    ✦
-                  </span>
-                </div>
+        <aside className="studio-hero-note self-end border-t border-[var(--border)] pt-5 lg:col-span-4 lg:mb-2">
+          <p className="eyebrow text-[var(--sage)]">Studio catalogue</p>
+          <p className="mt-3 text-2xl leading-snug text-[var(--ink)]">
+            Small-batch pieces, with limited stock and made-to-order favourites.
+          </p>
+        </aside>
+      </section>
 
-                <div className="mt-20 rounded-[1.6rem] bg-white/75 p-6 shadow-[0_15px_35px_rgba(95,64,52,0.12)] backdrop-blur sm:mt-28 sm:p-8">
-                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--sage)]">
-                    Every loop tells a story
-                  </p>
-                  <p className="mt-3 text-3xl leading-tight tracking-tight text-[var(--ink)] sm:text-4xl">
-                    Crafted slowly. Gifted joyfully.
-                  </p>
-                  <div className="mt-6 flex gap-3">
-                    <span className="h-2 w-16 rounded-full bg-[var(--rose)]" />
-                    <span className="h-2 w-9 rounded-full bg-[#e6b950]" />
-                    <span className="h-2 w-12 rounded-full bg-[var(--sage)]" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p className="absolute -bottom-4 -left-1 rounded-full border border-[var(--border)] bg-white px-4 py-2 font-sans text-xs font-medium text-[var(--muted)] shadow-sm sm:-left-6">
-              100% handmade with love
-            </p>
-          </div>
-        </section>
-
-        <section id="collections" className="section-band bg-[rgba(255,255,255,0.54)] py-20 sm:py-24">
-          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+      <section className="border-y border-[var(--border)] bg-white/40 py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="flex flex-col gap-5 border-b border-[var(--border)] pb-8 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
-              <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
-                Find your favourite
-              </p>
-              <h2 className="mt-4 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
-                A handmade collection for every little occasion.
+              <p className="eyebrow">From the studio</p>
+              <h2 className="mt-3 text-4xl leading-tight tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
+                A few pieces from the current catalogue.
               </h2>
-              <p className="mt-5 font-sans text-base leading-7 text-[var(--muted)]">
-                The product photographs and individual listings will arrive in
-                the next step. For now, this is the structure customers will use
-                to browse your collections.
-              </p>
             </div>
-
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {categories.map((category) => (
-                <a
-                  key={category.number}
-                  href="#catalog"
-                  className="category-card group rounded-[1.25rem] border border-[var(--border)] bg-white p-3 transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(84,51,44,0.12)]"
-                >
-                  <div
-                    className={`relative aspect-[5/4] overflow-hidden rounded-[1.1rem] bg-gradient-to-br ${category.tone} p-4`}
-                  >
-                    <span className="font-sans text-xs font-semibold tracking-[0.18em] text-[var(--muted)]">
-                      {category.number}
-                    </span>
-                    <span className="absolute bottom-4 right-4 grid size-12 place-items-center rounded-full border border-white/80 bg-white/45 text-xl text-white transition group-hover:scale-110">
-                      ✦
-                    </span>
-                    <span className="absolute -right-6 -top-6 size-24 rounded-full border-[14px] border-white/30" />
-                  </div>
-                  <div className="px-2 pb-2 pt-4">
-                    <h3 className="text-xl leading-tight text-[var(--ink)]">
-                      {category.name}
-                    </h3>
-                    <p className="mt-2 font-sans text-sm leading-6 text-[var(--muted)]">
-                      {category.description}
-                    </p>
-                    <span className="mt-4 inline-block font-sans text-sm font-semibold text-[var(--rose)]">
-                      Explore <span aria-hidden="true">→</span>
-                    </span>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <Catalog products={products} />
-
-        <section id="story" className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16 lg:px-10">
-          <div className="relative overflow-hidden rounded-[1.5rem] bg-[var(--ink)] p-7 text-white shadow-[var(--shadow-soft)] sm:p-10">
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-[#f6c6d1]">
-              Made by Shraddha Doshi
-            </p>
-            <p className="mt-5 text-4xl leading-tight tracking-[-0.035em] sm:text-5xl">
-              Handmade pieces should feel as personal as the moments they mark.
-            </p>
+            <Link href="/shop" className="studio-link studio-link-quiet shrink-0">
+              View the full catalogue
+            </Link>
           </div>
 
-          <div>
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--sage)]">
-              Why Twistify Arts
-            </p>
-            <h2 className="mt-4 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
-              Soft details, made with intention.
-            </h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              {values.map(([title, description]) => (
-                <article
-                  key={title}
-                  className="rounded-xl border border-[var(--border)] bg-white/70 p-5"
-                >
-                  <h3 className="text-xl text-[var(--ink)]">{title}</h3>
-                  <p className="mt-2 font-sans text-sm leading-6 text-[var(--muted)]">
-                    {description}
+          <p className="mt-5 max-w-2xl font-sans text-sm leading-6 text-[var(--muted)]">
+            Original studio photography is being prepared. These designed listing placeholders are not product photographs.
+          </p>
+
+          <div className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProducts.map((product) => (
+              <article key={product.id} className="featured-piece">
+                <Link href={`/shop/${product.id}`} className="block">
+                  <ProductPlaceholder
+                    name={product.name}
+                    category={product.category}
+                    className="aspect-[4/5]"
+                  />
+                </Link>
+                <div className="mt-4 border-t border-[var(--border)] pt-3">
+                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.13em] text-[var(--sage)]">
+                    {product.category}
                   </p>
-                </article>
-              ))}
-            </div>
+                  <div className="mt-2 flex items-start justify-between gap-3 sm:min-h-[2.75rem]">
+                    <h3 className="text-xl leading-tight text-[var(--ink)]">
+                      <Link href={`/shop/${product.id}`} className="transition hover:text-[var(--rose)]">
+                        {product.name}
+                      </Link>
+                    </h3>
+                    <p className="shrink-0 font-sans text-sm font-semibold text-[var(--ink)]">
+                      {formatPrice(product.price)}
+                    </p>
+                  </div>
+                  <p className="mt-2 font-sans text-sm text-[var(--muted)]">{product.availability}</p>
+                </div>
+              </article>
+            ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-    </div>
+      <section className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+          <div>
+            <p className="eyebrow">Browse by collection</p>
+            <h2 className="mt-3 text-4xl leading-tight tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
+              Find the detail that fits the occasion.
+            </h2>
+          </div>
+          <div className="collection-index border-y border-[var(--border)] py-4">
+            {collections.map((collection) => (
+              <p key={collection} className="border-b border-[rgba(234,216,202,0.72)] py-3 font-sans text-base text-[var(--ink)] last:border-b-0 sm:text-lg">
+                {collection}
+              </p>
+            ))}
+            <Link href="/shop" className="studio-link studio-link-quiet mt-5 inline-flex">
+              Browse every collection
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="maker" className="maker-note border-y border-[var(--ink)] bg-[var(--ink)] text-[#fffaf6]">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-12 lg:gap-x-10 lg:px-10">
+          <div className="lg:col-span-4">
+            <p className="eyebrow text-[#f4c7d2]">A note from the maker</p>
+            <p className="mt-4 font-sans text-sm leading-6 text-[#ead8ca]">Made by Shraddha Doshi</p>
+          </div>
+          <div className="lg:col-span-7 lg:col-start-6">
+            <h2 className="text-4xl leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+              Twistify Arts is a collection of handmade crochet and woolen crafts, made for gifting, celebrations, and the corners you call home.
+            </h2>
+            <Link href="/about" className="studio-link studio-link-light mt-9 inline-flex">
+              Read about Twistify Arts
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Catalog products={products} />
+    </main>
   );
 }

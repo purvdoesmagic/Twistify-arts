@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
+import { ProductPlaceholder } from "./product-placeholder";
 
 type CartPageProps = {
   products: Product[];
@@ -102,15 +102,12 @@ export function CartPage({ products }: CartPageProps) {
                     key={item.productId}
                     className="flex gap-4 border-b border-[var(--border)] pb-5 last:border-b-0 last:pb-0 sm:gap-5"
                   >
-                    <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-[#f4e8dd] sm:size-28">
-                      <Image
-                        src={item.product.image}
-                        alt={item.product.imageAlt}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 112px"
-                        className="object-cover"
-                      />
-                    </div>
+                    <ProductPlaceholder
+                      name={item.product.name}
+                      category={item.product.category}
+                      compact
+                      className="size-24 shrink-0 sm:size-28"
+                    />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>

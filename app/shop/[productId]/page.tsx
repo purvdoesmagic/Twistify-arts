@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/app/components/add-to-cart-button";
+import { ProductPlaceholder } from "@/app/components/product-placeholder";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -45,13 +45,12 @@ export default async function ProductPage({
   return (
     <main className="min-h-screen bg-[var(--paper)]">
       <section className="mx-auto grid w-full max-w-7xl gap-12 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-2 lg:gap-20 lg:px-10">
-        <div className="product-detail-media overflow-hidden rounded-[1.25rem] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-soft)]">
-          <div className="relative aspect-square overflow-hidden rounded-[0.9rem] bg-[#f7eee6]">
-            <Image src={product.image} alt={product.imageAlt} fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
-            <span className="absolute left-5 top-5 rounded-full bg-white/90 px-3 py-1 font-sans text-xs font-semibold text-[var(--muted)]">
-              Temporary image
-            </span>
-          </div>
+        <div className="product-detail-media border border-[var(--border)] bg-white p-3">
+          <ProductPlaceholder
+            name={product.name}
+            category={product.category}
+            className="aspect-square"
+          />
         </div>
 
         <div className="self-center">
@@ -69,7 +68,7 @@ export default async function ProductPage({
           <p className="mt-8 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)]">{formatPrice(product.price)}</p>
           <p className="mt-2 font-sans text-sm font-semibold text-[var(--rose)]">{product.availability}</p>
           <div className="mt-9 rounded-xl border border-[var(--border)] bg-white/70 p-5 font-sans text-sm leading-6 text-[var(--muted)]">
-            Each Twistify Arts piece is handmade. Colours and small details may vary beautifully from the temporary photo shown here.
+            Each Twistify Arts piece is handmade. Original studio photography is coming soon; this is a designed placeholder, not a product photograph.
           </div>
           <AddToCartButton productId={product.id} availability={product.availability} />
         </div>
