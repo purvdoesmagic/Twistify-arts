@@ -16,7 +16,7 @@ export default function ContactPage() {
     >
       <InfoSection title="Contact details">
         <p>
-          Business email: <span className="font-semibold text-[var(--ink)]">[Business Email]</span>
+          Business email: <a href="mailto:twistifyarts@gmail.com" className="font-semibold text-[var(--ink)]">twistifyarts@gmail.com</a>
         </p>
         <p>
           Phone: <span className="font-semibold text-[var(--ink)]">[Phone Number 1]</span>
@@ -25,7 +25,7 @@ export default function ContactPage() {
           Alternate phone: <span className="font-semibold text-[var(--ink)]">[Phone Number 2]</span>
         </p>
         <p className="text-xs text-[var(--muted)]">
-          Contact details are temporary placeholders and will be replaced with the confirmed business information.
+          Phone contact details will be added when confirmed.
         </p>
       </InfoSection>
       <InfoSection title="Product and order questions">
