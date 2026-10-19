@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatPhone, formatPrice } from "@/app/lib/format";
 
 const fulfillmentOptions = [
   ["pending", "Pending"],
@@ -16,7 +17,7 @@ type AdminOrder = {
   orderId: string;
   customer: { name: string; email: string | null };
   createdAt: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
+  items: Array<{ productId: string; name: string; quantity: number; price: number }>;
   amount: number;
   paymentStatus: string;
   fulfillmentStatus: (typeof fulfillmentOptions)[number][0];
@@ -32,13 +33,6 @@ type AdminOrder = {
     postalCode: string;
   };
 };
-
-const formatPrice = (amount: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 2,
-  }).format(amount);
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("en-IN", {
@@ -162,12 +156,12 @@ export function OrdersManager() {
             <div>
               <h2 className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-[var(--sage)]">Products</h2>
               <ul className="mt-3 space-y-2 font-sans text-sm text-[var(--muted)]">
-                {order.items.map((item) => <li key={item.name}>{item.quantity} × {item.name} <span className="text-[var(--ink)]">({formatPrice(item.price * item.quantity)})</span></li>)}
+                {order.items.map((item) => <li key={item.productId}>{item.quantity} × {item.name} <span className="text-[var(--ink)]">({formatPrice(item.price * item.quantity)})</span></li>)}
               </ul>
             </div>
             <div>
               <h2 className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-[var(--sage)]">Delivery</h2>
-              <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">{order.delivery.fullName}<br />+{order.delivery.phone}<br />{order.delivery.address}<br />{order.delivery.city}, {order.delivery.state} {order.delivery.postalCode}</p>
+              <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">{order.delivery.fullName}<br />{formatPhone(order.delivery.country, order.delivery.phone)}<br />{order.delivery.address}<br />{order.delivery.city}, {order.delivery.state} {order.delivery.postalCode}</p>
             </div>
           </div>
 

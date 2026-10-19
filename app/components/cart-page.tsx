@@ -4,17 +4,11 @@ import Link from "next/link";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
 import { ProductPlaceholder } from "./product-placeholder";
+import { formatPrice } from "@/app/lib/format";
 
 type CartPageProps = {
   products: Product[];
 };
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
 
 export function CartPage({ products }: CartPageProps) {
   const { cart, isHydrated, updateQuantity, removeFromCart } = useCart();

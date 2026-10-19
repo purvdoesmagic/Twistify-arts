@@ -5,17 +5,11 @@ import { useState } from "react";
 import { useCart } from "./cart-provider";
 import { ProductPlaceholder } from "./product-placeholder";
 import type { Product } from "../data/products";
+import { formatPrice } from "@/app/lib/format";
 
 type CatalogProps = {
   products: Product[];
 };
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
 
 export function Catalog({ products }: CatalogProps) {
   const { cart, cartCount, addToCart: addCartLine, updateQuantity } = useCart();

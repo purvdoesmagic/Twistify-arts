@@ -5,15 +5,9 @@ import { AddToCartButton } from "@/app/components/add-to-cart-button";
 import { ProductPlaceholder } from "@/app/components/product-placeholder";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
+import { formatPrice } from "@/app/lib/format";
 
 export const dynamic = "force-dynamic";
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
 
 export async function generateMetadata({
   params,

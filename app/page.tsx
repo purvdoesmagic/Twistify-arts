@@ -3,13 +3,9 @@ import { Catalog } from "./components/catalog";
 import { ProductPlaceholder } from "./components/product-placeholder";
 import { Product } from "@/app/models/product";
 import { connectToDatabase } from "@/lib/mongodb";
+import { formatPrice } from "@/app/lib/format";
 
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   await connectToDatabase();

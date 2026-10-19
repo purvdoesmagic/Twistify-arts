@@ -1,6 +1,7 @@
 import type { DeliveryDetails } from "@/app/lib/razorpay";
 import { getCountryCallingCode } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
+import { formatPrice } from "@/app/lib/format";
 
 type PaidOrder = {
   amount: number;
@@ -26,14 +27,6 @@ function escapeHtml(value: string) {
 
     return entities[character];
   });
-}
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export async function sendPaidOrderNotification(order: PaidOrder) {

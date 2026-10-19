@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { normalizeOrderStatuses, Order } from "@/app/models/order";
 import { connectToDatabase } from "@/lib/mongodb";
+import { formatCountry, formatPhone, formatPrice } from "@/app/lib/format";
 
 export const metadata: Metadata = {
   title: "Order Confirmation",
@@ -12,13 +13,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
-
-const formatPrice = (amount: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
 
 function MessageState({ title, message }: { title: string; message: string }) {
   return (
@@ -184,12 +178,12 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               <h2 className="text-2xl text-[var(--ink)]">Delivery details</h2>
               <div className="mt-4 font-sans text-sm leading-7 text-[var(--muted)]">
                 <p className="font-semibold text-[var(--ink)]">{order.delivery.fullName}</p>
-                <p>{order.delivery.phone}</p>
+                <p>{formatPhone(order.delivery.country, order.delivery.phone)}</p>
                 <p>{order.delivery.address}</p>
                 <p>
                   {order.delivery.city}, {order.delivery.state} {order.delivery.postalCode}
                 </p>
-                <p>{order.delivery.country}</p>
+                <p>{formatCountry(order.delivery.country)}</p>
               </div>
             </section>
           </div>

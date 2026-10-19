@@ -21,6 +21,9 @@ export function SiteFooter() {
           <Link className="text-[var(--muted)] transition hover:text-[var(--rose)]" href="/about">
             About
           </Link>
+          <Link className="text-[var(--muted)] transition hover:text-[var(--rose)]" href="/contact">
+            Contact
+          </Link>
           <Link className="text-[var(--muted)] transition hover:text-[var(--rose)]" href="/account">
             Account
           </Link>

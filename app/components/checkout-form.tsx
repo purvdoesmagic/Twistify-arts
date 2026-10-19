@@ -8,6 +8,7 @@ import type { CountryCode } from "libphonenumber-js";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
 import { ProductPlaceholder } from "./product-placeholder";
+import { formatPrice } from "@/app/lib/format";
 
 type CheckoutFormProps = {
   products: Product[];
@@ -79,13 +80,6 @@ declare global {
     Razorpay?: new (options: RazorpayOptions) => RazorpayCheckout;
   }
 }
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(price);
 
 const loadRazorpayCheckout = () =>
   new Promise<boolean>((resolve) => {
@@ -239,7 +233,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
           ondismiss: () => {
             if (!paymentCompleted) {
               setPaymentStatus(
-                "Razorpay was closed before payment. Open this site in Chrome or Edge and try again.",
+                "Payment was not completed. You can try again whenever you're ready.",
               );
             }
             setIsRazorpayLoading(false);
@@ -472,11 +466,6 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
               <span>{cartCount} item{cartCount === 1 ? "" : "s"}</span>
               <span className="text-2xl font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
             </div>
-            {razorpayEnabled ? (
-              <p className="mt-3 font-sans text-xs leading-5 text-[var(--muted)]">
-                Test Razorpay in a full browser such as Chrome or Edge, not the VS Code preview.
-              </p>
-            ) : null}
             {paymentStatus ? (
               <p className="mt-3 rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-sm leading-5 text-[var(--muted)]" role="status">
                 {paymentStatus}
