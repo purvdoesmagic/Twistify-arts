@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
+import { isValidPostalCode } from "@/app/lib/delivery";
 
 type RazorpayConfig = {
   keyId: string;
@@ -36,21 +37,6 @@ export type RazorpayPaymentDetails = {
   };
 };
 
-type OrderTokenPayload = {
-  orderId: string;
-  amount: number;
-  userId: string;
-  items: OrderTokenItem[];
-  delivery: DeliveryDetails;
-};
-
-type OrderTokenItem = {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-};
-
 export type DeliveryDetails = {
   fullName: string;
   country: string;
@@ -74,7 +60,7 @@ export function readDeliveryDetails(value: unknown): DeliveryDetails | null {
   const address = details.address?.trim();
   const city = details.city?.trim();
   const state = details.state?.trim();
-  const postalCode = details.postalCode?.trim();
+  const postalCode = (details.postalCode?.trim() ?? "").toUpperCase();
 
   if (
     !fullName ||
@@ -90,8 +76,7 @@ export function readDeliveryDetails(value: unknown): DeliveryDetails | null {
     city.length > 80 ||
     !state ||
     state.length > 80 ||
-    !postalCode ||
-    !/^\d{6}$/.test(postalCode)
+    !isValidPostalCode(country, postalCode)
   ) {
     return null;
   }
@@ -185,66 +170,6 @@ function signaturesMatch(expected: string, received: string) {
   );
 }
 
-export function createOrderToken(payload: OrderTokenPayload, secret: string) {
-  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const signature = sign(encodedPayload, secret);
-
-  return `${encodedPayload}.${signature}`;
-}
-
-export function readOrderToken(token: string, secret: string): OrderTokenPayload | null {
-  const [encodedPayload, receivedSignature, extraPart] = token.split(".");
-
-  if (!encodedPayload || !receivedSignature || extraPart) {
-    return null;
-  }
-
-  if (!signaturesMatch(sign(encodedPayload, secret), receivedSignature)) {
-    return null;
-  }
-
-  try {
-    const payload = JSON.parse(
-      Buffer.from(encodedPayload, "base64url").toString("utf8"),
-    ) as OrderTokenPayload;
-
-    if (
-      typeof payload.orderId !== "string" ||
-      !payload.orderId ||
-      typeof payload.amount !== "number" ||
-      !Number.isInteger(payload.amount) ||
-      payload.amount <= 0 ||
-      typeof payload.userId !== "string" ||
-      !payload.userId ||
-      !Array.isArray(payload.items) ||
-      payload.items.length === 0 ||
-      !readDeliveryDetails(payload.delivery) ||
-      payload.items.some(
-        (item) =>
-          typeof item?.productId !== "string" ||
-          !item.productId ||
-          typeof item?.name !== "string" ||
-          !item.name ||
-          typeof item?.price !== "number" ||
-          !Number.isInteger(item.price) ||
-          item.price <= 0 ||
-          typeof item?.quantity !== "number" ||
-          !Number.isInteger(item.quantity) ||
-          item.quantity < 1,
-      )
-    ) {
-      return null;
-    }
-
-    return {
-      ...payload,
-      delivery: readDeliveryDetails(payload.delivery)!,
-    };
-  } catch {
-    return null;
-  }
-}
-
 export function verifyRazorpayPayment(
   orderId: string,
   paymentId: string,
@@ -252,4 +177,12 @@ export function verifyRazorpayPayment(
   secret: string,
 ) {
   return signaturesMatch(sign(`${orderId}|${paymentId}`, secret), receivedSignature);
+}
+
+export function getRazorpayWebhookSecret() {
+  return process.env.RAZORPAY_WEBHOOK_SECRET || null;
+}
+
+export function verifyRazorpayWebhook(rawBody: string, receivedSignature: string, secret: string) {
+  return signaturesMatch(sign(rawBody, secret), receivedSignature);
 }

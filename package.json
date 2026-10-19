@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seed:products": "tsx scripts/seed-products.ts",
     "seed:admin": "tsx scripts/create-admin.ts",
-    "reset:admin": "tsx scripts/reset-admin.ts"
+    "reset:admin": "tsx scripts/reset-admin.ts",
+    "migrate:orders": "tsx scripts/migrate-order-indexes.ts"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

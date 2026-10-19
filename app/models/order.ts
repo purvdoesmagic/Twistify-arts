@@ -48,10 +48,12 @@ const orderSchema = new Schema(
       address: { type: String, required: true },
       city: { type: String, required: true },
       state: { type: String, required: true },
-      postalCode: { type: String, required: true },
+      postalCode: { type: String, default: "" },
     },
     razorpayOrderId: { type: String, required: true, unique: true },
-    razorpayPaymentId: { type: String, required: true, unique: true },
+    // Set once payment is captured; pending orders do not have one yet.
+    razorpayPaymentId: { type: String },
+    paidAt: { type: Date },
     amount: { type: Number, required: true, min: 0 },
     status: {
       type: String,
@@ -70,6 +72,11 @@ const orderSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true, versionKey: false },
+);
+
+orderSchema.index(
+  { razorpayPaymentId: 1 },
+  { unique: true, partialFilterExpression: { razorpayPaymentId: { $type: "string" } } },
 );
 
 export const Order = models.Order ?? model("Order", orderSchema);

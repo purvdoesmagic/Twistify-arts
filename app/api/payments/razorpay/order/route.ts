@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { Product } from "@/app/models/product";
-import {
-  createOrderToken,
-  getRazorpayConfig,
-  readDeliveryDetails,
-} from "@/app/lib/razorpay";
+import { Order } from "@/app/models/order";
+import { getRazorpayConfig, readDeliveryDetails } from "@/app/lib/razorpay";
 import { connectToDatabase } from "@/lib/mongodb";
 import { auth } from "@/auth";
 
@@ -120,24 +117,25 @@ export async function POST(request: Request) {
     );
   }
 
+  // Saved before payment so the webhook can complete the order even if the browser never returns.
+  await Order.create({
+    items: orderItems.map(({ product, quantity }) => ({
+      productId: product!.id,
+      name: product!.name,
+      price: product!.price,
+      quantity,
+    })),
+    delivery,
+    razorpayOrderId: order.id,
+    amount: order.amount,
+    paymentStatus: "unpaid",
+    fulfillmentStatus: "pending",
+    userId: session.user.id,
+  });
+
   return NextResponse.json({
     keyId: config.keyId,
     orderId: order.id,
-    orderToken: createOrderToken(
-      {
-        orderId: order.id,
-        amount: order.amount,
-        userId: session.user.id,
-        delivery,
-        items: orderItems.map(({ product, quantity }) => ({
-          productId: product!.id,
-          name: product!.name,
-          price: product!.price,
-          quantity,
-        })),
-      },
-      config.keySecret,
-    ),
     amount: order.amount,
     currency: order.currency,
   });

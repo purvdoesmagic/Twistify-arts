@@ -20,7 +20,7 @@ export async function GET() {
 
   try {
     await connectToDatabase();
-    const orders = await Order.find()
+    const orders = await Order.find({ paymentStatus: { $ne: "unpaid" } })
       .select("items delivery razorpayOrderId razorpayPaymentId amount status paymentStatus fulfillmentStatus userId createdAt")
       .sort({ createdAt: -1 })
       .lean();

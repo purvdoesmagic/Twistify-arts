@@ -8,6 +8,7 @@ import type { CountryCode } from "libphonenumber-js";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
 import { ProductPlaceholder } from "./product-placeholder";
+import { isValidPostalCode, postalCodeLabel } from "@/app/lib/delivery";
 import { formatPrice } from "@/app/lib/format";
 
 type CheckoutFormProps = {
@@ -36,7 +37,7 @@ const emptyDeliveryDetails: DeliveryDetails = {
 };
 
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-const callingCodeCountries = getCountries().sort((firstCountry, secondCountry) =>
+const deliveryCountries = getCountries().sort((firstCountry, secondCountry) =>
   (regionNames.of(firstCountry) ?? firstCountry).localeCompare(
     regionNames.of(secondCountry) ?? secondCountry,
   ),
@@ -45,7 +46,6 @@ const callingCodeCountries = getCountries().sort((firstCountry, secondCountry) =
 type RazorpayOrderResponse = {
   keyId?: string;
   orderId?: string;
-  orderToken?: string;
   amount?: number;
   currency?: string;
   error?: string;
@@ -134,8 +134,10 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
       return "Please enter a valid phone number.";
     }
 
-    if (!/^\d{6}$/.test(postalCode.trim())) {
-      return "Please enter a valid 6-digit PIN code.";
+    if (!isValidPostalCode(country, postalCode.trim().toUpperCase())) {
+      return country === "IN"
+        ? "Please enter a valid 6-digit PIN code."
+        : "Please enter a valid postal code.";
     }
 
     return null;
@@ -174,7 +176,6 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
         !orderResponse.ok ||
         !order.keyId ||
         !order.orderId ||
-        !order.orderToken ||
         !order.amount ||
         !order.currency
       ) {
@@ -203,9 +204,9 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
+                orderId: order.orderId,
                 paymentId: response.razorpay_payment_id,
                 signature: response.razorpay_signature,
-                orderToken: order.orderToken,
               }),
             });
             const verification = (await verifyResponse.json()) as {
@@ -352,18 +353,9 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
               <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
                 Phone number
                 <div className="flex rounded-xl border border-[var(--border)] bg-white focus-within:border-[var(--rose)]">
-                  <select
-                    value={deliveryDetails.country}
-                    onChange={(event) => updateDeliveryDetail("country", event.target.value)}
-                    aria-label="Country calling code"
-                    className="max-w-40 border-r border-[var(--border)] bg-transparent px-2 py-3 text-sm font-normal text-[var(--muted)] outline-none"
-                  >
-                    {callingCodeCountries.map((country) => (
-                      <option key={country} value={country}>
-                        {regionNames.of(country)} +{getCountryCallingCode(country)}
-                      </option>
-                    ))}
-                  </select>
+                  <span className="flex items-center border-r border-[var(--border)] px-3 text-sm font-normal text-[var(--muted)]">
+                    +{getCountryCallingCode(deliveryDetails.country as CountryCode)}
+                  </span>
                   <input
                     value={deliveryDetails.phone}
                     onChange={(event) =>
@@ -379,6 +371,21 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                     className="min-w-0 flex-1 rounded-r-xl bg-transparent px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none"
                   />
                 </div>
+              </label>
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+                Country
+                <select
+                  value={deliveryDetails.country}
+                  onChange={(event) => updateDeliveryDetail("country", event.target.value)}
+                  autoComplete="country"
+                  className="rounded-xl border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
+                >
+                  {deliveryCountries.map((country) => (
+                    <option key={country} value={country}>
+                      {regionNames.of(country)}
+                    </option>
+                  ))}
+                </select>
               </label>
               <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
                 Full address
@@ -403,7 +410,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   />
                 </label>
                 <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
-                  State
+                  State / region
                   <input
                     value={deliveryDetails.state}
                     onChange={(event) => updateDeliveryDetail("state", event.target.value)}
@@ -414,18 +421,23 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                 </label>
               </div>
               <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
-                PIN code
+                {postalCodeLabel(deliveryDetails.country)}
+                {deliveryDetails.country === "IN" ? null : (
+                  <span className="text-xs font-normal">Optional if your country has no postal codes.</span>
+                )}
                 <input
                   value={deliveryDetails.postalCode}
                   onChange={(event) =>
                     updateDeliveryDetail(
                       "postalCode",
-                      event.target.value.replace(/\D/g, "").slice(0, 6),
+                      deliveryDetails.country === "IN"
+                        ? event.target.value.replace(/\D/g, "").slice(0, 6)
+                        : event.target.value.replace(/[^A-Za-z0-9 -]/g, "").slice(0, 10),
                     )
                   }
                   autoComplete="postal-code"
-                  inputMode="numeric"
-                  maxLength={6}
+                  inputMode={deliveryDetails.country === "IN" ? "numeric" : "text"}
+                  maxLength={deliveryDetails.country === "IN" ? 6 : 10}
                   className="rounded-xl border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]"
                 />
               </label>

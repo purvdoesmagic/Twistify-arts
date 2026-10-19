@@ -103,6 +103,15 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
     );
   }
 
+  if (order.paymentStatus === "unpaid") {
+    return (
+      <MessageState
+        title="Payment not received yet."
+        message="We haven't received payment for this order. If you were charged, it will appear in your account within a few minutes."
+      />
+    );
+  }
+
   const statuses = normalizeOrderStatuses(
     order.status,
     order.paymentStatus,
