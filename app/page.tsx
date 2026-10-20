@@ -1,228 +1,220 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Catalog } from "./components/catalog";
-import { ProductPlaceholder } from "./components/product-placeholder";
+import { BudgetFinder } from "./components/budget-finder";
+import { LampShowcase } from "./components/lamp-showcase";
+import { LoopVideo } from "./components/loop-video";
+import { SplitStage } from "./components/split-stage";
+import { ArtCredits } from "./components/art-credits";
+import { credits, plates } from "@/app/data/art";
 import { getProducts } from "@/app/lib/products";
 import { formatPrice } from "@/app/lib/format";
 
 export const dynamic = "force-dynamic";
 
-const eyebrowClass = "font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]";
+const dots = ["var(--sage)", "var(--rose)", "var(--ink)"];
 
-const promises = [
-  ["In stock or made to order", "Availability is shown on every piece."],
-  ["Gifting and festivals", "Garlands, lamps, torans, bouquets, and more."],
-  ["Delivery confirmed at checkout", "Charges and timeline depend on your address."],
-] as const;
+const slip = [
+  {
+    stage: "Today",
+    rows: [
+      ["Choose your pieces", "up to 10 of each"],
+      ["Pay through Razorpay", "in rupees"],
+    ],
+  },
+  {
+    stage: "While it is made",
+    rows: [
+      ["In-stock pieces packed", "ready now"],
+      ["Made-to-order pieces crocheted", "by hand"],
+    ],
+  },
+  {
+    stage: "At your door",
+    rows: [
+      ["Delivery confirmed at checkout", "per address"],
+      ["Follow it in your account", "any time"],
+    ],
+  },
+];
+
+const email = "twistifyarts@gmail.com";
 
 export default async function Home() {
   const products = await getProducts();
-  const featuredProducts = products.slice(0, 4);
-  const collections = [...new Set(products.map((product) => product.category))].map((category) => ({
-    name: category,
-    count: products.filter((product) => product.category === category).length,
-  }));
   const prices = products.map((product) => product.price);
+  const lowest = prices.length ? Math.min(...prices) : 0;
+  const collections = [...new Set(products.map((product) => product.category))].map((name) => {
+    const items = products.filter((product) => product.category === name);
+    return { name, count: items.length, from: Math.min(...items.map((item) => item.price)) };
+  });
+  const lamps = products.filter((product) => product.category === "LED flower night lamps");
 
   return (
     <main id="top">
-      <section className="relative overflow-hidden">
-        <svg
-          className="yarn-thread pointer-events-none absolute -right-10 top-6 hidden h-auto w-[min(640px,55%)] opacity-60 md:block"
-          viewBox="0 0 640 520"
-          aria-hidden="true"
-        >
-          <path className="yarn-rose" d="M-10 420 C 120 300, 200 520, 300 380 S 470 120, 380 200 S 230 420, 400 300 S 600 60, 660 160" />
-          <path className="yarn-sage" d="M-10 470 C 160 360, 240 540, 340 420 S 500 180, 420 250 S 290 450, 450 350 S 620 130, 670 210" />
-        </svg>
-
-        <div className="relative mx-auto grid w-full max-w-7xl items-start gap-12 px-5 pb-20 pt-12 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-16 lg:px-12">
-          <div className="lg:col-span-8">
-            <p className={`mb-6 flex items-center gap-2.5 ${eyebrowClass}`}>
-              <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
-              Twistify Arts · Made by Shraddha Doshi
-            </p>
-            <h1 className="max-w-4xl text-5xl leading-[1.05] tracking-[-0.035em] text-balance text-[var(--ink)] sm:text-6xl lg:text-7xl">
-              Handmade details for the moments people keep.
-            </h1>
-            <p className="mt-7 max-w-2xl font-sans text-base leading-7 text-[var(--muted)] sm:text-lg sm:leading-8">
-              Crochet, woolen, floral, and festive creations for gifting, celebrations, pooja, and joyful corners at home.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-6 font-sans text-sm">
-              <Link
-                href="/shop"
-                className="inline-flex rounded-full bg-[var(--ink)] px-8 py-3.5 font-semibold text-[var(--paper)] shadow-sm transition-colors hover:bg-[var(--rose-deep)]"
-              >
-                Shop all creations
-              </Link>
-              <a
-                href="#maker"
-                className="group inline-flex items-center gap-1.5 border-b border-[rgba(90,62,43,0.4)] pb-0.5 text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose-deep)]"
-              >
-                A note from the maker
-                <span className="text-xs transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-
-          <aside className="rounded-2xl border border-[var(--border)] bg-white/80 p-6 shadow-sm backdrop-blur-sm sm:p-8 lg:col-span-4">
-            <div className="flex items-center justify-between border-b border-[rgba(234,216,202,0.6)] pb-4">
-              <p className="font-sans text-[11px] font-bold uppercase tracking-widest text-[var(--sage-deep)]">Studio catalogue</p>
-              <p className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(135,169,107,0.1)] px-2 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-[var(--sage-deep)]">
-                <span className="size-1.5 rounded-full bg-[var(--sage)]" aria-hidden="true" />
-                {products.length} pieces
-              </p>
-            </div>
-            <p className="mt-6 text-lg italic leading-relaxed text-[var(--ink)]">
-              “Small-batch pieces, with limited stock and made-to-order favourites.”
-            </p>
-            <ul className="mt-6 space-y-3 font-sans text-sm text-[var(--muted)]">
-              <li className="flex items-center gap-3">
-                <span className="size-1.5 rounded-full bg-[var(--sage)]" aria-hidden="true" />
-                Handmade crochet & woolen crafts
-              </li>
-              {prices.length > 0 ? (
-                <li className="flex items-center gap-3">
-                  <span className="size-1.5 rounded-full bg-[var(--rose)]" aria-hidden="true" />
-                  {formatPrice(Math.min(...prices))} to {formatPrice(Math.max(...prices))} gifting
-                </li>
-              ) : null}
-              <li className="flex items-center gap-3">
-                <span className="size-1.5 rounded-full bg-[var(--ink)]" aria-hidden="true" />
-                {collections.length} collections to explore
-              </li>
-            </ul>
-          </aside>
-        </div>
-      </section>
-
-      <section className="border-y border-[var(--border)] bg-[rgba(252,248,243,0.6)] py-20">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <p className={eyebrowClass}>From the studio</p>
-              <h2 className="mt-2 text-3xl tracking-tight text-[var(--ink)] sm:text-4xl">A few pieces from the current catalogue</h2>
-            </div>
-            <Link
-              href="/shop"
-              className="self-start border-b border-[rgba(90,62,43,0.3)] pb-0.5 font-sans text-sm font-semibold text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose-deep)] md:self-auto"
-            >
-              View the full catalogue ({products.length} creations) →
+      <SplitStage plates={plates}>
+        <section data-plate="0" className="flex flex-col justify-center pb-16 pt-10 sm:px-12 lg:min-h-[calc(100svh-6rem)] lg:px-16 lg:py-16">
+          <h1 data-rise className="max-w-[12ch] text-[length:var(--step-display)] uppercase leading-[0.9]">
+            Flowers that never wilt
+          </h1>
+          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-10 max-w-[34ch] text-[length:var(--step-lead)] leading-snug">
+            Garlands, lamps, torans and small gifts, crocheted in wool by Shraddha Doshi. From {formatPrice(lowest)}.
+          </p>
+          <div data-rise style={{ "--i": 2 } as React.CSSProperties} className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <Link href="/shop" className="btn">
+              Shop all {products.length} pieces
             </Link>
+            <a href="#budget" className="text-link">
+              Find one for your budget
+            </a>
           </div>
+        </section>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {featuredProducts.map((product) => (
-              <article key={product.id} className="product-card">
-                <Link href={`/shop/${product.id}`} className="block">
-                  <ProductPlaceholder name={product.name} category={product.category} className="aspect-[4/5]" />
-                </Link>
-                <div className="flex flex-grow flex-col pt-4">
-                  <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--sage-deep)]">{product.category}</p>
-                  <h3 className="mt-1 text-xl leading-snug text-[var(--ink)]">
-                    <Link href={`/shop/${product.id}`} className="transition-colors hover:text-[var(--rose-deep)]">
-                      {product.name}
-                    </Link>
-                  </h3>
-                  <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                    <p className="font-sans text-lg font-semibold text-[var(--ink)]">{formatPrice(product.price)}</p>
-                    <span className="rounded-full bg-[var(--blush)] px-2.5 py-0.5 font-sans text-xs font-medium text-[var(--rose-deep)]">
-                      {product.availability}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 md:py-28 lg:px-12">
-        <div className="grid items-start gap-12 lg:grid-cols-12">
-          <div className="lg:sticky lg:top-36 lg:col-span-4">
-            <p className={eyebrowClass}>Collections</p>
-            <h2 className="mt-3 text-3xl tracking-tight text-[var(--ink)] sm:text-4xl">Find the right piece for pooja, home, or gifting.</h2>
-            <p className="mt-4 font-sans text-sm leading-6 text-[var(--muted)]">
-              Each collection is made around a celebration or a corner of home — pick one to see its pieces.
+        <section data-plate="1" className="py-24 sm:px-12 lg:px-16 lg:py-40" aria-labelledby="lasting-heading">
+          <h2 id="lasting-heading" data-reveal className="text-[length:var(--step-head)]">A garland that lasts</h2>
+          <div className="mt-10 max-w-[42ch] space-y-5">
+            <p data-reveal className="font-medium">
+              A fresh jasmine garland is gone by evening. In Tamil Nadu and Kerala, jewellers have long shaped necklaces after jasmine buds; the one beside this text is from the nineteenth century.
             </p>
-            <Link
-              href="/shop"
-              className="mt-6 inline-flex items-center gap-1.5 border-b border-[rgba(90,62,43,0.4)] pb-0.5 font-sans text-sm font-medium text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose-deep)]"
-            >
-              Browse every collection <span aria-hidden="true">→</span>
-            </Link>
+            <p data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+              Twistify Arts does the same with wool. Hibiscus, jasmine, marigold, lotus and sunflower are crocheted petal by petal, so the flower on your door or your mandir is still there after the festival.
+            </p>
+            <p data-reveal style={{ "--i": 2 } as React.CSSProperties}>
+              Every piece is made by hand by Shraddha Doshi, so no two are quite alike. Some are ready to send; most are made once you order, and each listing says which.
+            </p>
+            <p data-reveal style={{ "--i": 3 } as React.CSSProperties}>
+              Want a colour, a size or a phone model the shop does not list? <Link href="/contact" className="text-link">Ask before you order.</Link>
+            </p>
           </div>
-          <div className="divide-y divide-[var(--border)] border-y border-[var(--border)] lg:col-span-8">
-            {collections.map((collection) => (
-              <Link
-                key={collection.name}
-                href={`/shop?category=${encodeURIComponent(collection.name)}#catalog`}
-                className="group flex items-center justify-between gap-4 px-2 py-5 transition-colors hover:bg-[var(--cream)]"
-              >
-                <span className="flex items-center gap-4">
-                  <span
-                    className="grid size-8 shrink-0 place-items-center rounded-full bg-[#f6eee7] text-[var(--sage-deep)] transition-colors group-hover:bg-[var(--ink)] group-hover:text-[var(--paper)]"
-                    aria-hidden="true"
-                  >
-                    ✿
+        </section>
+
+        {products.length > 0 ? (
+        <section id="budget" data-plate="2" className="scroll-mt-24 bg-[var(--cream)] px-5 py-24 sm:px-12 lg:px-16 lg:py-32" aria-labelledby="budget-heading">
+          <h2 id="budget-heading" data-reveal className="text-[length:var(--step-head)]">A piece for every budget</h2>
+          <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-6 max-w-[40ch]">
+            Slide to what you would like to spend and see every piece at or under it.
+          </p>
+          <div data-reveal style={{ "--i": 2 } as React.CSSProperties} className="mt-10 max-w-[34rem]">
+            <BudgetFinder
+              pieces={products.map(({ id, name, price, availability }) => ({ id, name, price, availability }))}
+            />
+          </div>
+        </section>
+        ) : null}
+
+        <section data-plate="3" className="py-24 sm:px-12 lg:px-16 lg:py-40" aria-labelledby="collections-heading">
+          <h2 id="collections-heading" data-reveal className="text-[length:var(--step-head)]">
+            {collections.length} collections
+          </h2>
+          <ul className="mt-10 max-w-[34rem]">
+            {collections.map((collection, index) => (
+              <li key={collection.name} data-reveal style={{ "--i": index % 6 } as React.CSSProperties}>
+                <Link
+                  href={`/shop?category=${encodeURIComponent(collection.name)}#catalog`}
+                  className="group flex min-h-11 items-center gap-3 py-1.5"
+                >
+                  <span className="size-4 shrink-0 rounded-full" style={{ background: dots[index % dots.length] }} aria-hidden="true" />
+                  <span className="flex-1 transition-colors group-hover:text-[var(--rose-deep)]">{collection.name}</span>
+                  <span className="text-[length:var(--step-small)] tabular-nums text-[var(--muted)]">
+                    {collection.count} from {formatPrice(collection.from)}
                   </span>
-                  <span className="text-lg text-[var(--ink)] transition-colors group-hover:text-[var(--rose-deep)]">{collection.name}</span>
-                </span>
-                <span className="flex shrink-0 items-center gap-3 font-sans text-xs text-[var(--muted)]">
-                  {collection.count} {collection.count === 1 ? "creation" : "creations"}
-                  <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-                </span>
-              </Link>
+                </Link>
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
+          </ul>
+        </section>
+      </SplitStage>
 
-      <section id="maker" className="scroll-mt-32 px-4 sm:px-8">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[var(--ink)] px-8 py-16 text-[var(--paper)] sm:px-16 sm:py-24">
-          <div className="pointer-events-none absolute -bottom-20 -right-20 size-96 rounded-full border border-white/5" aria-hidden="true" />
-          <div className="pointer-events-none absolute -bottom-32 right-10 size-80 rounded-full border border-[rgba(213,133,31,0.15)]" aria-hidden="true" />
-          <div className="relative max-w-3xl">
-            <p className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-[#F0B866]">A note from the maker · Shraddha Doshi</p>
-            <h2 className="mt-4 text-3xl leading-[1.18] tracking-tight sm:text-4xl">
-              Twistify Arts is a collection of handmade crochet and woolen crafts, made for gifting, celebrations, and the corners you call home.
-            </h2>
-            <p className="mt-6 font-sans text-base leading-7 text-[rgba(246,238,231,0.8)]">
-              Small variations from one piece to another are part of handmade work — each creation carries its own character.
+      <div className="mt-32 px-5 sm:px-8">
+        <LampShowcase lamps={lamps} />
+      </div>
+
+      <section className="mt-32 bg-[var(--rose)] px-5 py-24 sm:px-8 lg:py-32" aria-labelledby="order-heading">
+        <div className="grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <h2 id="order-heading" data-reveal className="text-[length:var(--step-head)]">From basket to doorstep</h2>
+            <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-6 max-w-[26ch] text-[length:var(--step-lead)] font-bold leading-snug">
+              Ordering takes a few minutes. Making it is the slow part.
             </p>
-            <Link
-              href="/about"
-              className="mt-10 inline-flex items-center gap-2 border-b border-[rgba(255,250,246,0.4)] pb-0.5 font-sans text-sm transition-colors hover:border-[#F0B866] hover:text-[#F0B866]"
-            >
-              Read about Twistify Arts <span aria-hidden="true">→</span>
-            </Link>
+          </div>
+          <div data-reveal className="slip w-full max-w-[34rem] bg-[var(--cream)] pb-10 pt-8 text-[length:var(--step-small)] tabular-nums sm:text-[length:var(--step-body)] lg:col-span-5 lg:col-start-7">
+            {slip.map((group) => (
+              <div key={group.stage} className="px-6 pt-7 first:pt-0 sm:px-8">
+                <p className="font-semibold">{group.stage}</p>
+                {group.rows.map(([what, value]) => (
+                  <p key={what} className="mt-2 flex items-end">
+                    <span>{what}</span>
+                    <span className="leader" aria-hidden="true" />
+                    <span className="shrink-0 text-[var(--muted)]">{value}</span>
+                  </p>
+                ))}
+              </div>
+            ))}
+            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-[var(--ink)] px-6 py-2 text-[var(--paper)] sm:px-8">
+              <span>You hold a flower that never wilts</span>
+              <span>from {formatPrice(lowest)}</span>
+            </p>
           </div>
         </div>
       </section>
 
-      <Catalog products={products} />
-
-      <section className="mx-auto w-full max-w-7xl px-5 pb-20 sm:px-8 lg:px-12">
-        <div className="grid gap-6 rounded-2xl border border-[#efd9a9] bg-[#fff5df] p-6 text-[#72573d] sm:p-8 md:grid-cols-3">
-          {promises.map(([title, text]) => (
-            <div key={title}>
-              <h3 className="font-sans text-sm font-bold tracking-tight">{title}</h3>
-              <p className="mt-1 font-sans text-xs leading-relaxed text-[rgba(114,87,61,0.9)]">{text}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-col items-start justify-between gap-4 rounded-2xl border border-[var(--border)] bg-white/70 p-6 sm:flex-row sm:items-center sm:p-8">
-          <div>
-            <h2 className="text-2xl text-[var(--ink)]">Questions or custom requests?</h2>
-            <p className="mt-1 font-sans text-sm text-[var(--muted)]">Share your phone model for cases, or ask about colours. We reply by email.</p>
+      <section className="grid items-center gap-16 px-5 py-40 sm:px-8 lg:grid-cols-2" aria-labelledby="letter-heading">
+        <figure className="lg:order-last">
+          <LoopVideo src="/art/crochet-hands.webm" poster="/art/crochet-hands-poster.jpg" className="aspect-[4/3] w-full object-cover saturate-[0.45]" />
+          <figcaption className="mt-3 text-[length:var(--step-small)] text-[var(--muted)]">Crochet in progress: a hook drawing loops of wool, one at a time.</figcaption>
+        </figure>
+        <div className="mx-auto max-w-[32.5rem]">
+          <Image src="/twistify-arts-mark.svg" alt="" width={44} height={44} className="size-11 rounded-full" />
+          <h2 id="letter-heading" data-reveal className="mt-7 text-[length:var(--step-head)]">A note from the studio</h2>
+          <div className="mt-8 space-y-5">
+            <p data-reveal>
+              Twistify Arts is Shraddha Doshi’s studio for crochet and woolen crafts: flowers, garlands, festival decor and small things to carry every day.
+            </p>
+            <p data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+              Each piece is made by hand, one at a time. Handmade work varies a little from piece to piece, and <mark className="bg-[#F2D3A6] text-[var(--ink)]">that is part of it.</mark>
+            </p>
+            <p data-reveal style={{ "--i": 2 } as React.CSSProperties}>
+              If you need something the shop does not list, a colour, a size or a phone model, write and ask.
+            </p>
           </div>
-          <Link
-            href="/contact"
-            className="shrink-0 rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition-colors hover:bg-[var(--ink)]"
-          >
-            Contact Twistify Arts
-          </Link>
+          <p className="mt-8 text-[length:var(--step-lead)] italic">Twistify Arts</p>
+          <p className="text-[length:var(--step-small)] text-[var(--muted)]">Handmade by Shraddha Doshi</p>
         </div>
       </section>
+
+      <section aria-labelledby="contact-heading" className="px-5 sm:px-8">
+        <div className="flex min-h-[9.5rem] items-end gap-6 bg-[var(--sage)] px-6 pb-8 pt-6 sm:px-10">
+          <h2 id="contact-heading" className="text-[length:var(--step-head)] leading-none">Write to the studio</h2>
+          <Image
+            src="/art/rangoli.jpg"
+            alt="A flower and Swastik rangoli drawn in coloured powder on a doorstep"
+            width={120}
+            height={120}
+            className="size-20 shrink-0 rounded-full object-cover sm:size-28"
+          />
+        </div>
+        <a href={`mailto:${email}`} className="flex min-h-[9.5rem] items-end break-all bg-[var(--sage-light)] px-6 pb-8 pt-6 sm:px-10 text-[length:var(--step-head)] leading-none font-serif transition-colors hover:text-[var(--paper)]">
+          {email}
+        </a>
+        <p className="flex min-h-[9.5rem] items-end bg-[var(--sage)] px-6 pb-8 pt-6 sm:px-10 font-serif text-[length:var(--step-head)] leading-none">
+          Custom colours and sizes
+        </p>
+        <p className="flex min-h-[9.5rem] items-end bg-[var(--sage-light)] px-6 pb-8 pt-6 sm:px-10 font-serif text-[length:var(--step-head)] leading-none">
+          Phone cases to your model
+        </p>
+        <a
+          href={`mailto:${email}?subject=${encodeURIComponent("Hello from the Twistify Arts site")}`}
+          className="group flex min-h-[9.5rem] items-end gap-6 bg-[var(--rose)] px-6 pb-8 pt-6 sm:px-10 font-serif text-[length:var(--step-head)] leading-none"
+        >
+          Say hello
+          <span className="mb-1 grid size-14 place-items-center rounded-full bg-[var(--ink)] text-[var(--paper)] transition-transform group-hover:translate-x-2 sm:size-16" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </a>
+      </section>
+
+      <ArtCredits credits={credits} />
     </main>
   );
 }
