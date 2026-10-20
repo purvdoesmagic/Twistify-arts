@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { ArtCredits } from "../components/art-credits";
 import { Catalog } from "../components/catalog";
+import { credits, plates } from "@/app/data/art";
+import { formatPrice } from "@/app/lib/format";
 import { getProducts } from "@/app/lib/products";
 
 export const metadata: Metadata = {
@@ -16,28 +20,39 @@ export default async function ShopPage({
 }) {
   const { category } = await searchParams;
   const products = await getProducts();
+  const collections = new Set(products.map((product) => product.category)).size;
+  const lowest = products.length ? Math.min(...products.map((product) => product.price)) : 0;
 
   return (
-    <main className="min-h-screen bg-[var(--paper)]">
-      <section className="mx-auto w-full max-w-7xl px-5 pt-12 sm:px-8 sm:pt-16 lg:px-12">
-        <header className="max-w-3xl">
-          <p className="mb-5 flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]">
-            <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
-            Twistify Arts · Crafted by Shraddha Doshi
-          </p>
-          <h1 className="text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">
-            Handmade details for every little occasion.
+    <main className="min-h-screen">
+      <section className="px-5 pt-10 sm:px-8 lg:pt-16" aria-labelledby="shop-heading">
+        <div className="grid items-end gap-8 lg:grid-cols-12">
+          <h1 id="shop-heading" data-rise className="text-[length:var(--step-display)] uppercase leading-[0.9] lg:col-span-7">
+            The whole collection
           </h1>
-          <p className="mt-5 max-w-2xl font-sans text-base leading-7 text-[var(--muted)] sm:text-lg">
-            Browse flower garlands, floral accessories, glowing lamps, festive decor, and thoughtful handmade gifts.
+          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="max-w-[38ch] text-[length:var(--step-lead)] leading-snug lg:col-span-5">
+            {products.length} pieces in {collections} collections, from {formatPrice(lowest)}, each crocheted by Shraddha Doshi. Pieces are shown as drawings until photographs are ready.
           </p>
-          <div className="mt-8 h-px w-full bg-[var(--border)]" aria-hidden="true" />
-        </header>
+        </div>
+        <ul className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {plates.map((plate, index) => (
+            <li key={plate.src} data-reveal style={{ "--i": index } as React.CSSProperties}>
+              <figure>
+                <div className="relative aspect-[4/5] overflow-hidden bg-[var(--blush)]">
+                  <Image src={plate.src} alt={plate.alt} fill priority={index < 2} sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                </div>
+                <figcaption className="mt-3 text-[length:var(--step-small)] text-[var(--muted)]">{plate.caption}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </section>
       <Catalog
         key={typeof category === "string" ? category : "all"}
         products={products}
-        initialCategory={typeof category === "string" ? category : undefined} />
+        initialCategory={typeof category === "string" ? category : undefined}
+      />
+      <ArtCredits credits={credits.slice(0, plates.length)} />
     </main>
   );
 }

@@ -18,7 +18,7 @@ export function AddToCartButton({ productId, availability }: AddToCartButtonProp
     return (
       <Link
         href="/shop"
-        className="mt-7 inline-flex rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+        className="btn mt-10"
       >
         Explore other creations
       </Link>
@@ -32,7 +32,7 @@ export function AddToCartButton({ productId, availability }: AddToCartButtonProp
         addToCart(productId);
         setIsAdded(true);
       }}
-      className="mt-7 inline-flex rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+      className="btn mt-10"
     >
       {isAdded ? "Added to basket" : "Add to basket"}
     </button>
