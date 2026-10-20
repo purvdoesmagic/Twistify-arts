@@ -48,7 +48,7 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
     <section id="catalog" className="mx-auto w-full max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
+          <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose-deep)]">
             The catalogue
           </p>
           <h2 className="mt-3 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
@@ -102,11 +102,11 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
               className="aspect-[4/5]"
             />
             <div className="flex flex-grow flex-col pt-4">
-              <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--sage)]">
+              <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--sage-deep)]">
                 {product.category}
               </p>
               <h3 className="mt-1 text-xl leading-snug text-[var(--ink)]">
-                <Link href={`/shop/${product.id}`} className="transition-colors hover:text-[var(--rose)]">
+                <Link href={`/shop/${product.id}`} className="transition-colors hover:text-[var(--rose-deep)]">
                   {product.name}
                 </Link>
               </h3>
@@ -116,7 +116,7 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
               <div className="mt-auto pt-4">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <p className="font-sans text-lg font-semibold text-[var(--ink)]">{formatPrice(product.price)}</p>
-                  <span className="rounded-full bg-[var(--blush)] px-2.5 py-0.5 font-sans text-xs font-medium text-[var(--rose)]">
+                  <span className="rounded-full bg-[var(--blush)] px-2.5 py-0.5 font-sans text-xs font-medium text-[var(--rose-deep)]">
                     {product.availability}
                   </span>
                 </div>
@@ -125,13 +125,13 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
                     type="button"
                     onClick={() => addToCart(product.id)}
                     disabled={product.availability === "Sold out"}
-                    className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-[var(--paper)] transition-colors hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#ded3c9] disabled:text-[#8b7b70]"
+                    className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-[var(--paper)] transition-colors hover:bg-[var(--rose-deep)] disabled:cursor-not-allowed disabled:bg-[#ded3c9] disabled:text-[#8b7b70]"
                   >
                     {product.availability === "Sold out" ? "Sold out" : "Add to basket"}
                   </button>
                   <Link
                     href={`/shop/${product.id}`}
-                    className="border-b border-[rgba(51,39,34,0.3)] pb-0.5 font-sans text-xs text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose)]"
+                    className="border-b border-[rgba(90,62,43,0.3)] pb-0.5 font-sans text-xs text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose-deep)]"
                   >
                     View listing
                   </Link>
@@ -150,12 +150,12 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
             onClick={() => {
               setCartOpen(false);
             }}
-            className="absolute inset-0 bg-[rgba(51,39,34,0.35)] backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(90,62,43,0.35)] backdrop-blur-sm"
           />
           <aside className="relative flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden bg-[var(--paper)] shadow-2xl">
             <div className="shrink-0 flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
               <div>
-                <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose)]">
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose-deep)]">
                   Your basket
                 </p>
                 <p className="mt-1 text-2xl text-[var(--ink)]">
@@ -196,7 +196,7 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
                       />
                       <div className="min-w-0 flex-1">
                         <p className="text-lg leading-tight text-[var(--ink)]">{item.product.name}</p>
-                        <p className="mt-1 font-sans text-sm font-semibold text-[var(--rose)]">
+                        <p className="mt-1 font-sans text-sm font-semibold text-[var(--rose-deep)]">
                           {formatPrice(item.product.price)}
                         </p>
                         <div className="mt-3 flex items-center justify-between">
@@ -240,7 +240,7 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
               {cartItems.length > 0 ? (
                 <Link
                   href="/checkout"
-                  className="mt-5 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
+                  className="mt-5 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)]"
                 >
                   Continue to Checkout
                 </Link>

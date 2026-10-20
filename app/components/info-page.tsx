@@ -11,11 +11,11 @@ export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-14 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-4xl">
-        <Link href="/" className="font-sans text-sm font-semibold text-[var(--rose)]">
+        <Link href="/" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
           ← Back home
         </Link>
         <header className="info-page-heading relative mt-10 max-w-3xl">
-          <p className="flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose)]">
+          <p className="flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]">
             <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
             {eyebrow}
           </p>
@@ -43,7 +43,7 @@ export function InfoSection({ title, children }: { title: string; children: Reac
 
 export function PolicyLinks() {
   return (
-    <nav className="flex flex-wrap gap-x-5 gap-y-2 font-sans text-sm font-semibold text-[var(--rose)]" aria-label="Policy navigation">
+    <nav className="flex flex-wrap gap-x-5 gap-y-2 font-sans text-sm font-semibold text-[var(--rose-deep)]" aria-label="Policy navigation">
       <Link href="/policies/shipping">Shipping</Link>
       <Link href="/policies/refunds">Refunds & returns</Link>
       <Link href="/policies/privacy">Privacy</Link>

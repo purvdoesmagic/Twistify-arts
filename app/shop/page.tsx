@@ -21,7 +21,7 @@ export default async function ShopPage({
     <main className="min-h-screen bg-[var(--paper)]">
       <section className="mx-auto w-full max-w-7xl px-5 pt-12 sm:px-8 sm:pt-16 lg:px-12">
         <header className="max-w-3xl">
-          <p className="mb-5 flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose)]">
+          <p className="mb-5 flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]">
             <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
             Twistify Arts · Crafted by Shraddha Doshi
           </p>

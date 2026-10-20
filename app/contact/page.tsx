@@ -41,7 +41,7 @@ export default function ContactPage() {
           Signed-in customers can review saved orders and their current fulfillment status from the account page.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link href="/account" className="rounded-full bg-[var(--ink)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--rose)]">
+          <Link href="/account" className="rounded-full bg-[var(--ink)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--rose-deep)]">
             View my account
           </Link>
           <Link href="/shop" className="rounded-full border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">

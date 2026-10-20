@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const linkClass = "text-[var(--muted)] transition-colors hover:text-[var(--rose)]";
-const headingClass = "text-xs font-bold uppercase tracking-[0.16em] text-[var(--rose)]";
+const linkClass = "text-[var(--muted)] transition-colors hover:text-[var(--rose-deep)]";
+const headingClass = "text-xs font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]";
 
 export function SiteFooter() {
   return (
@@ -20,7 +20,7 @@ export function SiteFooter() {
               Handmade crochet and woolen crafts by Shraddha Doshi, made for gifting, celebrations, and joyful corners at home.
             </p>
             <div className="mt-5 flex flex-wrap gap-2 font-sans text-[11px] font-bold uppercase tracking-[0.14em]">
-              <span className="rounded-full border border-[var(--sage)] bg-[rgba(116,138,112,0.12)] px-3 py-1 text-[#4f644c]">Handmade</span>
+              <span className="rounded-full border border-[var(--sage)] bg-[rgba(135,169,107,0.12)] px-3 py-1 text-[#5E7A48]">Handmade</span>
               <span className="rounded-full border border-[var(--border)] bg-white/60 px-3 py-1 text-[var(--muted)]">Small batch</span>
             </div>
           </div>

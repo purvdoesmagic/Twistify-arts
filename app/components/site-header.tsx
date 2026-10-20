@@ -55,7 +55,7 @@ export function SiteHeader() {
                 aria-current={isActive(href) ? "page" : undefined}
                 className={
                   isActive(href)
-                    ? "border-b-2 border-[var(--rose)] pb-1 font-semibold text-[var(--rose)]"
+                    ? "border-b-2 border-[var(--rose)] pb-1 font-semibold text-[var(--rose-deep)]"
                     : "pb-1 text-[var(--muted)] transition-colors hover:text-[var(--ink)]"
                 }
               >
@@ -72,7 +72,7 @@ export function SiteHeader() {
             >
               Cart
               {isHydrated ? (
-                <span className="grid size-5 place-items-center rounded-full bg-[var(--rose)] text-[11px] font-bold text-white">
+                <span className="grid size-5 place-items-center rounded-full bg-[var(--rose-deep)] text-[11px] font-bold text-white">
                   {cartCount}
                 </span>
               ) : null}
@@ -80,23 +80,23 @@ export function SiteHeader() {
             <div className="hidden items-center gap-4 md:flex">
               {isAuthenticated ? (
                 <>
-                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose)]" href="/account">
+                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose-deep)]" href="/account">
                     Account
                   </Link>
                   <button
                     type="button"
                     onClick={() => void signOut({ callbackUrl: "/" })}
-                    className="font-semibold text-[var(--muted)] transition-colors hover:text-[var(--rose)]"
+                    className="font-semibold text-[var(--muted)] transition-colors hover:text-[var(--rose-deep)]"
                   >
                     Sign out
                   </button>
                 </>
               ) : (
                 <>
-                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose)]" href="/login">
+                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose-deep)]" href="/login">
                     Sign in
                   </Link>
-                  <Link className="rounded-full bg-[var(--ink)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--rose)]" href="/signup">
+                  <Link className="rounded-full bg-[var(--ink)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--rose-deep)]" href="/signup">
                     Create account
                   </Link>
                 </>
@@ -124,7 +124,7 @@ export function SiteHeader() {
                   href={href}
                   onClick={closeMenu}
                   aria-current={isActive(href) ? "page" : undefined}
-                  className={`rounded-xl px-3 py-3 font-semibold hover:bg-white ${isActive(href) ? "text-[var(--rose)]" : "text-[var(--ink)]"}`}
+                  className={`rounded-xl px-3 py-3 font-semibold hover:bg-white ${isActive(href) ? "text-[var(--rose-deep)]" : "text-[var(--ink)]"}`}
                 >
                   {label}
                 </Link>

@@ -41,7 +41,7 @@ export function CartPage({ products }: CartPageProps) {
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl">
-        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
+        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
           ← Continue shopping
         </Link>
         <header className="mt-10 max-w-3xl">
@@ -64,7 +64,7 @@ export function CartPage({ products }: CartPageProps) {
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.productId)}
-                    className="font-semibold text-[var(--rose)] underline underline-offset-2"
+                    className="font-semibold text-[var(--rose-deep)] underline underline-offset-2"
                   >
                     Remove unavailable item
                   </button>
@@ -82,7 +82,7 @@ export function CartPage({ products }: CartPageProps) {
             </p>
             <Link
               href="/shop"
-              className="mt-7 inline-flex rounded-full bg-[var(--rose)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[#95495b]"
+              className="mt-7 inline-flex rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
             >
               Explore the shop
             </Link>
@@ -140,7 +140,7 @@ export function CartPage({ products }: CartPageProps) {
                         <button
                           type="button"
                           onClick={() => removeFromCart(item.productId)}
-                          className="font-sans text-sm font-semibold text-[var(--rose)] transition hover:text-[var(--ink)]"
+                          className="font-sans text-sm font-semibold text-[var(--rose-deep)] transition hover:text-[var(--ink)]"
                         >
                           Remove
                         </button>
@@ -163,7 +163,7 @@ export function CartPage({ products }: CartPageProps) {
               </div>
               <Link
                 href="/checkout"
-                className="mt-6 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)]"
+                className="mt-6 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)]"
               >
                 Continue to Checkout
               </Link>

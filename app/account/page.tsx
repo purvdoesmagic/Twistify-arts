@@ -42,11 +42,11 @@ export default async function AccountPage() {
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
+        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
           ← Continue shopping
         </Link>
         <section className="mt-6 rounded-[2rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose)]">Your account</p>
+          <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose-deep)]">Your account</p>
           <h1 className="mt-3 text-4xl text-[var(--ink)]">Hello, {session.user.name ?? "there"}.</h1>
           <p className="mt-3 font-sans text-sm text-[var(--muted)]">{session.user.email}</p>
         </section>
@@ -55,7 +55,7 @@ export default async function AccountPage() {
           {orders.length === 0 ? (
             <p className="mt-3 font-sans text-sm text-[var(--muted)]">
               You have not placed an order yet.{" "}
-              <Link href="/shop" className="font-semibold text-[var(--rose)]">
+              <Link href="/shop" className="font-semibold text-[var(--rose-deep)]">
                 Explore the shop
               </Link>
             </p>
@@ -69,7 +69,7 @@ export default async function AccountPage() {
                   <Link
                     key={order._id.toString()}
                     href={`/order/confirmation?orderId=${order._id.toString()}`}
-                    className="block rounded-xl border border-transparent bg-[#f8eee7] p-4 font-sans text-sm text-[var(--muted)] transition hover:border-[var(--border)] hover:bg-white"
+                    className="block rounded-xl border border-transparent bg-[#FBF0E0] p-4 font-sans text-sm text-[var(--muted)] transition hover:border-[var(--border)] hover:bg-white"
                   >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <p className="font-semibold text-[var(--ink)]">
@@ -81,7 +81,7 @@ export default async function AccountPage() {
                       {order.items.map((item) => `${item.quantity} × ${item.name}`).join(", ")}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs">
-                      <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-[var(--sage)]">
+                      <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-[var(--sage-deep)]">
                         {fulfillmentLabels[statuses.fulfillmentStatus] ?? statuses.fulfillmentStatus}
                       </span>
                       <span>

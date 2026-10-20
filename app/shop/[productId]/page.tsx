@@ -45,10 +45,10 @@ export default async function ProductPage({
         </div>
 
         <div className="self-center">
-          <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose)]">
+          <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
             ← All creations
           </Link>
-          <p className="mt-7 font-sans text-sm font-semibold text-[var(--sage)]">
+          <p className="mt-7 font-sans text-sm font-semibold text-[var(--sage-deep)]">
             {product.category}
           </p>
           <h1 className="mt-4 text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">
@@ -57,7 +57,7 @@ export default async function ProductPage({
           <p className="mt-6 font-sans text-lg leading-8 text-[var(--muted)]">{product.description}</p>
           <div className="mt-8 h-px w-full bg-[var(--border)]" aria-hidden="true" />
           <p className="mt-8 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)]">{formatPrice(product.price)}</p>
-          <p className="mt-2 font-sans text-sm font-semibold text-[var(--rose)]">{product.availability}</p>
+          <p className="mt-2 font-sans text-sm font-semibold text-[var(--rose-deep)]">{product.availability}</p>
           <div className="mt-9 rounded-xl border border-[var(--border)] bg-white/70 p-5 font-sans text-sm leading-6 text-[var(--muted)]">
             Each Twistify Arts piece is handmade. Original studio photography is coming soon; this is a designed placeholder, not a product photograph.
           </div>

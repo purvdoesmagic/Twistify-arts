@@ -6,15 +6,17 @@
 }
 
 :root {
-  --ink: #332722;
-  --muted: #6e5d55;
+  --ink: #5A3E2B;
+  --muted: #7A6252;
   --paper: #fffaf6;
-  --rose: #ad5e70;
-  --sage: #748a70;
+  --rose: #D5851F;
+  --rose-deep: #9C5A0C;
+  --sage: #87A96B;
+  --sage-deep: #5E7A48;
   --border: #ead8ca;
-  --shadow-soft: 0 12px 26px rgba(84, 51, 44, 0.06);
+  --shadow-soft: 0 12px 26px rgba(90, 62, 43, 0.06);
   --cream: #fcf8f3;
-  --blush: #f8eee7;
+  --blush: #FBF0E0;
 }
 
 * {
@@ -45,7 +47,7 @@ body {
 }
 
 ::selection {
-  background: #f2ccd4;
+  background: #F5DDB8;
   color: var(--ink);
 }
 
@@ -70,7 +72,7 @@ button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--rose);
+  outline: 2px solid var(--rose-deep);
   outline-offset: 3px;
 }
 
@@ -80,7 +82,7 @@ select:focus-visible {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--rose);
+  color: var(--rose-deep);
 }
 
 .studio-link {
@@ -95,7 +97,7 @@ select:focus-visible {
 }
 
 .studio-link-primary:hover {
-  color: var(--rose);
+  color: var(--rose-deep);
 }
 
 .studio-link-quiet {
@@ -103,7 +105,7 @@ select:focus-visible {
 }
 
 .studio-link-quiet:hover {
-  color: var(--rose);
+  color: var(--rose-deep);
 }
 
 .studio-link-light {
@@ -111,7 +113,7 @@ select:focus-visible {
 }
 
 .studio-link-light:hover {
-  color: #f4c7d2;
+  color: #F0B866;
 }
 
 .studio-hero-note {
@@ -174,7 +176,7 @@ select:focus-visible {
 }
 
 .product-placeholder-label {
-  color: var(--sage);
+  color: var(--sage-deep);
 }
 
 .product-placeholder-name {
