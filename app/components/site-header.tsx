@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -8,7 +7,6 @@ import { useState } from "react";
 import { useCart } from "./cart-provider";
 
 const navLinks = [
-  ["/", "Home"],
   ["/shop", "Shop"],
   ["/about", "About"],
   ["/contact", "Contact"],
@@ -21,141 +19,89 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isAuthenticated = status === "authenticated";
-  const cartLabel = isHydrated ? `Cart (${cartCount})` : "Cart";
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const basketLabel = isHydrated ? `Basket (${cartCount})` : "Basket";
+  const isActive = (href: string) => pathname.startsWith(href);
   const closeMenu = () => setMenuOpen(false);
+  const linkClass = (href: string) =>
+    `inline-flex min-h-11 items-center transition-colors ${isActive(href) ? "text-[var(--ink)] underline decoration-[var(--rose)] decoration-2 underline-offset-8" : "text-[var(--muted)] hover:text-[var(--ink)]"}`;
 
   return (
-    <header className="sticky top-0 z-40">
-      <p className="flex items-center justify-center gap-2 border-b border-[var(--border)] bg-[var(--cream)] px-4 py-2 text-center font-sans text-xs font-medium tracking-wide text-[var(--muted)]">
-        <span className="size-1.5 shrink-0 animate-pulse rounded-full bg-[var(--sage)]" aria-hidden="true" />
-        <span>
-          Handmade in small batches
-          <span className="px-1.5 text-[var(--border)]" aria-hidden="true">·</span>
-          In stock or made to order
-          <span className="hidden sm:inline">
-            <span className="px-1.5 text-[var(--border)]" aria-hidden="true">·</span>
-            Secure Razorpay checkout
-          </span>
-        </span>
-      </p>
+    <header className="sticky top-0 z-40 bg-[var(--paper)]">
+      <div className="flex h-[4.5rem] w-full items-center justify-between gap-6 px-5 sm:px-8">
+        <Link href="/" className="font-serif text-[length:var(--step-lead)] uppercase leading-none tracking-tight text-[var(--ink)]">
+          Twistify Arts
+        </Link>
 
-      <div className="border-b border-[var(--border)] bg-[rgba(255,250,246,0.9)] backdrop-blur-md">
-        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
-          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Twistify Arts home">
-            <Image src="/twistify-arts-mark.svg" alt="" width={40} height={40} priority className="size-10" />
-            <span className="text-lg tracking-tight text-[var(--ink)] sm:text-xl">Twistify Arts</span>
+        <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+          {navLinks.map(([href, label]) => (
+            <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} className={linkClass(href)}>
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-5">
+          <div className="hidden items-center gap-5 md:flex">
+            {isAuthenticated ? (
+              <>
+                <Link className={linkClass("/account")} href="/account">
+                  Account
+                </Link>
+                <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="min-h-11 text-[var(--muted)] transition-colors hover:text-[var(--ink)]">
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link className={linkClass("/login")} href="/login">
+                Sign in
+              </Link>
+            )}
+          </div>
+          <Link href="/cart" className="btn min-h-11 px-4 py-2" aria-label={basketLabel}>
+            {basketLabel}
           </Link>
+          <button
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-site-navigation"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="min-h-11 bg-[var(--blush)] px-3 text-[length:var(--step-small)] text-[var(--ink)] md:hidden"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
+        </div>
+      </div>
 
-          <nav className="hidden items-center gap-8 font-sans text-sm md:flex" aria-label="Main navigation">
+      {menuOpen ? (
+        <nav id="mobile-site-navigation" className="bg-[var(--cream)] px-5 py-4 shadow-[var(--shadow-soft)] sm:px-8 md:hidden" aria-label="Mobile navigation">
+          <div className="grid gap-1 text-[length:var(--step-lead)]">
             {navLinks.map(([href, label]) => (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive(href) ? "page" : undefined}
-                className={
-                  isActive(href)
-                    ? "border-b-2 border-[var(--rose)] pb-1 font-semibold text-[var(--rose-deep)]"
-                    : "pb-1 text-[var(--muted)] transition-colors hover:text-[var(--ink)]"
-                }
-              >
+              <Link key={href} href={href} onClick={closeMenu} aria-current={isActive(href) ? "page" : undefined} className="py-3">
                 {label}
               </Link>
             ))}
-          </nav>
-
-          <div className="flex items-center gap-3 font-sans text-sm">
-            <Link
-              href="/cart"
-              aria-label={cartLabel}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white px-4 py-2 font-semibold text-[var(--ink)] transition-colors hover:border-[var(--rose)]"
-            >
-              Cart
-              {isHydrated ? (
-                <span className="grid size-5 place-items-center rounded-full bg-[var(--rose-deep)] text-[11px] font-bold text-white">
-                  {cartCount}
-                </span>
-              ) : null}
-            </Link>
-            <div className="hidden items-center gap-4 md:flex">
-              {isAuthenticated ? (
-                <>
-                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose-deep)]" href="/account">
-                    Account
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => void signOut({ callbackUrl: "/" })}
-                    className="font-semibold text-[var(--muted)] transition-colors hover:text-[var(--rose-deep)]"
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link className="font-semibold text-[var(--ink)] transition-colors hover:text-[var(--rose-deep)]" href="/login">
-                    Sign in
-                  </Link>
-                  <Link className="rounded-full bg-[var(--ink)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--rose-deep)]" href="/signup">
-                    Create account
-                  </Link>
-                </>
-              )}
-            </div>
-            <button
-              type="button"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-site-navigation"
-              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-              onClick={() => setMenuOpen((open) => !open)}
-              className="grid size-10 place-items-center rounded-full border border-[var(--border)] bg-white text-lg text-[var(--ink)] md:hidden"
-            >
-              {menuOpen ? "×" : "☰"}
-            </button>
-          </div>
-        </div>
-
-        {menuOpen ? (
-          <nav id="mobile-site-navigation" className="border-t border-[var(--border)] px-5 py-4 font-sans sm:px-8 md:hidden" aria-label="Mobile navigation">
-            <div className="mx-auto grid max-w-7xl gap-1">
-              {navLinks.map(([href, label]) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMenu}
-                  aria-current={isActive(href) ? "page" : undefined}
-                  className={`rounded-xl px-3 py-3 font-semibold hover:bg-white ${isActive(href) ? "text-[var(--rose-deep)]" : "text-[var(--ink)]"}`}
-                >
-                  {label}
+            {isAuthenticated ? (
+              <>
+                <Link className="py-3" href="/account" onClick={closeMenu}>
+                  Account
                 </Link>
-              ))}
-              {isAuthenticated ? (
-                <>
-                  <Link className="rounded-xl px-3 py-3 font-semibold text-[var(--ink)] hover:bg-white" href="/account" onClick={closeMenu}>
-                    Account
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => void signOut({ callbackUrl: "/" })}
-                    className="rounded-xl px-3 py-3 text-left font-semibold text-[var(--ink)] hover:bg-white"
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link className="rounded-xl px-3 py-3 font-semibold text-[var(--ink)] hover:bg-white" href="/login" onClick={closeMenu}>
-                    Sign in
-                  </Link>
-                  <Link className="rounded-xl px-3 py-3 font-semibold text-[var(--ink)] hover:bg-white" href="/signup" onClick={closeMenu}>
-                    Create account
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
-        ) : null}
-      </div>
+                <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="py-3 text-left">
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link className="py-3" href="/login" onClick={closeMenu}>
+                  Sign in
+                </Link>
+                <Link className="py-3" href="/signup" onClick={closeMenu}>
+                  Create an account
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      ) : null}
     </header>
   );
 }

@@ -1,22 +1,38 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-jakarta), Arial, Helvetica, sans-serif;
-  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-text), "Albert Sans", Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-display), Georgia, serif;
 }
 
 :root {
+  /* Brand: brown ink, amber and sage. Deep shades keep small text readable on the stone ground. */
   --ink: #5A3E2B;
-  --muted: #7A6252;
-  --paper: #fffaf6;
+  --muted: #6E5A4C;
+  --paper: #ECEBE8;
+  --cream: #F6F6F4;
+  --blush: #E2E0DB;
   --rose: #D5851F;
   --rose-deep: #9C5A0C;
   --sage: #87A96B;
-  --sage-deep: #5E7A48;
-  --border: #ead8ca;
-  --shadow-soft: 0 12px 26px rgba(90, 62, 43, 0.06);
-  --cream: #fcf8f3;
-  --blush: #FBF0E0;
+  --sage-light: #A9C290;
+  --sage-deep: #4E6A3A;
+  --border: #D3CABD;
+  --shadow-soft: 0 18px 40px rgba(90, 62, 43, 0.14);
+
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --step-display: clamp(3.25rem, 1.2rem + 6.4vw, 7.5rem);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-reveal: 800ms;
 }
 
 * {
@@ -33,10 +49,12 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  font-family: var(--font-text), "Albert Sans", Arial, sans-serif;
+  font-size: var(--step-body);
+  line-height: 1.55;
 }
 
-/* Layered so Tailwind font utilities (e.g. font-sans) can override it. */
+/* Layered so Tailwind utilities (fonts, sizes) can override these defaults. */
 @layer base {
   button,
   input,
@@ -44,242 +62,201 @@ body {
   select {
     font: inherit;
   }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
 }
 
 ::selection {
-  background: #F5DDB8;
+  background: #F2D3A6;
   color: var(--ink);
 }
 
 h1,
 h2,
 h3,
-p {
+p,
+li,
+figcaption {
   text-wrap: pretty;
-}
-
-a,
-button,
-input,
-textarea,
-select {
-  transition-duration: 180ms;
-  transition-timing-function: ease-out;
 }
 
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--rose-deep);
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 
-.eyebrow {
-  font-family: var(--font-jakarta), Arial, Helvetica, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--rose-deep);
-}
-
-.studio-link {
+/* One button shape for the whole site: square corners, flat fill. */
+.btn {
+  display: inline-flex;
   align-items: center;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 0.25rem;
-  transition-property: color, border-color;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-text), sans-serif;
+  font-size: var(--step-small);
+  font-weight: 500;
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, color var(--t-hover) ease;
 }
 
-.studio-link-primary {
-  color: var(--ink);
+.btn:active {
+  transform: scale(0.97);
 }
 
-.studio-link-primary:hover {
-  color: var(--rose-deep);
-}
-
-.studio-link-quiet {
+.btn:disabled {
+  cursor: not-allowed;
+  background: var(--blush);
   color: var(--muted);
 }
 
-.studio-link-quiet:hover {
-  color: var(--rose-deep);
+.btn-quiet {
+  background: var(--blush);
+  color: var(--ink);
 }
 
-.studio-link-light {
-  color: #fffaf6;
+.text-link {
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.22em;
+  transition: color var(--t-hover) ease, text-decoration-color var(--t-hover) ease;
 }
 
-.studio-link-light:hover {
-  color: #F0B866;
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(:disabled):hover {
+    background: var(--rose-deep);
+    color: #fff;
+  }
+
+  .btn-quiet:not(:disabled):hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .text-link:hover {
+    color: var(--rose-deep);
+  }
 }
 
-.studio-hero-note {
-  max-width: 23rem;
-}
-
-.featured-piece a:focus-visible {
-  outline-offset: 5px;
-}
-
+/* Drawn product pictures: a flat field, no outline. */
 .product-placeholder {
   position: relative;
-  display: flex;
+  display: grid;
+  place-items: center;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  background: var(--cream);
-  color: var(--ink);
-  text-align: center;
-  padding: 0.5rem;
-  transition: border-color 0.2s ease;
-}
-
-.product-placeholder:hover {
-  border-color: var(--rose);
-}
-
-.product-placeholder-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  border: 1px solid rgba(234, 216, 202, 0.5);
-  border-radius: 0.5rem;
-  padding: 1rem 0.75rem;
-  gap: 0.45rem;
-}
-
-.product-placeholder-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  margin: auto 0;
-}
-
-.product-placeholder-label,
-.product-placeholder-category,
-.product-placeholder-status {
-  margin: 0;
-  font-family: var(--font-jakarta), Arial, Helvetica, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.product-placeholder-label {
-  color: var(--sage-deep);
-}
-
-.product-placeholder-name {
-  margin: 0;
-  font-family: var(--font-newsreader), Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.product-placeholder-category {
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  font-size: 0.7rem;
-}
-
-.product-placeholder-status {
-  border-radius: 999px;
-  background: rgba(234, 216, 202, 0.4);
-  padding: 0.25rem 0.75rem;
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  font-size: 0.72rem;
-}
-
-.product-placeholder-compact {
-  padding: 0.2rem;
-  border-radius: 0.6rem;
-}
-
-.product-placeholder-compact .product-placeholder-content {
-  justify-content: center;
-  padding: 0.25rem;
-  gap: 0.15rem;
-  border-radius: 0.4rem;
-}
-
-.product-placeholder-compact .product-placeholder-label,
-.product-placeholder-compact .product-placeholder-status {
-  font-size: 0.5rem;
-  letter-spacing: 0.06em;
-  padding: 0;
-  background: none;
-}
-
-.catalogue-notice {
-  border-left: 4px solid var(--sage);
-  border-radius: 0.75rem;
   background: var(--blush);
-  padding: 1rem 1.25rem;
+}
+
+.product-placeholder svg {
+  width: 78%;
+  height: 78%;
+  transition: transform 600ms var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover > .product-placeholder svg,
+  .product-card:hover .product-placeholder svg {
+    transform: rotate(8deg) scale(1.04);
+  }
+}
+
+.product-placeholder-compact svg {
+  width: 84%;
+  height: 84%;
 }
 
 .product-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  background: #fff;
-  padding: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-  border-color: var(--rose);
-  box-shadow: var(--shadow-soft);
 }
 
 .site-footer {
-  background: #f1e4da;
+  background: var(--paper);
 }
 
 .info-section {
-  border: 1px solid var(--border);
+  background: var(--cream);
 }
 
-/* Hero yarn thread: draws itself once on load. */
-.yarn-thread path {
-  fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 2400;
-  stroke-dashoffset: 2400;
-  animation: yarn-draw 3.2s ease-out 0.2s forwards;
+/* The split stage: the picture half holds still while the reading half scrolls. */
+.stage-plate img {
+  opacity: 0;
+  transition: opacity 1600ms ease;
 }
 
-.yarn-thread .yarn-rose {
-  stroke: var(--rose);
+.stage-plate img.is-current {
+  opacity: 1;
 }
 
-.yarn-thread .yarn-sage {
-  stroke: var(--sage);
-  animation-delay: 0.6s;
+.slip {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), 96% 100%, 92% calc(100% - 14px), 88% 100%, 84% calc(100% - 14px), 80% 100%, 76% calc(100% - 14px), 72% 100%, 68% calc(100% - 14px), 64% 100%, 60% calc(100% - 14px), 56% 100%, 52% calc(100% - 14px), 48% 100%, 44% calc(100% - 14px), 40% 100%, 36% calc(100% - 14px), 32% 100%, 28% calc(100% - 14px), 24% 100%, 20% calc(100% - 14px), 16% 100%, 12% calc(100% - 14px), 8% 100%, 4% calc(100% - 14px), 0 100%);
 }
 
-@keyframes yarn-draw {
+.leader {
+  flex: 1;
+  min-width: 1.5rem;
+  margin: 0 0.6rem 0.35em;
+  border-bottom: 4px dotted currentColor;
+  opacity: 0.45;
+}
+
+input[type="range"] {
+  accent-color: var(--rose-deep);
+}
+
+/* Motion: content is visible unless scripting runs, and reduced motion keeps everything still. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js [data-rise] {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: rise var(--t-reveal) var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 90ms + 120ms);
+  }
+
+  .stage-plate img.is-current {
+    animation: drift 14s var(--ease-soft) both;
+  }
+}
+
+@keyframes rise {
   to {
-    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
   }
 }
 
@@ -288,14 +265,7 @@ select:focus-visible {
     scroll-behavior: auto;
   }
 
-  .yarn-thread path {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .eyebrow {
-    font-size: 0.66rem;
+  .stage-plate img {
+    transition: none;
   }
 }

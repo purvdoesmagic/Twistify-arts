@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { RevealObserver } from "./reveal-observer";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
@@ -14,9 +15,15 @@ export function StorefrontChrome({ children }: Readonly<{ children: React.ReactN
 
   return (
     <>
+      <a href="#content" className="btn sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
+        Skip to content
+      </a>
       <SiteHeader />
-      {children}
+      <div id="content" tabIndex={-1} className="outline-none">
+        {children}
+      </div>
       <SiteFooter />
+      <RevealObserver />
     </>
   );
 }

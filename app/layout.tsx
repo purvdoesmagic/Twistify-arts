@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
+import { Albert_Sans, Imbue } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/auth-provider";
 import { CartProvider } from "./components/cart-provider";
 import { StorefrontChrome } from "./components/storefront-chrome";
 
-const newsreader = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-newsreader" });
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
+const display = Imbue({ subsets: ["latin"], axes: ["opsz"], variable: "--font-display" });
+const text = Albert_Sans({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-text" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -49,7 +49,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" className={`${newsreader.variable} ${jakarta.variable}`}>
+    <html lang="en-IN" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Lets the motion styles hide content only when scripting can reveal it again. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         <AuthProvider>
           <CartProvider>
