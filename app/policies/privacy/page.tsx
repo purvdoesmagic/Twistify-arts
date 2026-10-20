@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <InfoPage
-      eyebrow="Store policies"
-      title="Privacy Policy"
+      title="Privacy policy"
+      plate={3}
       intro="This page explains at a high level what information Twistify Arts uses to operate the storefront, process orders, and support customers."
     >
       <InfoSection title="Information used by the storefront">

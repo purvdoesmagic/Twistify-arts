@@ -10,8 +10,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <InfoPage
-      eyebrow="About Twistify Arts"
-      title="Small handmade details, made with care."
+      title="Made by hand, with care"
+      plate={1}
+      gallery
       intro="Twistify Arts creates crochet, woolen, floral, and festive pieces for gifting, celebrations, pooja, and cheerful corners at home."
     >
       <InfoSection title="What Twistify Arts is">
@@ -35,10 +36,10 @@ export default function AboutPage() {
           Customers can expect thoughtfully made products, clear listing information, and order updates through their account after a successful purchase.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link href="/shop" className="rounded-full bg-[var(--rose-deep)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--ink)]">
+          <Link href="/shop" className="bg-[var(--rose-deep)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--ink)]">
             Browse the shop
           </Link>
-          <Link href="/contact" className="rounded-full border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
+          <Link href="/contact" className="border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
             Contact Twistify Arts
           </Link>
         </div>

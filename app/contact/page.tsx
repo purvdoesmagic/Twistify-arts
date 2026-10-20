@@ -10,8 +10,9 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <InfoPage
-      eyebrow="Contact Twistify Arts"
-      title="We would be glad to hear from you."
+      title="Write to the studio"
+      plate={2}
+      gallery
       intro="For product questions, order questions, or help understanding an item listing, please use the contact details below."
     >
       <InfoSection title="Contact details">
@@ -24,7 +25,7 @@ export default function ContactPage() {
         <p>
           Alternate phone: <span className="font-semibold text-[var(--ink)]">[Phone Number 2]</span>
         </p>
-        <p className="text-xs text-[var(--muted)]">
+        <p className="text-[length:var(--step-small)] text-[var(--muted)]">
           Phone contact details will be added when confirmed.
         </p>
       </InfoSection>
@@ -41,10 +42,10 @@ export default function ContactPage() {
           Signed-in customers can review saved orders and their current fulfillment status from the account page.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link href="/account" className="rounded-full bg-[var(--ink)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--rose-deep)]">
+          <Link href="/account" className="bg-[var(--ink)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--rose-deep)]">
             View my account
           </Link>
-          <Link href="/shop" className="rounded-full border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
+          <Link href="/shop" className="border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
             Continue shopping
           </Link>
         </div>

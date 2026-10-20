@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function TermsPolicyPage() {
   return (
     <InfoPage
-      eyebrow="Store policies"
-      title="Terms & Conditions"
+      title="Terms and conditions"
+      plate={3}
       intro="These terms describe the basic expectations for using the Twistify Arts website and placing an order."
     >
       <InfoSection title="Using the website">

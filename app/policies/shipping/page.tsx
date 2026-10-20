@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function ShippingPolicyPage() {
   return (
     <InfoPage
-      eyebrow="Store policies"
-      title="Shipping Policy"
+      title="Shipping policy"
+      plate={2}
       intro="We prepare handmade orders carefully and confirm the applicable shipping details as part of checkout."
     >
       <InfoSection title="Order processing">

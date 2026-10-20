@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function RefundsPolicyPage() {
   return (
     <InfoPage
-      eyebrow="Store policies"
-      title="Refund & Return Policy"
+      title="Refunds and returns"
+      plate={0}
       intro="Because Twistify Arts products are handmade, each refund or return request is reviewed according to the order and the product condition."
     >
       <InfoSection title="General approach">

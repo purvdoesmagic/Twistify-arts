@@ -46,16 +46,15 @@ export function CartPage({ products }: CartPageProps) {
         </Link>
         <header className="mt-10 max-w-3xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <h1 className="text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">Cart</h1>
+            <h1 className="text-[var(--ink)] text-[length:var(--step-head)] leading-none">Cart</h1>
             <p className="font-sans text-sm text-[var(--muted)]">
               {itemCount} item{itemCount === 1 ? "" : "s"}
             </p>
           </div>
-          <div className="mt-8 h-px w-full bg-[var(--border)]" aria-hidden="true" />
-        </header>
+          </header>
 
         {missingItems.length > 0 ? (
-          <section className="mt-8 rounded-xl border border-[#efd9a9] bg-[#fff5df] px-4 py-4 font-sans text-sm leading-6 text-[#72573d]">
+          <section className="mt-8 border border-[#efd9a9] bg-[#fff5df] px-4 py-4 font-sans text-sm leading-6 text-[#72573d]">
             <p>Some items in your basket are no longer available.</p>
             <div className="mt-3 grid gap-2">
               {missingItems.map((item) => (
@@ -75,26 +74,26 @@ export function CartPage({ products }: CartPageProps) {
         ) : null}
 
         {cartItems.length === 0 ? (
-          <section className="mt-8 rounded-xl border border-[var(--border)] bg-white/70 px-6 py-12 text-center shadow-[var(--shadow-soft)] sm:px-10">
+          <section className="mt-8 bg-[var(--cream)] px-6 py-12 text-center sm:px-10">
             <h2 className="text-3xl text-[var(--ink)]">Your basket is waiting.</h2>
             <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
               Add a handmade favourite from the shop to begin your order.
             </p>
             <Link
               href="/shop"
-              className="mt-7 inline-flex rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+              className="mt-7 inline-flex bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
             >
               Explore the shop
             </Link>
           </section>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
-            <section className="rounded-xl border border-[var(--border)] bg-white/70 p-5 shadow-[var(--shadow-soft)] sm:p-6">
+            <section className="bg-[var(--cream)] p-5 sm:p-6">
               <div className="grid gap-5">
                 {cartItems.map((item) => (
                   <article
                     key={item.productId}
-                    className="flex gap-4 border-b border-[var(--border)] pb-5 last:border-b-0 last:pb-0 sm:gap-5"
+                    className="flex gap-4 pb-5 last:pb-0 sm:gap-5"
                   >
                     <ProductPlaceholder
                       name={item.product.name}
@@ -113,11 +112,11 @@ export function CartPage({ products }: CartPageProps) {
                         </p>
                       </div>
                       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex items-center rounded-full border border-[var(--border)] bg-white">
+                        <div className="flex items-center border border-[var(--border)] bg-white">
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            className="grid size-9 place-items-center font-sans text-lg text-[var(--ink)]"
+                            className="grid size-11 place-items-center font-sans text-lg text-[var(--ink)]"
                             aria-label={`Decrease ${item.product.name} quantity`}
                           >
                             −
@@ -128,7 +127,7 @@ export function CartPage({ products }: CartPageProps) {
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                            className="grid size-9 place-items-center font-sans text-lg text-[var(--ink)]"
+                            className="grid size-11 place-items-center font-sans text-lg text-[var(--ink)]"
                             aria-label={`Increase ${item.product.name} quantity`}
                           >
                             +
@@ -151,19 +150,19 @@ export function CartPage({ products }: CartPageProps) {
               </div>
             </section>
 
-            <aside className="rounded-xl border border-[var(--border)] bg-white/70 p-5 shadow-[var(--shadow-soft)] sm:p-6">
+            <aside className="bg-[var(--cream)] p-5 sm:p-6">
               <h2 className="text-2xl text-[var(--ink)]">Order summary</h2>
               <div className="mt-5 flex items-center justify-between font-sans text-sm text-[var(--muted)]">
                 <span>Total items</span>
                 <span className="font-semibold text-[var(--ink)]">{itemCount}</span>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[var(--border)] pt-4">
+              <div className="mt-3 flex items-center justify-between pt-4">
                 <span className="font-sans text-sm text-[var(--muted)]">Subtotal</span>
                 <span className="text-2xl font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
               </div>
               <Link
                 href="/checkout"
-                className="mt-6 inline-flex w-full justify-center rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)]"
+                className="mt-6 inline-flex w-full justify-center bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)]"
               >
                 Continue to Checkout
               </Link>

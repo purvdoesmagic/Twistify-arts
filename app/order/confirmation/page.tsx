@@ -17,24 +17,24 @@ export const dynamic = "force-dynamic";
 function MessageState({ title, message }: { title: string; message: string }) {
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
-      <section className="mx-auto max-w-2xl rounded-[2rem] border border-[var(--border)] bg-white/80 px-6 py-12 text-center shadow-[0_12px_26px_rgba(90,62,43,0.06)] sm:px-10">
-        <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose-deep)]">
+      <section className="mx-auto max-w-2xl bg-[var(--cream)] px-6 py-12 text-center sm:px-10">
+        <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">
           Twistify Arts
         </p>
-        <h1 className="mt-3 text-4xl text-[var(--ink)]">{title}</h1>
+        <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">{title}</h1>
         <p className="mx-auto mt-4 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
           {message}
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Link
             href="/shop"
-            className="rounded-full bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+            className="bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
           >
             Continue shopping
           </Link>
           <Link
             href="/account"
-            className="rounded-full border border-[var(--border)] bg-white px-6 py-3 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
+            className="border border-[var(--border)] bg-white px-6 py-3 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
           >
             View account
           </Link>
@@ -121,11 +121,11 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
   return (
     <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl">
-            <section className="rounded-[1.5rem] bg-[var(--ink)] px-6 py-10 text-white shadow-[var(--shadow-soft)] sm:px-10">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[#F0B866]">
+            <section className="bg-[var(--ink)] px-6 py-10 text-white sm:px-10">
+          <p className="font-sans text-[length:var(--step-small)] font-semibold text-[#F0B866]">
             Thank you for your order
           </p>
-          <h1 className="mt-4 text-4xl leading-tight tracking-[-0.035em] sm:text-5xl">
+          <h1 className="mt-4 text-[length:var(--step-head)] leading-none">
             Your handmade order is confirmed.
           </h1>
           <p className="mt-4 max-w-2xl font-sans text-sm leading-6 text-[#F3E6D8]">
@@ -135,10 +135,10 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
           <div className="grid gap-6">
-            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
-              <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-start sm:justify-between">
+            <section className="info-section bg-[var(--cream)] p-6 sm:p-8">
+              <div className="flex flex-col gap-4 pb-5 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-[var(--rose-deep)]">
+                  <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">
                     Order reference
                   </p>
                   <p className="mt-2 break-all font-sans text-sm font-semibold text-[var(--ink)]">
@@ -166,7 +166,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
                   {order.items.map((item) => (
                     <article
                       key={item.productId}
-                      className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-4 last:border-b-0 last:pb-0"
+                      className="flex items-start justify-between gap-4 pb-4 last:pb-0"
                     >
                       <div>
                         <p className="text-lg text-[var(--ink)]">{item.name}</p>
@@ -183,7 +183,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               </div>
             </section>
 
-            <section className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6 sm:p-8">
+            <section className="info-section bg-[var(--cream)] p-6 sm:p-8">
               <h2 className="text-2xl text-[var(--ink)]">Delivery details</h2>
               <div className="mt-4 font-sans text-sm leading-7 text-[var(--muted)]">
                 <p className="font-semibold text-[var(--ink)]">{order.delivery.fullName}</p>
@@ -197,8 +197,8 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
             </section>
           </div>
 
-          <aside className="info-section rounded-[1.5rem] border border-[var(--border)] bg-white/80 p-6">
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[var(--rose-deep)]">
+          <aside className="info-section bg-[var(--cream)] p-6">
+            <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">
               Order total
             </p>
             <p className="mt-3 text-3xl font-semibold text-[var(--ink)]">{formatPrice(order.amount / 100)}</p>
@@ -208,13 +208,13 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
             <div className="mt-6 grid gap-3">
               <Link
                 href="/shop"
-                className="inline-flex justify-center rounded-full bg-[var(--rose-deep)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+                className="inline-flex justify-center bg-[var(--rose-deep)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
               >
                 Continue shopping
               </Link>
               <Link
                 href="/account"
-                className="inline-flex justify-center rounded-full border border-[var(--border)] bg-white px-5 py-3 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
+                className="inline-flex justify-center border border-[var(--border)] bg-white px-5 py-3 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]"
               >
                 View my orders
               </Link>

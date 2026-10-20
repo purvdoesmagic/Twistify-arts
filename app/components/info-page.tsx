@@ -1,53 +1,79 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ArtCredits } from "./art-credits";
+import { credits, plates } from "@/app/data/art";
 
 type InfoPageProps = {
-  eyebrow: string;
   title: string;
   intro: string;
+  plate?: number;
+  gallery?: boolean;
   children: React.ReactNode;
 };
 
-export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
+export function InfoPage({ title, intro, plate = 0, gallery = false, children }: InfoPageProps) {
+  const picture = plates[plate] ?? plates[0];
+
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-14 sm:px-8 sm:py-20">
-      <div className="mx-auto max-w-4xl">
-        <Link href="/" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
-          ← Back home
-        </Link>
-        <header className="info-page-heading relative mt-10 max-w-3xl">
-          <p className="flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose-deep)]">
-            <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
-            {eyebrow}
-          </p>
-          <h1 className="mt-4 text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">
+    <main className="min-h-screen">
+      <section className="grid items-center gap-10 px-5 pt-10 sm:px-8 lg:grid-cols-2 lg:pt-16">
+        <div>
+          <h1 data-rise className="max-w-[14ch] text-[length:var(--step-display)] uppercase leading-[0.9]">
             {title}
           </h1>
-          <p className="mt-5 font-sans text-base leading-7 text-[var(--muted)] sm:text-lg">
+          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-8 max-w-[40ch] text-[length:var(--step-lead)] leading-snug">
             {intro}
           </p>
-        </header>
-        <div className="mt-10 grid gap-5">{children}</div>
-      </div>
+        </div>
+        <figure data-reveal>
+          <div className="relative aspect-[4/3] overflow-hidden bg-[var(--blush)] lg:aspect-[5/4]">
+            <Image src={picture.src} alt={picture.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+          </div>
+          <figcaption className="mt-3 text-[length:var(--step-small)] text-[var(--muted)]">{picture.caption}</figcaption>
+        </figure>
+      </section>
+      <div className="mt-32 space-y-24 px-5 sm:px-8">{children}</div>
+      {gallery ? (
+        <section className="mt-32 px-5 sm:px-8" aria-labelledby="gallery-heading">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+            <h2 id="gallery-heading" data-reveal className="text-[length:var(--step-head)]">The flowers behind the collection</h2>
+            <p data-reveal className="max-w-[44ch]">Hibiscus, jasmine, marigold and sunflower, as painters and printmakers kept them: the same flowers crocheted here in wool.</p>
+          </div>
+          <ul className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {plates.map((item, index) => (
+              <li key={item.src} data-reveal style={{ "--i": index } as React.CSSProperties}>
+                <figure>
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[var(--blush)]">
+                    <Image src={item.src} alt={item.alt} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                  </div>
+                  <figcaption className="mt-3 text-[length:var(--step-small)] text-[var(--muted)]">{item.caption}</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      <ArtCredits credits={gallery ? credits.slice(0, plates.length) : [credits[plates.indexOf(picture)]]} />
     </main>
   );
 }
 
 export function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="info-section rounded-2xl border border-[var(--border)] bg-white/80 p-6 shadow-[var(--shadow-soft)] sm:p-8">
-      <h2 className="text-2xl text-[var(--ink)]">{title}</h2>
-      <div className="mt-3 space-y-3 font-sans text-sm leading-7 text-[var(--muted)]">{children}</div>
+    <section data-reveal className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+      <h2 className="text-[length:var(--step-head)]">{title}</h2>
+      <div className="max-w-[60ch] space-y-4">{children}</div>
     </section>
   );
 }
 
 export function PolicyLinks() {
   return (
-    <nav className="flex flex-wrap gap-x-5 gap-y-2 font-sans text-sm font-semibold text-[var(--rose-deep)]" aria-label="Policy navigation">
-      <Link href="/policies/shipping">Shipping</Link>
-      <Link href="/policies/refunds">Refunds & returns</Link>
-      <Link href="/policies/privacy">Privacy</Link>
-      <Link href="/policies/terms">Terms</Link>
+    <nav className="flex flex-wrap gap-x-6 gap-y-2 pt-2" aria-label="Policy navigation">
+      <Link href="/policies/shipping" className="text-link">Shipping</Link>
+      <Link href="/policies/refunds" className="text-link">Refunds & returns</Link>
+      <Link href="/policies/privacy" className="text-link">Privacy</Link>
+      <Link href="/policies/terms" className="text-link">Terms</Link>
     </nav>
   );
 }
