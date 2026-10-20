@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "@/auth.config";
 import { User } from "@/app/models/user";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase, isDatabaseConfigured } from "@/lib/mongodb";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -19,7 +19,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const password = typeof credentials?.password === "string" ? credentials.password : "";
         const requiresAdminAccess = credentials?.portal === "admin";
 
-        if (!email || !password) {
+        if (!email || !password || !isDatabaseConfigured()) {
           return null;
         }
 

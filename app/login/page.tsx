@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { AuthForm } from "@/app/components/auth-form";
+import { isDatabaseConfigured } from "@/lib/mongodb";
 
 type LoginPageProps = { searchParams: Promise<{ callbackUrl?: string }> };
 
@@ -11,5 +12,5 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   if (session?.user) redirect(destination);
 
-  return <main className="min-h-screen bg-[var(--paper)] px-5 py-16 sm:px-8"><AuthForm mode="login" callbackUrl={destination} /></main>;
+  return <main className="min-h-screen bg-[var(--paper)] px-5 py-16 sm:px-8"><AuthForm mode="login" unavailable={!isDatabaseConfigured()} callbackUrl={destination} /></main>;
 }

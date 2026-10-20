@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Catalog } from "../components/catalog";
-import { Product } from "../models/product";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getProducts } from "@/app/lib/products";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -10,14 +9,22 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function ShopPage() {
-  await connectToDatabase();
-  const products = await Product.find().select("-_id").lean();
+export default async function ShopPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string | string[] }>;
+}) {
+  const { category } = await searchParams;
+  const products = await getProducts();
 
   return (
     <main className="min-h-screen bg-[var(--paper)]">
-      <section className="mx-auto w-full max-w-7xl px-5 pb-12 pt-12 sm:px-8 sm:pb-14 sm:pt-16 lg:px-10">
+      <section className="mx-auto w-full max-w-7xl px-5 pt-12 sm:px-8 sm:pt-16 lg:px-12">
         <header className="max-w-3xl">
+          <p className="mb-5 flex items-center gap-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--rose)]">
+            <span className="h-px w-6 bg-[var(--rose)]" aria-hidden="true" />
+            Twistify Arts · Crafted by Shraddha Doshi
+          </p>
           <h1 className="text-5xl leading-tight tracking-[-0.04em] text-[var(--ink)] sm:text-6xl">
             Handmade details for every little occasion.
           </h1>
@@ -27,7 +34,10 @@ export default async function ShopPage() {
           <div className="mt-8 h-px w-full bg-[var(--border)]" aria-hidden="true" />
         </header>
       </section>
-      <Catalog products={products} />
+      <Catalog
+        key={typeof category === "string" ? category : "all"}
+        products={products}
+        initialCategory={typeof category === "string" ? category : undefined} />
     </main>
   );
 }

@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Twistify Arts
 
-## Getting Started
+Storefront for Twistify Arts — handmade crochet and woolen crafts by Shraddha Doshi.
+Built with Next.js, MongoDB (Mongoose), Auth.js, and Razorpay.
 
-First, run the development server:
+## Quick start
+
+Requires Node.js 20.9 or newer.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. No configuration is needed to browse: without a database the
+shop shows the bundled catalog from `app/data/products.ts`, and accounts and checkout show
+a "not available yet" notice instead of failing.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Full setup (accounts, orders, payments)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Copy `.env.example` to `.env.local` and fill in the values:
+   - `MONGODB_URI` — MongoDB connection string (enables accounts, orders, and the product database).
+   - `AUTH_SECRET` — a long random string; generate one with
+     `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`. **Required in production.**
+   - `RAZORPAY_*` — enables online payment; leave `RAZORPAY_ENABLED=false` to turn it off.
+   - `RESEND_API_KEY`, `ORDER_NOTIFICATION_EMAIL` — optional order emails.
+2. Load the catalog into the database: `npm run seed:products`
+3. Create an admin (uses `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`): `npm run seed:admin`
+4. Restart `npm run dev`.
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run lint` | ESLint |
+| `npm run seed:products` | Upsert `app/data/products.ts` into MongoDB |
+| `npm run seed:admin` | Create the admin account |
+| `npm run reset:admin` | Reset the admin password |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Never commit `.env.local` — it holds your secrets and is ignored by git.

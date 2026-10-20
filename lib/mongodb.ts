@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+export function isDatabaseConfigured() {
+  return Boolean(process.env.MONGODB_URI);
+}
+
 function getMongoUri() {
   const mongoUri = process.env.MONGODB_URI;
 

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/auth-provider";
 import { CartProvider } from "./components/cart-provider";
 import { StorefrontChrome } from "./components/storefront-chrome";
+
+const newsreader = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-newsreader" });
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -45,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN">
+    <html lang="en-IN" className={`${newsreader.variable} ${jakarta.variable}`}>
       <body>
         <AuthProvider>
           <CartProvider>

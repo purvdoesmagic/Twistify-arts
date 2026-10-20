@@ -9,12 +9,15 @@ import { formatPrice } from "@/app/lib/format";
 
 type CatalogProps = {
   products: Product[];
+  initialCategory?: string;
 };
 
-export function Catalog({ products }: CatalogProps) {
+export function Catalog({ products, initialCategory }: CatalogProps) {
   const { cart, cartCount, addToCart: addCartLine, updateQuantity } = useCart();
   const filters = ["All creations", ...new Set(products.map((product) => product.category))];
-  const [activeFilter, setActiveFilter] = useState(filters[0]);
+  const [activeFilter, setActiveFilter] = useState(
+    initialCategory && filters.includes(initialCategory) ? initialCategory : filters[0],
+  );
   const [cartOpen, setCartOpen] = useState(false);
   const visibleProducts =
     activeFilter === "All creations"
@@ -42,17 +45,13 @@ export function Catalog({ products }: CatalogProps) {
   };
 
   return (
-    <section id="catalog" className="catalog-section mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
-      <div className="catalogue-notice max-w-2xl font-sans text-sm leading-6 text-[var(--muted)]">
-        Original studio photography is coming soon. These designed placeholders are not product photographs; prices and availability are current.
-      </div>
-
-      <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+    <section id="catalog" className="mx-auto w-full max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="font-sans text-xs font-semibold uppercase tracking-[0.24em] text-[var(--rose)]">
             The catalogue
           </p>
-          <h2 className="mt-4 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
+          <h2 className="mt-3 text-4xl tracking-[-0.035em] text-[var(--ink)] sm:text-5xl">
             Handmade favourites, ready to make your own.
           </h2>
           <p className="mt-5 font-sans text-base leading-7 text-[var(--muted)]">
@@ -62,13 +61,17 @@ export function Catalog({ products }: CatalogProps) {
         <button
           type="button"
           onClick={() => setCartOpen(true)}
-          className="border-b border-[var(--ink)] pb-1 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--rose)] hover:text-[var(--rose)]"
+          className="self-start rounded-full border border-[var(--border)] bg-white px-5 py-2.5 font-sans text-sm font-semibold text-[var(--ink)] transition-colors hover:border-[var(--rose)] lg:self-auto"
         >
           Basket ({cartCount})
         </button>
       </div>
 
-      <div className="mt-8 -mx-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0">
+      <p className="catalogue-notice mt-8 max-w-3xl font-sans text-sm leading-6 text-[var(--muted)]">
+        <strong className="font-semibold text-[var(--ink)]">Studio notice:</strong> original photography is coming soon. These designed placeholders are not product photographs; prices and availability are current.
+      </p>
+
+      <div className="mt-8 -mx-5 flex gap-2 overflow-x-auto border-b border-[var(--border)] px-5 pb-4 sm:mx-0 sm:px-0">
         {filters.map((filter) => {
           const isActive = filter === activeFilter;
 
@@ -78,10 +81,10 @@ export function Catalog({ products }: CatalogProps) {
               type="button"
               aria-pressed={isActive}
               onClick={() => setActiveFilter(filter)}
-              className={`shrink-0 border-b px-1 py-2 font-sans text-sm font-semibold transition ${
+              className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 font-sans text-xs font-semibold transition-colors ${
                 isActive
-                  ? "border-[var(--ink)] text-[var(--ink)]"
-                  : "border-transparent text-[var(--muted)] hover:border-[var(--sage)] hover:text-[var(--ink)]"
+                  ? "bg-[var(--ink)] text-[var(--paper)]"
+                  : "bg-[#f6eee7] text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
               {filter}
@@ -90,48 +93,49 @@ export function Catalog({ products }: CatalogProps) {
         })}
       </div>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visibleProducts.map((product) => (
-          <article
-            key={product.id}
-            className="product-card overflow-hidden bg-transparent pt-5"
-          >
+          <article key={product.id} className="product-card">
             <ProductPlaceholder
               name={product.name}
               category={product.category}
               className="aspect-[4/5]"
             />
-            <div className="pb-2 pt-5">
-              <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-[var(--sage)]">
+            <div className="flex flex-grow flex-col pt-4">
+              <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--sage)]">
                 {product.category}
               </p>
-              <h3 className="mt-2 text-2xl leading-tight text-[var(--ink)]">{product.name}</h3>
-              <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">
+              <h3 className="mt-1 text-xl leading-snug text-[var(--ink)]">
+                <Link href={`/shop/${product.id}`} className="transition-colors hover:text-[var(--rose)]">
+                  {product.name}
+                </Link>
+              </h3>
+              <p className="mt-1 line-clamp-2 font-sans text-xs leading-5 text-[var(--muted)]">
                 {product.description}
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <div>
-                  <p className="font-sans text-lg font-semibold text-[var(--ink)]">
-                    {formatPrice(product.price)}
-                  </p>
-                  <span className="font-sans text-xs font-semibold text-[var(--rose)]">
+              <div className="mt-auto pt-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <p className="font-sans text-lg font-semibold text-[var(--ink)]">{formatPrice(product.price)}</p>
+                  <span className="rounded-full bg-[var(--blush)] px-2.5 py-0.5 font-sans text-xs font-medium text-[var(--rose)]">
                     {product.availability}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => addToCart(product.id)}
-                  disabled={product.availability === "Sold out"}
-                  className="border-b border-[var(--rose)] pb-1 font-sans text-sm font-semibold text-[var(--rose)] transition hover:text-[#95495b] disabled:cursor-not-allowed disabled:border-[var(--muted)] disabled:text-[var(--muted)]"
-                >
-                  {product.availability === "Sold out" ? "Sold out" : "Add"}
-                </button>
-                <Link
-                  href={`/shop/${product.id}`}
-                  className="border-b border-[var(--ink)] pb-1 font-sans text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--sage)] hover:text-[var(--sage)]"
-                >
-                  View listing
-                </Link>
+                <div className="flex items-center justify-between gap-3 border-t border-[rgba(234,216,202,0.6)] pt-3">
+                  <button
+                    type="button"
+                    onClick={() => addToCart(product.id)}
+                    disabled={product.availability === "Sold out"}
+                    className="rounded-full bg-[var(--ink)] px-4 py-2 font-sans text-xs font-semibold text-[var(--paper)] transition-colors hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#ded3c9] disabled:text-[#8b7b70]"
+                  >
+                    {product.availability === "Sold out" ? "Sold out" : "Add to basket"}
+                  </button>
+                  <Link
+                    href={`/shop/${product.id}`}
+                    className="border-b border-[rgba(51,39,34,0.3)] pb-0.5 font-sans text-xs text-[var(--ink)] transition-colors hover:border-[var(--rose)] hover:text-[var(--rose)]"
+                  >
+                    View listing
+                  </Link>
+                </div>
               </div>
             </div>
           </article>

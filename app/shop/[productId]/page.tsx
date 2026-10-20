@@ -3,8 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/app/components/add-to-cart-button";
 import { ProductPlaceholder } from "@/app/components/product-placeholder";
-import { Product } from "@/app/models/product";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getProduct } from "@/app/lib/products";
 import { formatPrice } from "@/app/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -15,8 +14,7 @@ export async function generateMetadata({
   params: Promise<{ productId: string }>;
 }): Promise<Metadata> {
   const { productId } = await params;
-  await connectToDatabase();
-  const product = await Product.findOne({ id: productId }).select("-_id").lean();
+  const product = await getProduct(productId);
 
   return product
     ? { title: product.name, description: product.description }
@@ -29,8 +27,7 @@ export default async function ProductPage({
   params: Promise<{ productId: string }>;
 }) {
   const { productId } = await params;
-  await connectToDatabase();
-  const product = await Product.findOne({ id: productId }).select("-_id").lean();
+  const product = await getProduct(productId);
 
   if (!product) {
     notFound();

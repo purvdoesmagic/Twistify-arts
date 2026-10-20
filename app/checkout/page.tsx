@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import type { Product as ProductData } from "@/app/data/products";
 import { CheckoutForm } from "@/app/components/checkout-form";
-import { Product } from "@/app/models/product";
 import { getRazorpayConfig } from "@/app/lib/razorpay";
 import { auth } from "@/auth";
-import { connectToDatabase } from "@/lib/mongodb";
+import { getProducts } from "@/app/lib/products";
 
 export const metadata: Metadata = {
   title: "Checkout",
@@ -21,8 +19,7 @@ export default async function CheckoutPage() {
     redirect("/login?callbackUrl=/checkout");
   }
 
-  await connectToDatabase();
-  const products = (await Product.find().select("-_id").lean()) as ProductData[];
+  const products = await getProducts();
   const razorpayEnabled = getRazorpayConfig() !== null;
 
   return <CheckoutForm products={products} razorpayEnabled={razorpayEnabled} />;

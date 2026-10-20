@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { User } from "@/app/models/user";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase, isDatabaseConfigured } from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 
@@ -19,7 +19,16 @@ export async function POST(request: Request) {
   if (password.length < 8) return NextResponse.json({ error: "Your password must be at least 8 characters." }, { status: 400 });
   if (password !== confirmPassword) return NextResponse.json({ error: "Your passwords do not match." }, { status: 400 });
 
-  await connectToDatabase();
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ error: "Accounts are not available yet: the store database is not configured." }, { status: 503 });
+  }
+
+  try {
+    await connectToDatabase();
+  } catch {
+    return NextResponse.json({ error: "Accounts are temporarily unavailable. Please try again later." }, { status: 503 });
+  }
+
   if (await User.exists({ email })) return NextResponse.json({ error: "An account already exists for this email." }, { status: 409 });
 
   try {

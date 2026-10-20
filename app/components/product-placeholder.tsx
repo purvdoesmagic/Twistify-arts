@@ -20,12 +20,10 @@ export function ProductPlaceholder({
       <div className="product-placeholder-content" aria-hidden="true">
         <p className="product-placeholder-label">Studio photograph</p>
         {!compact ? (
-          <>
-            <span className="product-placeholder-divider" />
+          <div className="product-placeholder-text">
             <p className="product-placeholder-name">{name}</p>
             <p className="product-placeholder-category">{category}</p>
-            <span className="product-placeholder-divider" />
-          </>
+          </div>
         ) : null}
         <p className="product-placeholder-status">Coming soon</p>
       </div>

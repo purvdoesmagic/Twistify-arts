@@ -5,13 +5,13 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
-type AuthFormProps = { mode: "login" | "signup" | "admin"; callbackUrl: string };
+type AuthFormProps = { mode: "login" | "signup" | "admin"; callbackUrl: string; unavailable?: boolean };
 
 function safeCallbackUrl(value: string) {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/account";
 }
 
-export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
+export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormProps) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -72,8 +72,9 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
         <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Password<input value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignup ? "new-password" : "current-password"} type="password" minLength={isSignup ? 8 : undefined} required className="rounded-xl border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]" /></label>
         {isSignup ? <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Confirm password<input value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" type="password" minLength={8} required className="rounded-xl border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose)]" /></label> : null}
       </div>
+      {unavailable ? <p role="status" className="mt-4 rounded-xl bg-[#fff5df] px-3 py-2 font-sans text-sm text-[#72573d]">Accounts are not available yet because the store database is not configured. You can still browse the shop.</p> : null}
       {error ? <p role="alert" className="mt-4 rounded-xl bg-[#f8eee7] px-3 py-2 font-sans text-sm text-[var(--rose)]">{error}</p> : null}
-      <button type="submit" disabled={isSubmitting} className="mt-6 w-full rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]">{isSubmitting ? "Please wait…" : isSignup ? "Create account" : "Sign in"}</button>
+      <button type="submit" disabled={isSubmitting || unavailable} className="mt-6 w-full rounded-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose)] disabled:cursor-not-allowed disabled:bg-[#91817a]">{isSubmitting ? "Please wait…" : isSignup ? "Create account" : "Sign in"}</button>
       {!isAdmin ? <p className="mt-5 text-center font-sans text-sm text-[var(--muted)]">{isSignup ? "Already have an account?" : "New to Twistify Arts?"}{" "}<Link href={isSignup ? "/login" : "/signup"} className="font-semibold text-[var(--rose)]">{isSignup ? "Sign in" : "Create an account"}</Link></p> : null}
     </form>
   );
