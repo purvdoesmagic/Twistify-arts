@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { normalizePhone } from "@/app/lib/format";
-import { escapeHtml, sendEmail } from "@/app/lib/order-notification";
+import { escapeHtml, isEmailConfigured, sendEmail } from "@/app/lib/order-notification";
 import { User } from "@/app/models/user";
 import { connectToDatabase, isDatabaseConfigured } from "@/lib/mongodb";
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   // Never build the link from the Host header in production: a spoofed host would mail out an attacker's link.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.NODE_ENV !== "production" ? new URL(request.url).origin : undefined);
 
-  if (!isDatabaseConfigured() || !siteUrl || !process.env.RESEND_API_KEY) {
+  if (!isDatabaseConfigured() || !siteUrl || !isEmailConfigured()) {
     return NextResponse.json({ error: "Password reset is not available yet. Please contact us for help." }, { status: 503 });
   }
 

@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 import type { DeliveryDetails } from "@/app/lib/razorpay";
 import { formatCountry, formatPhone, formatPrice } from "@/app/lib/format";
 
@@ -50,7 +51,26 @@ function deliveryHtml(delivery: DeliveryDetails) {
   `;
 }
 
+export function isEmailConfigured() {
+  return Boolean((process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) || process.env.RESEND_API_KEY);
+}
+
+// Gmail needs no domain, so it can email any customer; Resend's shared sender only reaches the account owner.
+async function sendGmail(to: string, subject: string, html: string): Promise<EmailResult> {
+  try {
+    await nodemailer
+      .createTransport({ service: "gmail", auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD } })
+      .sendMail({ from: `Twistify Arts <${process.env.GMAIL_USER}>`, to, subject, html });
+    return { sent: true };
+  } catch (error) {
+    console.error("Unable to send email", error);
+    return { sent: false, reason: "Email delivery failed." };
+  }
+}
+
 export async function sendEmail(to: string, subject: string, html: string): Promise<EmailResult> {
+  if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) return sendGmail(to, subject, html);
+
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
