@@ -1,33 +1,65 @@
-"use client";
-
 import Link from "next/link";
 
-const links = [
-  ["/shop", "Shop"],
-  ["/about", "About"],
-  ["/contact", "Contact"],
-  ["/policies/shipping", "Shipping"],
-  ["/policies/refunds", "Refunds"],
+const columns = [
+  {
+    title: "Shop",
+    links: [
+      ["/shop", "All pieces"],
+      ["/shop?category=LED%20flower%20night%20lamps#catalog", "Night lamps"],
+      ["/shop?category=Flower%20garlands%20%26%20malas#catalog", "Garlands & malas"],
+      ["/shop?category=Keychains#catalog", "Keychains"],
+    ],
+  },
+  {
+    title: "Help",
+    links: [
+      ["/faq", "FAQ"],
+      ["/contact", "Contact"],
+      ["/account", "Track your order"],
+      ["/policies/shipping", "Shipping"],
+      ["/policies/refunds", "Refunds"],
+    ],
+  },
+  {
+    title: "Studio",
+    links: [
+      ["/about", "About Shraddha"],
+      ["/policies/privacy", "Privacy"],
+      ["/policies/terms", "Terms"],
+    ],
+  },
 ] as const;
 
 export function SiteFooter() {
   return (
     <footer className="site-footer px-5 pb-8 pt-[20svh] text-[length:var(--step-small)] sm:px-8">
-      <div className="grid gap-2 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
-        <p className="text-[var(--muted)]">Handmade crochet by Shraddha Doshi</p>
-        <nav className="flex flex-wrap gap-x-6 gap-y-1" aria-label="Footer navigation">
-          {links.map(([href, label]) => (
-            <Link key={href} href={href} className="text-link inline-flex min-h-11 items-center">
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <p className="flex flex-wrap items-center gap-x-6 text-[var(--muted)] md:justify-end">
-          <span>© {new Date().getFullYear()} Twistify Arts</span>
-          <Link href="/policies/privacy" className="text-link inline-flex min-h-11 items-center text-[var(--ink)]">Privacy</Link>
-          <Link href="/policies/terms" className="text-link inline-flex min-h-11 items-center text-[var(--ink)]">Terms</Link>
-        </p>
+      <div className="grid gap-12 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div>
+          <p className="font-serif text-[length:var(--step-lead)] uppercase leading-none">Twistify Arts</p>
+          <p className="mt-4 max-w-[30ch] text-[var(--muted)]">Handmade crochet by Shraddha Doshi. Custom colours and sizes on request.</p>
+          <a href="mailto:twistifyarts@gmail.com" className="text-link mt-4 inline-flex min-h-11 items-center">
+            twistifyarts@gmail.com
+          </a>
+        </div>
+        {columns.map((column) => (
+          <nav key={column.title} aria-label={column.title}>
+            <p className="font-semibold">{column.title}</p>
+            <ul className="mt-2">
+              {column.links.map(([href, label]) => (
+                <li key={href}>
+                  <Link href={href} className="sweep-link inline-flex min-h-11 items-center">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
+      <p className="mt-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[var(--muted)]">
+        <span>© {new Date().getFullYear()} Twistify Arts</span>
+        <span>Secure payments by Razorpay · Prices in rupees</span>
+      </p>
     </footer>
   );
 }

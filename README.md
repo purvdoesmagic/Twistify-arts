@@ -40,3 +40,7 @@ a "not available yet" notice instead of failing.
 | `npm run reset:admin` | Reset the admin password |
 
 Never commit `.env.local` — it holds your secrets and is ignored by git.
+
+## Roadmap
+
+See [docs/STOREFRONT_GAP_ANALYSIS.md](docs/STOREFRONT_GAP_ANALYSIS.md) for what the storefront still lacks compared with leading handmade shops.

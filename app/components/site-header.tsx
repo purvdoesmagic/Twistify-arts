@@ -9,6 +9,7 @@ import { useCart } from "./cart-provider";
 const navLinks = [
   ["/shop", "Shop"],
   ["/about", "About"],
+  ["/faq", "FAQ"],
   ["/contact", "Contact"],
 ] as const;
 

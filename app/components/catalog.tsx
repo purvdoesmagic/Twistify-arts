@@ -15,6 +15,17 @@ type CatalogProps = {
 
 const ALL = "Everything";
 
+const sorts = {
+  featured: "Featured",
+  "price-asc": "Price: low to high",
+  "price-desc": "Price: high to low",
+  name: "Name: A to Z",
+} as const;
+
+type SortKey = keyof typeof sorts;
+
+const fieldClass = "min-h-11 w-full bg-[var(--blush)] px-4 text-[var(--ink)] placeholder:text-[var(--muted)]";
+
 export function Catalog({ products, initialCategory }: CatalogProps) {
   const { cart, cartCount, addToCart: addCartLine, updateQuantity } = useCart();
   const filters = [ALL, ...new Set(products.map((product) => product.category))];
@@ -22,7 +33,23 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
     initialCategory && filters.includes(initialCategory) ? initialCategory : ALL,
   );
   const [cartOpen, setCartOpen] = useState(false);
-  const visibleProducts = activeFilter === ALL ? products : products.filter((product) => product.category === activeFilter);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<SortKey>("featured");
+  const [availableOnly, setAvailableOnly] = useState(false);
+  const needle = query.trim().toLowerCase();
+  const visibleProducts = products
+    .filter((product) => activeFilter === ALL || product.category === activeFilter)
+    .filter((product) => !availableOnly || product.availability !== "Sold out")
+    .filter((product) => !needle || `${product.name} ${product.category}`.toLowerCase().includes(needle))
+    .sort((a, b) =>
+      sort === "price-asc" ? a.price - b.price : sort === "price-desc" ? b.price - a.price : sort === "name" ? a.name.localeCompare(b.name) : 0,
+    );
+  const isFiltered = activeFilter !== ALL || availableOnly || needle !== "";
+  const clearFilters = () => {
+    setActiveFilter(ALL);
+    setAvailableOnly(false);
+    setQuery("");
+  };
   const cartItems = cart.flatMap((line) => {
     const product = products.find((item) => item.id === line.productId);
 
@@ -70,6 +97,54 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
         })}
       </div>
 
+      <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+        <label className="block text-[length:var(--step-small)]">
+          <span className="mb-1 block text-[var(--muted)]">Search</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Try “lamp”, “garland” or “keychain”"
+            className={fieldClass}
+          />
+        </label>
+        <label className="block text-[length:var(--step-small)]">
+          <span className="mb-1 block text-[var(--muted)]">Sort by</span>
+          <select value={sort} onChange={(event) => setSort(event.target.value as SortKey)} className={`${fieldClass} sm:w-auto`}>
+            {Object.entries(sorts).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex min-h-11 items-center gap-2 text-[length:var(--step-small)]">
+          <input type="checkbox" checked={availableOnly} onChange={(event) => setAvailableOnly(event.target.checked)} className="size-5 accent-[var(--rose-deep)]" />
+          Hide sold out
+        </label>
+      </div>
+
+      <p className="mt-6 text-[length:var(--step-small)] text-[var(--muted)]" role="status" aria-live="polite">
+        Showing {visibleProducts.length} of {products.length} pieces
+        {isFiltered ? (
+          <>
+            {" · "}
+            <button type="button" onClick={clearFilters} className="text-link">
+              Clear filters
+            </button>
+          </>
+        ) : null}
+      </p>
+
+      {visibleProducts.length === 0 ? (
+        <div className="mt-12 max-w-[44ch]">
+          <p className="text-[length:var(--step-lead)] leading-snug">Nothing matches that yet.</p>
+          <p className="mt-3 text-[var(--muted)]">
+            Try a different word, or <Link href="/contact" className="text-link">ask the studio</Link>. Custom colours and sizes are possible.
+          </p>
+        </div>
+      ) : null}
+
       <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 sm:gap-y-16 lg:grid-cols-3 xl:grid-cols-4">
         {visibleProducts.map((product, index) => (
           <article key={product.id} className="product-card" data-reveal style={{ "--i": index % 4 } as React.CSSProperties}>
@@ -83,7 +158,8 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
               </Link>
             </h3>
             <p className="mt-2">
-              {formatPrice(product.price)} <span className="text-[var(--muted)]">· {product.availability}</span>
+              {formatPrice(product.price)}{" "}
+              <span className={product.availability === "Sold out" ? "text-[var(--rose-deep)]" : "text-[var(--muted)]"}>· {product.availability}</span>
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
               <button
