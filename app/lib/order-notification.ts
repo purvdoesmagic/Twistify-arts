@@ -59,7 +59,8 @@ export function isEmailConfigured() {
 async function sendGmail(to: string, subject: string, html: string): Promise<EmailResult> {
   try {
     await nodemailer
-      .createTransport({ service: "gmail", auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD } })
+      // Port 587 (STARTTLS): some networks block Gmail's default 465.
+      .createTransport({ host: "smtp.gmail.com", port: 587, requireTLS: true, auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD } })
       .sendMail({ from: `Twistify Arts <${process.env.GMAIL_USER}>`, to, subject, html });
     return { sent: true };
   } catch (error) {
