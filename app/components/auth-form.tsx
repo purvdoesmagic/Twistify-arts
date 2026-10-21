@@ -3,9 +3,23 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { type ComponentProps, type FormEvent, useState } from "react";
 
 type AuthFormProps = { mode: "login" | "signup" | "admin"; callbackUrl: string; unavailable?: boolean };
+
+export const labelClass = "grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]";
+export const inputClass = "border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]";
+
+export function PasswordInput(props: Omit<ComponentProps<"input">, "type" | "className">) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <span className="relative grid">
+      <input {...props} type={visible ? "text" : "password"} className={`${inputClass} pr-16`} />
+      <button type="button" onClick={() => setVisible(!visible)} aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible} className="absolute inset-y-0 right-0 px-3 font-sans text-xs font-semibold uppercase tracking-wide text-[var(--muted)] hover:text-[var(--rose-deep)]">{visible ? "Hide" : "Show"}</button>
+    </span>
+  );
+}
 
 function safeCallbackUrl(value: string) {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/account";
@@ -15,6 +29,7 @@ export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormPro
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +48,7 @@ export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormPro
         const response = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, confirmPassword }),
+          body: JSON.stringify({ name, email, phone, password, confirmPassword }),
         });
         const result = (await response.json()) as { error?: string };
 
@@ -41,13 +56,13 @@ export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormPro
       }
 
       const result = await signIn("credentials", {
-        email,
+        identifier: email,
         password,
         portal: isAdmin ? "admin" : "customer",
         redirect: false,
       });
 
-      if (result?.error) throw new Error(isAdmin ? "Invalid admin email or password." : "Invalid email or password.");
+      if (result?.error) throw new Error(isAdmin ? "Invalid admin email or password." : "Invalid email, phone number or password.");
 
       router.replace(isAdmin ? "/admin" : destination);
       router.refresh();
@@ -66,10 +81,16 @@ export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormPro
       <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">{title}</h1>
       <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">{subtitle}</p>
       <div className="mt-7 grid gap-4">
-        {isSignup ? <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Name<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" maxLength={80} required className="border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]" /></label> : null}
-        <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Email<input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" type="email" maxLength={254} required className="border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]" /></label>
-        <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Password<input value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignup ? "new-password" : "current-password"} type="password" minLength={isSignup ? 8 : undefined} required className="border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]" /></label>
-        {isSignup ? <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">Confirm password<input value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" type="password" minLength={8} required className="border border-[var(--border)] px-3 py-3 font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]" /></label> : null}
+        {isSignup ? <label className={labelClass}>Name<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" maxLength={80} required className={inputClass} /></label> : null}
+        {isSignup
+          ? <label className={labelClass}>Email<input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" type="email" maxLength={254} required className={inputClass} /></label>
+          : <label className={labelClass}>{isAdmin ? "Email" : "Email or phone number"}<input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="username" type={isAdmin ? "email" : "text"} maxLength={254} required className={inputClass} /></label>}
+        {isSignup ? <label className={labelClass}><span>Phone number <span className="font-normal">(optional, lets you sign in with it)</span></span><input value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" type="tel" maxLength={20} placeholder="98765 43210" className={inputClass} /></label> : null}
+        <label className={labelClass}>
+          <span className="flex justify-between">Password{!isSignup ? <Link href="/forgot-password" className="font-normal text-[var(--rose-deep)]">Forgot password?</Link> : null}</span>
+          <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignup ? "new-password" : "current-password"} minLength={isSignup ? 8 : undefined} required />
+        </label>
+        {isSignup ? <label className={labelClass}>Confirm password<PasswordInput value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" minLength={8} required /></label> : null}
       </div>
       {unavailable ? <p role="status" className="mt-4 bg-[#fff5df] px-3 py-2 font-sans text-sm text-[#72573d]">Accounts are not available yet because the store database is not configured. You can still browse the shop.</p> : null}
       {error ? <p role="alert" className="mt-4 bg-[#FBF0E0] px-3 py-2 font-sans text-sm text-[var(--rose-deep)]">{error}</p> : null}

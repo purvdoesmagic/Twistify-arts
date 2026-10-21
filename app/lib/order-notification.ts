@@ -15,7 +15,7 @@ type PaidOrder = {
 
 type EmailResult = { sent: boolean; reason?: string };
 
-function escapeHtml(value: string) {
+export function escapeHtml(value: string) {
   return value.replace(/[&<>'"]/g, (character) => {
     const entities: Record<string, string> = {
       "&": "&amp;",
@@ -50,7 +50,7 @@ function deliveryHtml(delivery: DeliveryDetails) {
   `;
 }
 
-async function sendEmail(to: string, subject: string, html: string): Promise<EmailResult> {
+export async function sendEmail(to: string, subject: string, html: string): Promise<EmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
@@ -73,13 +73,13 @@ async function sendEmail(to: string, subject: string, html: string): Promise<Ema
     });
 
     if (!response.ok) {
-      console.error("Unable to send order email", await response.text());
+      console.error("Unable to send email", await response.text());
       return { sent: false, reason: "Email delivery failed." };
     }
 
     return { sent: true };
   } catch (error) {
-    console.error("Unable to send order email", error);
+    console.error("Unable to send email", error);
     return { sent: false, reason: "Email delivery failed." };
   }
 }

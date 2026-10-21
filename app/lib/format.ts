@@ -1,4 +1,4 @@
-import { getCountryCallingCode } from "libphonenumber-js";
+import { getCountryCallingCode, parsePhoneNumberFromString } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
 
 const priceFormatter = new Intl.NumberFormat("en-IN", {
@@ -28,4 +28,10 @@ export function formatCountry(country: string) {
   } catch {
     return country;
   }
+}
+
+// Bare numbers are read as Indian; returns E.164 (e.g. +919876543210) or null when invalid.
+export function normalizePhone(value: string) {
+  const parsed = parsePhoneNumberFromString(value, "IN");
+  return parsed?.isValid() ? parsed.number : null;
 }
