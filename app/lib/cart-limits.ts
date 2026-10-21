@@ -4,10 +4,12 @@ export const MAX_PIECES = 20;
 
 type Line = { productId: string; quantity: number };
 
+// Returns the same array when a limit stops the add, so callers can tell nothing changed.
 export function addLine<T extends Line>(cart: T[], productId: string): T[] {
   const existing = cart.find((line) => line.productId === productId);
 
   if (existing) {
+    if (existing.quantity >= MAX_PER_PIECE) return cart;
     return cart.map((line) => (line === existing ? { ...line, quantity: Math.min(line.quantity + 1, MAX_PER_PIECE) } : line));
   }
 

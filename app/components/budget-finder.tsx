@@ -51,8 +51,7 @@ export function BudgetFinder({ pieces }: { pieces: Piece[] }) {
             <button
               type="button"
               onClick={() => {
-                addToCart(piece.id);
-                setAdded(piece.id);
+                if (addToCart(piece.id)) setAdded(piece.id);
               }}
               className="btn btn-quiet min-h-11 px-3 py-2"
               aria-label={`Add ${piece.name} to basket`}

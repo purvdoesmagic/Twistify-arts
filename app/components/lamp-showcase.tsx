@@ -49,8 +49,7 @@ export function LampShowcase({ lamps }: { lamps: Lamp[] }) {
             type="button"
             disabled={isSoldOut}
             onClick={() => {
-              addToCart(lamp.id);
-              setAddedId(lamp.id);
+              if (addToCart(lamp.id)) setAddedId(lamp.id);
             }}
             className="btn min-h-[4.5rem]"
           >

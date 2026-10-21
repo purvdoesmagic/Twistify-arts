@@ -25,7 +25,7 @@ export function SiteHeader() {
   const linkClass = "sweep-link inline-flex min-h-11 items-center";
 
   return (
-    <header className="sticky top-0 z-40 bg-[var(--paper)]">
+    <header className="sticky top-0 z-40 bg-[var(--paper)]" onKeyDown={(event) => event.key === "Escape" && closeMenu()}>
       <div className="flex h-[4.5rem] w-full items-center justify-between gap-6 px-5 sm:px-8">
         <Link href="/" className="font-serif text-[length:var(--step-lead)] uppercase leading-none tracking-tight text-[var(--ink)]">
           Twistify Arts

@@ -92,7 +92,7 @@ export async function POST(request: Request) {
   }
 
   const amount = orderItems.reduce(
-    (total, item) => total + item.product!.price * item.quantity * 100,
+    (total, item) => total + Math.round(item.product!.price * item.quantity * 100),
     0,
   );
 

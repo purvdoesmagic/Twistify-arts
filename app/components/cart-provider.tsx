@@ -14,7 +14,7 @@ type CartContextValue = {
   cart: CartLine[];
   isHydrated: boolean;
   cartCount: number;
-  addToCart: (productId: string) => void;
+  addToCart: (productId: string) => boolean;
   updateQuantity: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
@@ -57,6 +57,7 @@ function readStoredCart(): CartLine[] {
 export function CartProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -76,12 +77,30 @@ export function CartProvider({ children }: Readonly<{ children: React.ReactNode 
     }
   }, [cart, hasHydrated]);
 
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 4000);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
+
   const addToCart = (productId: string) => {
     if (!productId.trim()) {
-      return;
+      return false;
     }
 
-    setCart((currentCart) => addLine(currentCart, productId));
+    const nextCart = addLine(cart, productId);
+
+    if (nextCart === cart) {
+      setNotice(
+        cart.some((line) => line.productId === productId)
+          ? `You can add up to ${MAX_PER_PIECE} of each piece.`
+          : `Your basket can hold up to ${MAX_PIECES} different pieces.`,
+      );
+      return false;
+    }
+
+    setCart(nextCart);
+    return true;
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -106,7 +125,14 @@ export function CartProvider({ children }: Readonly<{ children: React.ReactNode 
     clearCart: () => setCart([]),
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+      <p role="status" className="pointer-events-none fixed inset-x-4 bottom-5 z-50 mx-auto w-fit max-w-[calc(100vw-2rem)] font-sans text-sm text-white">
+        {notice ? <span className="block bg-[var(--ink)] px-4 py-3">{notice}</span> : null}
+      </p>
+    </CartContext.Provider>
+  );
 }
 
 export function useCart() {

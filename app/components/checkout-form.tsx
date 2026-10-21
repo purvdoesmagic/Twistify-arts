@@ -170,7 +170,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ delivery: deliveryDetails, items: cart }),
       });
-      const order = (await orderResponse.json()) as RazorpayOrderResponse;
+      const order = (await orderResponse.json().catch(() => ({}))) as RazorpayOrderResponse;
 
       if (
         !orderResponse.ok ||
@@ -209,7 +209,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                 signature: response.razorpay_signature,
               }),
             });
-            const verification = (await verifyResponse.json()) as {
+            const verification = (await verifyResponse.json().catch(() => ({}))) as {
               verified?: boolean;
               orderId?: string;
               error?: string;

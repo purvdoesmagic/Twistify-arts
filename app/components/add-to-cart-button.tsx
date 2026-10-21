@@ -29,8 +29,7 @@ export function AddToCartButton({ productId, availability }: AddToCartButtonProp
     <button
       type="button"
       onClick={() => {
-        addToCart(productId);
-        setIsAdded(true);
+        setIsAdded(addToCart(productId));
       }}
       className="btn mt-10"
     >

@@ -45,7 +45,7 @@ export async function PATCH(
     const order = await Order.findByIdAndUpdate(
       id,
       { $set: { fulfillmentStatus } },
-      { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     )
       .select("items delivery razorpayOrderId razorpayPaymentId amount status paymentStatus fulfillmentStatus userId createdAt")
       .lean();

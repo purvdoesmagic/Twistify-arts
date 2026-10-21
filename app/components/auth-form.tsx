@@ -22,7 +22,8 @@ export function PasswordInput(props: Omit<ComponentProps<"input">, "type" | "cla
 }
 
 function safeCallbackUrl(value: string) {
-  return value.startsWith("/") && !value.startsWith("//") ? value : "/account";
+  // Browsers read "/\evil.com" like "//evil.com", another site.
+  return value.startsWith("/") && !value.startsWith("//") && !value.startsWith("/\\") ? value : "/account";
 }
 
 export function AuthForm({ mode, callbackUrl, unavailable = false }: AuthFormProps) {

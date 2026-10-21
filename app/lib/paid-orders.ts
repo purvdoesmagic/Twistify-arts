@@ -48,7 +48,7 @@ export async function markOrderPaid(razorpayOrderId: string, paymentId: string):
   }
 
   const expectedAmount = order.items.reduce(
-    (total, item) => total + item.price * item.quantity * 100,
+    (total, item) => total + Math.round(item.price * item.quantity * 100),
     0,
   );
   const paymentDetails = await fetchRazorpayPaymentDetails(config, razorpayOrderId, paymentId);
@@ -71,7 +71,7 @@ export async function markOrderPaid(razorpayOrderId: string, paymentId: string):
   const updated = await Order.findOneAndUpdate(
     { _id: order._id, paymentStatus: { $ne: "paid" } },
     { $set: { paymentStatus: "paid", razorpayPaymentId: paymentId, paidAt: new Date() } },
-    { new: true },
+    { returnDocument: "after" },
   )
     .select("_id")
     .lean();
@@ -88,22 +88,30 @@ export async function markOrderPaid(razorpayOrderId: string, paymentId: string):
     orderId: razorpayOrderId,
     paymentId,
   };
-  const customer = await User.findById(order.userId).select("name email").lean();
-  const [notification] = await Promise.all([
-    sendPaidOrderNotification(paidOrder),
-    customer?.email
-      ? sendCustomerOrderConfirmation(paidOrder, {
-          email: customer.email,
-          name: customer.name ?? order.delivery.fullName,
-          orderReference: order._id.toString(),
-        })
-      : Promise.resolve({ sent: false }),
-  ]);
+  // The order is already marked paid, so a failed lookup or email must not report the payment as failed.
+  let notificationSent = false;
+
+  try {
+    const customer = await User.findById(order.userId).select("name email").lean();
+    const [notification] = await Promise.all([
+      sendPaidOrderNotification(paidOrder),
+      customer?.email
+        ? sendCustomerOrderConfirmation(paidOrder, {
+            email: customer.email,
+            name: customer.name ?? order.delivery.fullName,
+            orderReference: order._id.toString(),
+          })
+        : Promise.resolve({ sent: false }),
+    ]);
+    notificationSent = notification.sent;
+  } catch (error) {
+    console.error("Paid order notifications failed", razorpayOrderId, error);
+  }
 
   return {
     ok: true,
     orderId: order._id.toString(),
     userId: order.userId.toString(),
-    notificationSent: notification.sent,
+    notificationSent,
   };
 }
