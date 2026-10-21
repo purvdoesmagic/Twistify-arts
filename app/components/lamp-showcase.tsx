@@ -31,7 +31,7 @@ export function LampShowcase({ lamps }: { lamps: Lamp[] }) {
               type="button"
               aria-pressed={itemIndex === index}
               onClick={() => setIndex(itemIndex)}
-              className={`min-h-11 transition-colors ${itemIndex === index ? "text-[var(--ink)] underline decoration-[var(--rose)] decoration-2 underline-offset-8" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
+              className="sweep-link min-h-11"
             >
               {item.name.replace(/ lamp$/i, "")}
             </button>

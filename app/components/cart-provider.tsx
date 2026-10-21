@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { addLine, MAX_PER_PIECE, MAX_PIECES, setLineQuantity } from "@/app/lib/cart-limits";
 
 export const CART_STORAGE_KEY = "twistify-arts-cart";
 
@@ -45,7 +46,9 @@ function readStoredCart(): CartLine[] {
     }
 
     const parsedCart: unknown = JSON.parse(storedCart);
-    return Array.isArray(parsedCart) ? parsedCart.filter(isCartLine) : [];
+    return Array.isArray(parsedCart)
+      ? parsedCart.filter(isCartLine).slice(0, MAX_PIECES).map((line) => ({ ...line, quantity: Math.min(line.quantity, MAX_PER_PIECE) }))
+      : [];
   } catch {
     return [];
   }
@@ -78,19 +81,7 @@ export function CartProvider({ children }: Readonly<{ children: React.ReactNode 
       return;
     }
 
-    setCart((currentCart) => {
-      const existingLine = currentCart.find((line) => line.productId === productId);
-
-      if (existingLine) {
-        return currentCart.map((line) =>
-          line.productId === productId
-            ? { ...line, quantity: line.quantity + 1 }
-            : line,
-        );
-      }
-
-      return [...currentCart, { productId, quantity: 1 }];
-    });
+    setCart((currentCart) => addLine(currentCart, productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -98,13 +89,7 @@ export function CartProvider({ children }: Readonly<{ children: React.ReactNode 
       return;
     }
 
-    setCart((currentCart) =>
-      quantity === 0
-        ? currentCart.filter((line) => line.productId !== productId)
-        : currentCart.map((line) =>
-            line.productId === productId ? { ...line, quantity } : line,
-          ),
-    );
+    setCart((currentCart) => setLineQuantity(currentCart, productId, quantity));
   };
 
   const removeFromCart = (productId: string) => {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Product } from "../data/products";
 import { useCart } from "./cart-provider";
+import { MAX_PER_PIECE } from "@/app/lib/cart-limits";
 import { ProductPlaceholder } from "./product-placeholder";
 import { formatPrice } from "@/app/lib/format";
 
@@ -127,7 +128,8 @@ export function CartPage({ products }: CartPageProps) {
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                            className="grid size-11 place-items-center font-sans text-lg text-[var(--ink)]"
+                            disabled={item.quantity >= MAX_PER_PIECE}
+                              className="grid size-11 place-items-center disabled:opacity-40 font-sans text-lg text-[var(--ink)]"
                             aria-label={`Increase ${item.product.name} quantity`}
                           >
                             +

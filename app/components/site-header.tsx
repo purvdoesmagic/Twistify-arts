@@ -22,8 +22,7 @@ export function SiteHeader() {
   const basketLabel = isHydrated ? `Basket (${cartCount})` : "Basket";
   const isActive = (href: string) => pathname.startsWith(href);
   const closeMenu = () => setMenuOpen(false);
-  const linkClass = (href: string) =>
-    `inline-flex min-h-11 items-center transition-colors ${isActive(href) ? "text-[var(--ink)] underline decoration-[var(--rose)] decoration-2 underline-offset-8" : "text-[var(--muted)] hover:text-[var(--ink)]"}`;
+  const linkClass = "sweep-link inline-flex min-h-11 items-center";
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--paper)]">
@@ -34,7 +33,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
           {navLinks.map(([href, label]) => (
-            <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} className={linkClass(href)}>
+            <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} className={linkClass}>
               {label}
             </Link>
           ))}
@@ -44,7 +43,7 @@ export function SiteHeader() {
           <div className="hidden items-center gap-5 md:flex">
             {isAuthenticated ? (
               <>
-                <Link className={linkClass("/account")} href="/account">
+                <Link className={linkClass} href="/account" aria-current={isActive("/account") ? "page" : undefined}>
                   Account
                 </Link>
                 <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="min-h-11 text-[var(--muted)] transition-colors hover:text-[var(--ink)]">
@@ -52,7 +51,7 @@ export function SiteHeader() {
                 </button>
               </>
             ) : (
-              <Link className={linkClass("/login")} href="/login">
+              <Link className={linkClass} href="/login" aria-current={isActive("/login") ? "page" : undefined}>
                 Sign in
               </Link>
             )}

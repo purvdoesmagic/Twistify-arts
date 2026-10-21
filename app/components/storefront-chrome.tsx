@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactLenis } from "lenis/react";
+import "lenis/dist/lenis.css";
 import { usePathname } from "next/navigation";
 import { RevealObserver } from "./reveal-observer";
 import { SiteFooter } from "./site-footer";
@@ -14,7 +16,7 @@ export function StorefrontChrome({ children }: Readonly<{ children: React.ReactN
   }
 
   return (
-    <>
+    <ReactLenis root options={{ autoRaf: true, anchors: true }}>
       <a href="#content" className="btn sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
         Skip to content
       </a>
@@ -24,6 +26,6 @@ export function StorefrontChrome({ children }: Readonly<{ children: React.ReactN
       </div>
       <SiteFooter />
       <RevealObserver />
-    </>
+    </ReactLenis>
   );
 }

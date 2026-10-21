@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "./cart-provider";
+import { MAX_PER_PIECE } from "@/app/lib/cart-limits";
 import { ProductPlaceholder } from "./product-placeholder";
 import type { Product } from "../data/products";
 import { formatPrice } from "@/app/lib/format";
@@ -61,11 +62,7 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
               type="button"
               aria-pressed={isActive}
               onClick={() => setActiveFilter(filter)}
-              className={`min-h-11 transition-colors ${
-                isActive
-                  ? "text-[var(--ink)] underline decoration-[var(--rose)] decoration-2 underline-offset-8"
-                  : "text-[var(--muted)] hover:text-[var(--ink)]"
-              }`}
+              className="sweep-link min-h-11"
             >
               {filter}
             </button>
@@ -143,7 +140,8 @@ export function Catalog({ products, initialCategory }: CatalogProps) {
                             <button
                               type="button"
                               onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                              className="grid size-11 place-items-center text-lg"
+                              disabled={item.quantity >= MAX_PER_PIECE}
+                              className="grid size-11 place-items-center disabled:opacity-40 text-lg"
                               aria-label={`Add one ${item.product.name}`}
                             >
                               +

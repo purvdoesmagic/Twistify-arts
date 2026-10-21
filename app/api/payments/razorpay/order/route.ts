@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { MAX_PER_PIECE, MAX_PIECES } from "@/app/lib/cart-limits";
 import { Product } from "@/app/models/product";
 import { Order } from "@/app/models/order";
 import { getRazorpayConfig, readDeliveryDetails } from "@/app/lib/razorpay";
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
       !Number.isInteger(item.quantity) ||
       typeof item.quantity !== "number" ||
       item.quantity < 1 ||
-      item.quantity > 10
+      item.quantity > MAX_PER_PIECE
     ) {
       return NextResponse.json({ error: "One or more basket items are invalid." }, { status: 400 });
     }
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
     quantities.set(item.productId, (quantities.get(item.productId) ?? 0) + item.quantity);
   }
 
-  if (quantities.size > 20 || [...quantities.values()].some((quantity) => quantity > 10)) {
+  if (quantities.size > MAX_PIECES || [...quantities.values()].some((quantity) => quantity > MAX_PER_PIECE)) {
     return NextResponse.json({ error: "Please reduce the quantity and try again." }, { status: 400 });
   }
 

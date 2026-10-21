@@ -44,6 +44,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Lenis does its own smoothing; native smooth scroll would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
@@ -126,6 +131,52 @@ select:focus-visible,
 .btn-quiet {
   background: var(--blush);
   color: var(--ink);
+}
+
+/* Underline that sweeps in on hover and stays for the current item (after skiper-ui's skiper40 links). */
+.sweep-link {
+  position: relative;
+  color: var(--muted);
+  transition: color var(--t-hover) ease;
+}
+
+.sweep-link[aria-current="page"],
+.sweep-link[aria-pressed="true"] {
+  color: var(--ink);
+}
+
+.sweep-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.5rem;
+  height: 2px;
+  background: var(--rose);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-out);
+}
+
+.sweep-link[aria-current="page"]::after,
+.sweep-link[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sweep-link:hover {
+    color: var(--ink);
+  }
+
+  .sweep-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sweep-link::after {
+    transition: none;
+  }
 }
 
 .text-link {
