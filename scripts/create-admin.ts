@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { loadEnvConfig } from "@next/env";
 
 loadEnvConfig(process.cwd());

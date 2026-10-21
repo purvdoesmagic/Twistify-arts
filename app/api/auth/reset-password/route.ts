@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { User } from "@/app/models/user";
 import { connectToDatabase, isDatabaseConfigured } from "@/lib/mongodb";

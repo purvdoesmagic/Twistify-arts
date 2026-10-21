@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { normalizePhone } from "@/app/lib/format";
 import { User } from "@/app/models/user";
