@@ -40,22 +40,22 @@ export default async function AccountPage() {
     .lean()) as AccountOrder[];
 
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8">
+    <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
+        <Link href="/shop" className="font-sans text-sm font-semibold text-(--rose-deep)">
           ← Continue shopping
         </Link>
-        <section className="mt-6 bg-[var(--cream)] p-6 sm:p-8">
-          <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">Your account</p>
-          <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">Hello, {session.user.name ?? "there"}.</h1>
-          <p className="mt-3 font-sans text-sm text-[var(--muted)]">{session.user.email}</p>
+        <section className="mt-6 bg-(--cream) p-6 sm:p-8">
+          <p className="font-sans text-(length:--step-small) font-semibold text-(--rose-deep)">Your account</p>
+          <h1 className="mt-3 text-(--ink) text-(length:--step-head) leading-none">Hello, {session.user.name ?? "there"}.</h1>
+          <p className="mt-3 font-sans text-sm text-(--muted)">{session.user.email}</p>
         </section>
-        <section className="mt-6 bg-[var(--cream)] p-6 sm:p-8">
-          <h2 className="text-2xl text-[var(--ink)]">Your orders</h2>
+        <section className="mt-6 bg-(--cream) p-6 sm:p-8">
+          <h2 className="text-2xl text-(--ink)">Your orders</h2>
           {orders.length === 0 ? (
-            <p className="mt-3 font-sans text-sm text-[var(--muted)]">
+            <p className="mt-3 font-sans text-sm text-(--muted)">
               You have not placed an order yet.{" "}
-              <Link href="/shop" className="font-semibold text-[var(--rose-deep)]">
+              <Link href="/shop" className="font-semibold text-(--rose-deep)">
                 Explore the shop
               </Link>
             </p>
@@ -69,19 +69,19 @@ export default async function AccountPage() {
                   <Link
                     key={order._id.toString()}
                     href={`/order/confirmation?orderId=${order._id.toString()}`}
-                    className="block border border-transparent bg-[#FBF0E0] p-4 font-sans text-sm text-[var(--muted)] transition hover:border-[var(--border)] hover:bg-white"
+                    className="block border border-transparent bg-[#FBF0E0] p-4 font-sans text-sm text-(--muted) transition hover:border-(--border) hover:bg-white"
                   >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <p className="font-semibold text-[var(--ink)]">
+                      <p className="font-semibold text-(--ink)">
                         {new Date(order.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}
                       </p>
-                      <p className="font-semibold text-[var(--ink)]">{formatPrice(order.amount / 100)}</p>
+                      <p className="font-semibold text-(--ink)">{formatPrice(order.amount / 100)}</p>
                     </div>
                     <p className="mt-1">
                       {order.items.map((item) => `${item.quantity} × ${item.name}`).join(", ")}
                     </p>
-                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[length:var(--step-small)]">
-                      <span className="bg-white px-2.5 py-1 font-semibold text-[var(--sage-deep)]">
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-(length:--step-small)">
+                      <span className="bg-white px-2.5 py-1 font-semibold text-(--sage-deep)">
                         {fulfillmentLabels[statuses.fulfillmentStatus] ?? statuses.fulfillmentStatus}
                       </span>
                       <span>

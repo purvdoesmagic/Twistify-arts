@@ -12,5 +12,5 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   if (session?.user) redirect(destination);
 
-  return <main className="min-h-screen bg-[var(--paper)] px-5 py-16 sm:px-8"><AuthForm mode="login" unavailable={!isDatabaseConfigured()} callbackUrl={destination} /></main>;
+  return <main className="min-h-screen bg-(--paper) px-5 py-16 sm:px-8"><AuthForm mode="login" unavailable={!isDatabaseConfigured()} callbackUrl={destination} /></main>;
 }

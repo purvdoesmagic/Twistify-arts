@@ -129,7 +129,7 @@ export function CartProvider({ children }: Readonly<{ children: React.ReactNode 
     <CartContext.Provider value={value}>
       {children}
       <p role="status" className="pointer-events-none fixed inset-x-4 bottom-5 z-50 mx-auto w-fit max-w-[calc(100vw-2rem)] font-sans text-sm text-white">
-        {notice ? <span className="block bg-[var(--ink)] px-4 py-3">{notice}</span> : null}
+        {notice ? <span className="block bg-(--ink) px-4 py-3">{notice}</span> : null}
       </p>
     </CartContext.Provider>
   );

@@ -17,15 +17,15 @@ export default function ContactPage() {
     >
       <InfoSection title="Contact details">
         <p>
-          Business email: <a href="mailto:twistifyarts@gmail.com" className="font-semibold text-[var(--ink)]">twistifyarts@gmail.com</a>
+          Business email: <a href="mailto:twistifyarts@gmail.com" className="font-semibold text-(--ink)">twistifyarts@gmail.com</a>
         </p>
         <p>
-          Phone: <span className="font-semibold text-[var(--ink)]">[Phone Number 1]</span>
+          Phone: <span className="font-semibold text-(--ink)">[Phone Number 1]</span>
         </p>
         <p>
-          Alternate phone: <span className="font-semibold text-[var(--ink)]">[Phone Number 2]</span>
+          Alternate phone: <span className="font-semibold text-(--ink)">[Phone Number 2]</span>
         </p>
-        <p className="text-[length:var(--step-small)] text-[var(--muted)]">
+        <p className="text-(length:--step-small) text-(--muted)">
           Phone contact details will be added when confirmed.
         </p>
       </InfoSection>
@@ -42,10 +42,10 @@ export default function ContactPage() {
           Signed-in customers can review saved orders and their current fulfillment status from the account page.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link href="/account" className="bg-[var(--ink)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--rose-deep)]">
+          <Link href="/account" className="bg-(--ink) px-5 py-3 font-semibold text-white transition hover:bg-(--rose-deep)">
             View my account
           </Link>
-          <Link href="/shop" className="border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
+          <Link href="/shop" className="border border-(--border) bg-white px-5 py-3 font-semibold text-(--ink) transition hover:border-(--sage)">
             Continue shopping
           </Link>
         </div>

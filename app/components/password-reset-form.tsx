@@ -36,9 +36,9 @@ export function PasswordResetForm({ token }: { token?: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto w-full max-w-md bg-[var(--cream)] p-6 sm:p-8">
-      <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">{token ? "Choose a new password" : "Forgot your password?"}</h1>
-      <p className="mt-3 font-sans text-sm leading-6 text-[var(--muted)]">{token ? "Enter a new password for your account." : "Enter your email or phone number and we'll email you a link to reset it."}</p>
+    <form onSubmit={submit} className="mx-auto w-full max-w-md bg-(--cream) p-6 sm:p-8">
+      <h1 className="mt-3 text-(--ink) text-(length:--step-head) leading-none">{token ? "Choose a new password" : "Forgot your password?"}</h1>
+      <p className="mt-3 font-sans text-sm leading-6 text-(--muted)">{token ? "Enter a new password for your account." : "Enter your email or phone number and we'll email you a link to reset it."}</p>
       {done ? (
         <p role="status" className="mt-6 bg-[#eef6ea] px-3 py-2 font-sans text-sm text-[#3d5a32]">{done}</p>
       ) : (
@@ -53,11 +53,11 @@ export function PasswordResetForm({ token }: { token?: string }) {
               <label className={labelClass}>Email or phone number<input value={identifier} onChange={(event) => setIdentifier(event.target.value)} autoComplete="username" maxLength={254} required className={inputClass} /></label>
             )}
           </div>
-          {error ? <p role="alert" className="mt-4 bg-[#FBF0E0] px-3 py-2 font-sans text-sm text-[var(--rose-deep)]">{error}</p> : null}
-          <button type="submit" disabled={isSubmitting} className="mt-6 w-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)] disabled:cursor-not-allowed disabled:bg-[#91817a]">{isSubmitting ? "Please wait…" : token ? "Update password" : "Email me a reset link"}</button>
+          {error ? <p role="alert" className="mt-4 bg-[#FBF0E0] px-3 py-2 font-sans text-sm text-(--rose-deep)">{error}</p> : null}
+          <button type="submit" disabled={isSubmitting} className="mt-6 w-full bg-(--ink) px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-(--rose-deep) disabled:cursor-not-allowed disabled:bg-[#91817a]">{isSubmitting ? "Please wait…" : token ? "Update password" : "Email me a reset link"}</button>
         </>
       )}
-      <p className="mt-5 text-center font-sans text-sm text-[var(--muted)]"><Link href="/login" className="font-semibold text-[var(--rose-deep)]">Back to sign in</Link></p>
+      <p className="mt-5 text-center font-sans text-sm text-(--muted)"><Link href="/login" className="font-semibold text-(--rose-deep)">Back to sign in</Link></p>
     </form>
   );
 }

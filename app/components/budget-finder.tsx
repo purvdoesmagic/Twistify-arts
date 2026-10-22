@@ -24,7 +24,7 @@ export function BudgetFinder({ pieces }: { pieces: Piece[] }) {
     <div>
       <label htmlFor="budget" className="flex items-baseline justify-between gap-4">
         <span>Your budget</span>
-        <output htmlFor="budget" className="font-serif text-[length:var(--step-head)] leading-none tabular-nums">
+        <output htmlFor="budget" className="font-serif text-(length:--step-head) leading-none tabular-nums">
           {formatPrice(budget)}
         </output>
       </label>
@@ -38,7 +38,7 @@ export function BudgetFinder({ pieces }: { pieces: Piece[] }) {
         onChange={(event) => setBudget(Number(event.target.value))}
         className="mt-4 h-11 w-full cursor-pointer"
       />
-      <p className="mt-3 text-[var(--muted)]" aria-live="polite">
+      <p className="mt-3 text-(--muted)" aria-live="polite">
         {matches.length} {matches.length === 1 ? "piece" : "pieces"} at or under {formatPrice(budget)}
       </p>
       <ul className="mt-6">
@@ -47,7 +47,7 @@ export function BudgetFinder({ pieces }: { pieces: Piece[] }) {
             <Link href={`/shop/${piece.id}`} className="text-link min-w-0 flex-1 truncate">
               {piece.name}
             </Link>
-            <span className="tabular-nums text-[var(--muted)]">{formatPrice(piece.price)}</span>
+            <span className="tabular-nums text-(--muted)">{formatPrice(piece.price)}</span>
             <button
               type="button"
               onClick={() => {

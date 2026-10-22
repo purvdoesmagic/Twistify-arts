@@ -19,12 +19,12 @@ export function LampShowcase({ lamps }: { lamps: Lamp[] }) {
   const isSoldOut = lamp.availability === "Sold out";
 
   return (
-    <section className="grid min-h-[88svh] bg-[var(--cream)] lg:grid-cols-2" aria-labelledby="lamps-heading">
+    <section className="grid min-h-[88svh] bg-(--cream) lg:grid-cols-2" aria-labelledby="lamps-heading">
       <div className="flex items-center justify-center p-4 sm:p-10">
-        <ProductPlaceholder key={lamp.id} name={lamp.name} category={lamp.category} className="aspect-square w-full max-w-[40rem]" />
+        <ProductPlaceholder key={lamp.id} name={lamp.name} category={lamp.category} className="aspect-square w-full max-w-160" />
       </div>
       <div className="flex flex-col justify-between gap-12 px-5 py-12 sm:px-10 lg:py-16">
-        <div className="flex flex-wrap gap-x-8 gap-y-2 text-[length:var(--step-lead)]" role="group" aria-label="Choose a lamp">
+        <div className="flex flex-wrap gap-x-8 gap-y-2 text-(length:--step-lead)" role="group" aria-label="Choose a lamp">
           {lamps.map((item, itemIndex) => (
             <button
               key={item.id}
@@ -38,7 +38,7 @@ export function LampShowcase({ lamps }: { lamps: Lamp[] }) {
           ))}
         </div>
         <div data-reveal>
-          <h2 id="lamps-heading" className="text-[length:var(--step-head)]">Wool flowers that glow</h2>
+          <h2 id="lamps-heading" className="text-(length:--step-head)">Wool flowers that glow</h2>
           <p className="mt-6 max-w-[34ch]">
             The {lamp.name.toLowerCase()} is a crocheted flower with a soft light inside, for a bedside or a quiet corner.
             {" "}{formatPrice(lamp.price)} · {lamp.availability.toLowerCase()}.
@@ -51,11 +51,11 @@ export function LampShowcase({ lamps }: { lamps: Lamp[] }) {
             onClick={() => {
               if (addToCart(lamp.id)) setAddedId(lamp.id);
             }}
-            className="btn min-h-[4.5rem]"
+            className="btn min-h-18"
           >
             {isSoldOut ? "Sold out" : addedId === lamp.id ? "Added to basket" : `Add to basket · ${formatPrice(lamp.price)}`}
           </button>
-          <Link href={`/shop/${lamp.id}`} className="btn btn-quiet min-h-[4.5rem]">
+          <Link href={`/shop/${lamp.id}`} className="btn btn-quiet min-h-18">
             View the listing
           </Link>
         </div>

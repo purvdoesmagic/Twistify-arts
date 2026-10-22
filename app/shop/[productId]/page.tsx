@@ -55,35 +55,35 @@ export default async function ProductPage({
   return (
     <main className="min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <nav aria-label="Breadcrumb" className="px-5 pt-4 text-[length:var(--step-small)] text-[var(--muted)] sm:px-8">
+      <nav aria-label="Breadcrumb" className="px-5 pt-4 text-(length:--step-small) text-(--muted) sm:px-8">
         <ol className="flex flex-wrap items-center gap-x-2">
           <li><Link href="/shop" className="text-link">Shop</Link></li>
           <li aria-hidden="true">/</li>
           <li><Link href={`/shop?category=${encodeURIComponent(product.category)}#catalog`} className="text-link">{product.category}</Link></li>
           <li aria-hidden="true">/</li>
-          <li aria-current="page" className="text-[var(--ink)]">{product.name}</li>
+          <li aria-current="page" className="text-(--ink)">{product.name}</li>
         </ol>
       </nav>
       <section className="grid items-start gap-10 px-5 pt-6 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:pt-10">
         <div>
-          <h1 data-rise className="text-[length:var(--step-display)] uppercase leading-[0.9]">{product.name}</h1>
-          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-6 text-[length:var(--step-lead)] leading-snug">
+          <h1 data-rise className="text-(length:--step-display) uppercase leading-[0.9]">{product.name}</h1>
+          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-6 text-(length:--step-lead) leading-snug">
             Crocheted by hand by Shraddha Doshi, from the{" "}
             <Link href={`/shop?category=${encodeURIComponent(product.category)}#catalog`} className="text-link">
               {product.category}
             </Link>{" "}
             collection.
           </p>
-          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-10 font-serif text-[length:var(--step-head)] leading-none tabular-nums">
+          <p data-rise style={{ "--i": 1 } as React.CSSProperties} className="mt-10 font-serif text-(length:--step-head) leading-none tabular-nums">
             {formatPrice(product.price)}
           </p>
           <p className="mt-3">{product.availability}</p>
           <p className="mt-8 max-w-[44ch]">{product.description}</p>
-          <p className="mt-4 max-w-[44ch] text-[var(--muted)]">
+          <p className="mt-4 max-w-[44ch] text-(--muted)">
             Every piece is crocheted by hand, so colours and shapes vary a little. Shown as a drawing until photographs are ready.
           </p>
           <AddToCartButton productId={product.id} availability={product.availability} />
-          <ul className="mt-8 max-w-[44ch] space-y-2 text-[length:var(--step-small)] text-[var(--muted)]">
+          <ul className="mt-8 max-w-[44ch] space-y-2 text-(length:--step-small) text-(--muted)">
             <li>Crocheted by hand by Shraddha Doshi</li>
             <li>
               {product.availability === "Made to order"
@@ -97,7 +97,7 @@ export default async function ProductPage({
               Want another colour or size? <Link href="/contact" className="text-link">Ask the studio</Link>
             </li>
           </ul>
-          <div className="mt-8 max-w-[44ch] divide-y divide-[var(--border)] border-y border-[var(--border)]">
+          <div className="mt-8 max-w-[44ch] divide-y divide-(--border) border-y border-(--border)">
             {[
               ["Delivery", <>Charges and timing are confirmed at checkout and vary by address. Read the <Link key="s" href="/policies/shipping" className="text-link">shipping policy</Link>.</>],
               ["Returns", <>Handmade pieces are covered by our <Link key="r" href="/policies/refunds" className="text-link">refund policy</Link>. Contact us first if something arrives wrong.</>],
@@ -106,9 +106,9 @@ export default async function ProductPage({
               <details key={String(title)} className="group py-1">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between">
                   {title}
-                  <span aria-hidden="true" className="text-[var(--muted)] transition-transform group-open:rotate-45">+</span>
+                  <span aria-hidden="true" className="text-(--muted) transition-transform group-open:rotate-45">+</span>
                 </summary>
-                <p className="pb-3 text-[length:var(--step-small)] text-[var(--muted)]">{body}</p>
+                <p className="pb-3 text-(length:--step-small) text-(--muted)">{body}</p>
               </details>
             ))}
           </div>
@@ -120,14 +120,14 @@ export default async function ProductPage({
 
       {related.length > 0 ? (
         <section className="mt-24 px-5 sm:px-8" aria-labelledby="related-heading">
-          <h2 id="related-heading" data-reveal className="text-[length:var(--step-head)]">More from this collection</h2>
+          <h2 id="related-heading" data-reveal className="text-(length:--step-head)">More from this collection</h2>
           <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
             {related.map((item, index) => (
               <li key={item.id} data-reveal style={{ "--i": index } as React.CSSProperties}>
                 <Link href={`/shop/${item.id}`} className="block">
-                  <ProductPlaceholder name={item.name} category={item.category} className="aspect-[4/5]" />
-                  <p className="mt-3 text-[length:var(--step-lead)] leading-tight">{item.name}</p>
-                  <p className="mt-1 text-[var(--muted)]">{formatPrice(item.price)} · {item.availability}</p>
+                  <ProductPlaceholder name={item.name} category={item.category} className="aspect-4/5" />
+                  <p className="mt-3 text-(length:--step-lead) leading-tight">{item.name}</p>
+                  <p className="mt-1 text-(--muted)">{formatPrice(item.price)} · {item.availability}</p>
                 </Link>
               </li>
             ))}
@@ -137,7 +137,7 @@ export default async function ProductPage({
 
       <section className="mt-32 px-5 sm:px-8" aria-labelledby="flowers-heading">
         <div className="grid gap-6 lg:grid-cols-2">
-          <h2 id="flowers-heading" data-reveal className="text-[length:var(--step-head)]">The flowers behind the collection</h2>
+          <h2 id="flowers-heading" data-reveal className="text-(length:--step-head)">The flowers behind the collection</h2>
           <p data-reveal className="max-w-[44ch]">
             Hibiscus, jasmine, marigold and sunflower, as painters and printmakers kept them: the same flowers Shraddha Doshi crochets in wool.
           </p>
@@ -146,10 +146,10 @@ export default async function ProductPage({
           {plates.map((plate, index) => (
             <li key={plate.src} data-reveal style={{ "--i": index } as React.CSSProperties}>
               <figure>
-                <div className="relative aspect-[4/5] overflow-hidden bg-[var(--blush)]">
+                <div className="relative aspect-4/5 overflow-hidden bg-(--blush)">
                   <Image src={plate.src} alt={plate.alt} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
                 </div>
-                <figcaption className="mt-3 text-[length:var(--step-small)] text-[var(--muted)]">{plate.caption}</figcaption>
+                <figcaption className="mt-3 text-(length:--step-small) text-(--muted)">{plate.caption}</figcaption>
               </figure>
             </li>
           ))}

@@ -26,9 +26,9 @@ export function SiteHeader() {
   const linkClass = "sweep-link inline-flex min-h-11 items-center";
 
   return (
-    <header className="sticky top-0 z-40 bg-[var(--paper)]" onKeyDown={(event) => event.key === "Escape" && closeMenu()}>
-      <div className="flex h-[4.5rem] w-full items-center justify-between gap-6 px-5 sm:px-8">
-        <Link href="/" className="font-serif text-[length:var(--step-lead)] uppercase leading-none tracking-tight text-[var(--ink)]">
+    <header className="sticky top-0 z-40 bg-(--paper)" onKeyDown={(event) => event.key === "Escape" && closeMenu()}>
+      <div className="flex h-18 w-full items-center justify-between gap-6 px-5 sm:px-8">
+        <Link href="/" className="font-serif text-(length:--step-lead) uppercase leading-none tracking-tight text-(--ink)">
           Twistify Arts
         </Link>
 
@@ -47,7 +47,7 @@ export function SiteHeader() {
                 <Link className={linkClass} href="/account" aria-current={isActive("/account") ? "page" : undefined}>
                   Account
                 </Link>
-                <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="min-h-11 text-[var(--muted)] transition-colors hover:text-[var(--ink)]">
+                <button type="button" onClick={() => void signOut({ callbackUrl: "/" })} className="min-h-11 text-(--muted) transition-colors hover:text-(--ink)">
                   Sign out
                 </button>
               </>
@@ -65,7 +65,7 @@ export function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="mobile-site-navigation"
             onClick={() => setMenuOpen((open) => !open)}
-            className="min-h-11 bg-[var(--blush)] px-3 text-[length:var(--step-small)] text-[var(--ink)] md:hidden"
+            className="min-h-11 bg-(--blush) px-3 text-(length:--step-small) text-(--ink) md:hidden"
           >
             {menuOpen ? "Close" : "Menu"}
           </button>
@@ -73,8 +73,8 @@ export function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <nav id="mobile-site-navigation" className="bg-[var(--cream)] px-5 py-4 shadow-[var(--shadow-soft)] sm:px-8 md:hidden" aria-label="Mobile navigation">
-          <div className="grid gap-1 text-[length:var(--step-lead)]">
+        <nav id="mobile-site-navigation" className="bg-(--cream) px-5 py-4 shadow-(--shadow-soft) sm:px-8 md:hidden" aria-label="Mobile navigation">
+          <div className="grid gap-1 text-(length:--step-lead)">
             {navLinks.map(([href, label]) => (
               <Link key={href} href={href} onClick={closeMenu} aria-current={isActive(href) ? "page" : undefined} className="py-3">
                 {label}

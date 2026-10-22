@@ -30,7 +30,7 @@ export function SplitStage({ plates, children }: { plates: Plate[]; children: Re
 
   return (
     <div className="grid gap-3 px-5 sm:px-8 lg:grid-cols-2">
-      <div className="stage-plate sticky top-[4.75rem] order-first h-[46svh] overflow-hidden bg-[var(--blush)] lg:order-last lg:top-[5.25rem] lg:h-[calc(100svh-6rem)]">
+      <div className="stage-plate sticky top-19 order-first h-[46svh] overflow-hidden bg-(--blush) lg:order-last lg:top-21 lg:h-[calc(100svh-6rem)]">
         {/* next/image's fill check doesn't accept a sticky parent, so the plates sit in their own positioned layer. */}
         <div className="absolute inset-0">
           {plates.map((item, index) => (
@@ -45,12 +45,12 @@ export function SplitStage({ plates, children }: { plates: Plate[]; children: Re
             />
           ))}
         </div>
-        <p className="absolute inset-x-0 bottom-0 flex min-h-12 items-center justify-between gap-4 bg-[var(--paper)] px-4 py-2 text-[length:var(--step-small)] text-[var(--ink)]">
+        <p className="absolute inset-x-0 bottom-0 flex min-h-12 items-center justify-between gap-4 bg-(--paper) px-4 py-2 text-(length:--step-small) text-(--ink)">
           <span>{plate.caption}</span>
-          <span className="hidden shrink-0 text-[var(--muted)] sm:inline">{plate.source}</span>
+          <span className="hidden shrink-0 text-(--muted) sm:inline">{plate.source}</span>
         </p>
       </div>
-      <div ref={readingRef} className="relative z-10 min-w-0 bg-[var(--paper)]">
+      <div ref={readingRef} className="relative z-10 min-w-0 bg-(--paper)">
         {children}
       </div>
     </div>

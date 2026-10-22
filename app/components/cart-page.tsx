@@ -29,9 +29,9 @@ export function CartPage({ products }: CartPageProps) {
 
   if (!isHydrated) {
     return (
-      <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+      <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8 sm:py-16">
         <div className="mx-auto max-w-5xl">
-          <p className="font-sans text-sm text-[var(--muted)]" aria-live="polite">
+          <p className="font-sans text-sm text-(--muted)" aria-live="polite">
             Loading your basket...
           </p>
         </div>
@@ -40,15 +40,15 @@ export function CartPage({ products }: CartPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+    <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl">
-        <Link href="/shop" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
+        <Link href="/shop" className="font-sans text-sm font-semibold text-(--rose-deep)">
           ← Continue shopping
         </Link>
         <header className="mt-10 max-w-3xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <h1 className="text-[var(--ink)] text-[length:var(--step-head)] leading-none">Cart</h1>
-            <p className="font-sans text-sm text-[var(--muted)]">
+            <h1 className="text-(--ink) text-(length:--step-head) leading-none">Cart</h1>
+            <p className="font-sans text-sm text-(--muted)">
               {itemCount} item{itemCount === 1 ? "" : "s"}
             </p>
           </div>
@@ -64,7 +64,7 @@ export function CartPage({ products }: CartPageProps) {
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.productId)}
-                    className="font-semibold text-[var(--rose-deep)] underline underline-offset-2"
+                    className="font-semibold text-(--rose-deep) underline underline-offset-2"
                   >
                     Remove unavailable item
                   </button>
@@ -75,21 +75,21 @@ export function CartPage({ products }: CartPageProps) {
         ) : null}
 
         {cartItems.length === 0 ? (
-          <section className="mt-8 bg-[var(--cream)] px-6 py-12 text-center sm:px-10">
-            <h2 className="text-3xl text-[var(--ink)]">Your basket is waiting.</h2>
-            <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
+          <section className="mt-8 bg-(--cream) px-6 py-12 text-center sm:px-10">
+            <h2 className="text-3xl text-(--ink)">Your basket is waiting.</h2>
+            <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-(--muted)">
               Add a handmade favourite from the shop to begin your order.
             </p>
             <Link
               href="/shop"
-              className="mt-7 inline-flex bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+              className="mt-7 inline-flex bg-(--rose-deep) px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-(--ink)"
             >
               Explore the shop
             </Link>
           </section>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
-            <section className="bg-[var(--cream)] p-5 sm:p-6">
+            <section className="bg-(--cream) p-5 sm:p-6">
               <div className="grid gap-5">
                 {cartItems.map((item) => (
                   <article
@@ -105,43 +105,43 @@ export function CartPage({ products }: CartPageProps) {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                          <p className="text-2xl leading-tight text-[var(--ink)]">{item.product.name}</p>
-                          <p className="mt-1 font-sans text-sm text-[var(--muted)]">{item.product.availability}</p>
+                          <p className="text-2xl leading-tight text-(--ink)">{item.product.name}</p>
+                          <p className="mt-1 font-sans text-sm text-(--muted)">{item.product.availability}</p>
                         </div>
-                        <p className="font-sans text-base font-semibold text-[var(--ink)]">
+                        <p className="font-sans text-base font-semibold text-(--ink)">
                           {formatPrice(item.product.price)}
                         </p>
                       </div>
                       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex items-center border border-[var(--border)] bg-white">
+                        <div className="flex items-center border border-(--border) bg-white">
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            className="grid size-11 place-items-center font-sans text-lg text-[var(--ink)]"
+                            className="grid size-11 place-items-center font-sans text-lg text-(--ink)"
                             aria-label={`Decrease ${item.product.name} quantity`}
                           >
                             −
                           </button>
-                          <span className="grid min-w-9 place-items-center font-sans text-sm font-semibold text-[var(--ink)]">
+                          <span className="grid min-w-9 place-items-center font-sans text-sm font-semibold text-(--ink)">
                             {item.quantity}
                           </span>
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                             disabled={item.quantity >= MAX_PER_PIECE}
-                              className="grid size-11 place-items-center disabled:opacity-40 font-sans text-lg text-[var(--ink)]"
+                              className="grid size-11 place-items-center disabled:opacity-40 font-sans text-lg text-(--ink)"
                             aria-label={`Increase ${item.product.name} quantity`}
                           >
                             +
                           </button>
                         </div>
-                        <p className="font-sans text-sm font-semibold text-[var(--ink)]">
+                        <p className="font-sans text-sm font-semibold text-(--ink)">
                           Line subtotal: {formatPrice(item.product.price * item.quantity)}
                         </p>
                         <button
                           type="button"
                           onClick={() => removeFromCart(item.productId)}
-                          className="font-sans text-sm font-semibold text-[var(--rose-deep)] transition hover:text-[var(--ink)]"
+                          className="font-sans text-sm font-semibold text-(--rose-deep) transition hover:text-(--ink)"
                         >
                           Remove
                         </button>
@@ -152,19 +152,19 @@ export function CartPage({ products }: CartPageProps) {
               </div>
             </section>
 
-            <aside className="bg-[var(--cream)] p-5 sm:p-6">
-              <h2 className="text-2xl text-[var(--ink)]">Order summary</h2>
-              <div className="mt-5 flex items-center justify-between font-sans text-sm text-[var(--muted)]">
+            <aside className="bg-(--cream) p-5 sm:p-6">
+              <h2 className="text-2xl text-(--ink)">Order summary</h2>
+              <div className="mt-5 flex items-center justify-between font-sans text-sm text-(--muted)">
                 <span>Total items</span>
-                <span className="font-semibold text-[var(--ink)]">{itemCount}</span>
+                <span className="font-semibold text-(--ink)">{itemCount}</span>
               </div>
               <div className="mt-3 flex items-center justify-between pt-4">
-                <span className="font-sans text-sm text-[var(--muted)]">Subtotal</span>
-                <span className="text-2xl font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
+                <span className="font-sans text-sm text-(--muted)">Subtotal</span>
+                <span className="text-2xl font-semibold text-(--ink)">{formatPrice(cartTotal)}</span>
               </div>
               <Link
                 href="/checkout"
-                className="mt-6 inline-flex w-full justify-center bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)]"
+                className="mt-6 inline-flex w-full justify-center bg-(--ink) px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-(--rose-deep)"
               >
                 Continue to Checkout
               </Link>

@@ -36,10 +36,10 @@ export default function AboutPage() {
           Customers can expect thoughtfully made products, clear listing information, and order updates through their account after a successful purchase.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link href="/shop" className="bg-[var(--rose-deep)] px-5 py-3 font-semibold text-white transition hover:bg-[var(--ink)]">
+          <Link href="/shop" className="bg-(--rose-deep) px-5 py-3 font-semibold text-white transition hover:bg-(--ink)">
             Browse the shop
           </Link>
-          <Link href="/contact" className="border border-[var(--border)] bg-white px-5 py-3 font-semibold text-[var(--ink)] transition hover:border-[var(--sage)]">
+          <Link href="/contact" className="border border-(--border) bg-white px-5 py-3 font-semibold text-(--ink) transition hover:border-(--sage)">
             Contact Twistify Arts
           </Link>
         </div>

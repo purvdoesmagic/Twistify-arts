@@ -32,14 +32,14 @@ export default function FaqPage() {
     <InfoPage title="Questions, answered" plate={1} intro="The things people ask most before ordering a handmade piece.">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <InfoSection title="Ordering and delivery">
-        <div className="max-w-[60ch] divide-y divide-[var(--border)] border-y border-[var(--border)]">
+        <div className="max-w-[60ch] divide-y divide-(--border) border-y border-(--border)">
           {faqs.map(([question, answer]) => (
             <details key={question} className="group py-1">
-              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-[var(--ink)]">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-(--ink)">
                 {question}
-                <span aria-hidden="true" className="text-[var(--muted)] transition-transform group-open:rotate-45">+</span>
+                <span aria-hidden="true" className="text-(--muted) transition-transform group-open:rotate-45">+</span>
               </summary>
-              <p className="pb-3 text-[var(--muted)]">{answer}</p>
+              <p className="pb-3 text-(--muted)">{answer}</p>
             </details>
           ))}
         </div>

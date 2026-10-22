@@ -253,9 +253,9 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
 
   if (!isHydrated) {
     return (
-      <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+      <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8 sm:py-16">
         <div className="mx-auto max-w-5xl">
-          <p className="font-sans text-sm text-[var(--muted)]" aria-live="polite">
+          <p className="font-sans text-sm text-(--muted)" aria-live="polite">
             Loading your checkout...
           </p>
         </div>
@@ -265,18 +265,18 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
 
   if (cartItems.length === 0) {
     return (
-      <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
-        <div className="info-section mx-auto max-w-3xl bg-[var(--cream)] px-6 py-12 text-center sm:px-10">
-          <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">
+      <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8 sm:py-16">
+        <div className="info-section mx-auto max-w-3xl bg-(--cream) px-6 py-12 text-center sm:px-10">
+          <p className="font-sans text-(length:--step-small) font-semibold text-(--rose-deep)">
             Checkout
           </p>
-          <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">Your basket is empty.</h1>
-          <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-[var(--muted)]">
+          <h1 className="mt-3 text-(--ink) text-(length:--step-head) leading-none">Your basket is empty.</h1>
+          <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-6 text-(--muted)">
             Add a handmade favourite before continuing to checkout.
           </p>
           <Link
             href="/shop"
-            className="mt-7 inline-flex bg-[var(--rose-deep)] px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--ink)]"
+            className="mt-7 inline-flex bg-(--rose-deep) px-6 py-3 font-sans text-sm font-semibold text-white transition hover:bg-(--ink)"
           >
             Explore the shop
           </Link>
@@ -286,17 +286,17 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--paper)] px-5 py-12 sm:px-8 sm:py-16">
+    <main className="min-h-screen bg-(--paper) px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-6xl">
-        <Link href="/cart" className="font-sans text-sm font-semibold text-[var(--rose-deep)]">
+        <Link href="/cart" className="font-sans text-sm font-semibold text-(--rose-deep)">
           ← Edit your basket
         </Link>
         <div className="mt-6">
-          <p className="font-sans text-sm font-semibold text-[var(--muted)]">
+          <p className="font-sans text-sm font-semibold text-(--muted)">
             Secure checkout
           </p>
-          <h1 className="mt-3 text-[var(--ink)] text-[length:var(--step-head)] leading-none">Complete your order</h1>
-          <p className="mt-3 max-w-2xl font-sans text-sm leading-6 text-[var(--muted)]">
+          <h1 className="mt-3 text-(--ink) text-(length:--step-head) leading-none">Complete your order</h1>
+          <p className="mt-3 max-w-2xl font-sans text-sm leading-6 text-(--muted)">
             Share your delivery details, then pay securely through Razorpay.
           </p>
         </div>
@@ -311,7 +311,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.productId)}
-                    className="font-semibold text-[var(--rose-deep)] underline underline-offset-2"
+                    className="font-semibold text-(--rose-deep) underline underline-offset-2"
                   >
                     Remove item
                   </button>
@@ -323,7 +323,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.productId)}
-                    className="font-semibold text-[var(--rose-deep)] underline underline-offset-2"
+                    className="font-semibold text-(--rose-deep) underline underline-offset-2"
                   >
                     Remove item
                   </button>
@@ -334,26 +334,26 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
         ) : null}
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_21rem] lg:items-start">
-          <section className="info-section bg-[var(--cream)] p-6 sm:p-8">
-            <h2 className="text-2xl text-[var(--ink)]">Delivery details</h2>
-            <p className="mt-2 font-sans text-sm leading-6 text-[var(--muted)]">
+          <section className="info-section bg-(--cream) p-6 sm:p-8">
+            <h2 className="text-2xl text-(--ink)">Delivery details</h2>
+            <p className="mt-2 font-sans text-sm leading-6 text-(--muted)">
               These details are included in the paid-order email.
             </p>
             <div className="mt-6 space-y-4">
-              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                 Full name
                 <input
                   value={deliveryDetails.fullName}
                   onChange={(event) => updateDeliveryDetail("fullName", event.target.value)}
                   autoComplete="name"
                   maxLength={80}
-                  className="border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                  className="border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                 />
               </label>
-              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                 Phone number
-                <div className="flex border border-[var(--border)] bg-white focus-within:border-[var(--rose-deep)]">
-                  <span className="flex items-center border-r border-[var(--border)] px-3 text-sm font-normal text-[var(--muted)]">
+                <div className="flex border border-(--border) bg-white focus-within:border-(--rose-deep)">
+                  <span className="flex items-center border-r border-(--border) px-3 text-sm font-normal text-(--muted)">
                     +{getCountryCallingCode(deliveryDetails.country as CountryCode)}
                   </span>
                   <input
@@ -368,17 +368,17 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                     inputMode="numeric"
                     maxLength={15}
                     placeholder="Phone number"
-                    className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none"
+                    className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm font-normal text-(--ink) outline-none"
                   />
                 </div>
               </label>
-              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                 Country
                 <select
                   value={deliveryDetails.country}
                   onChange={(event) => updateDeliveryDetail("country", event.target.value)}
                   autoComplete="country"
-                  className="border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                  className="border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                 >
                   {deliveryCountries.map((country) => (
                     <option key={country} value={country}>
@@ -387,7 +387,7 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                 Full address
                 <textarea
                   value={deliveryDetails.address}
@@ -395,35 +395,35 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   autoComplete="street-address"
                   maxLength={240}
                   rows={3}
-                  className="resize-none rounded-xl border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                  className="resize-none rounded-xl border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                 />
               </label>
               <div className="grid grid-cols-2 gap-3">
-                <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+                <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                   City
                   <input
                     value={deliveryDetails.city}
                     onChange={(event) => updateDeliveryDetail("city", event.target.value)}
                     autoComplete="address-level2"
                     maxLength={80}
-                    className="border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                    className="border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                   />
                 </label>
-                <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+                <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                   State / region
                   <input
                     value={deliveryDetails.state}
                     onChange={(event) => updateDeliveryDetail("state", event.target.value)}
                     autoComplete="address-level1"
                     maxLength={80}
-                    className="border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                    className="border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                   />
                 </label>
               </div>
-              <label className="grid gap-1.5 font-sans text-sm font-semibold text-[var(--muted)]">
+              <label className="grid gap-1.5 font-sans text-sm font-semibold text-(--muted)">
                 {postalCodeLabel(deliveryDetails.country)}
                 {deliveryDetails.country === "IN" ? null : (
-                  <span className="text-[length:var(--step-small)] font-normal">Optional if your country has no postal codes.</span>
+                  <span className="text-(length:--step-small) font-normal">Optional if your country has no postal codes.</span>
                 )}
                 <input
                   value={deliveryDetails.postalCode}
@@ -438,19 +438,19 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                   autoComplete="postal-code"
                   inputMode={deliveryDetails.country === "IN" ? "numeric" : "text"}
                   maxLength={deliveryDetails.country === "IN" ? 6 : 10}
-                  className="border border-[var(--border)] bg-white px-3 py-3 text-sm font-normal text-[var(--ink)] outline-none focus:border-[var(--rose-deep)]"
+                  className="border border-(--border) bg-white px-3 py-3 text-sm font-normal text-(--ink) outline-none focus:border-(--rose-deep)"
                 />
               </label>
               {deliveryError ? (
-                <p className="bg-[#FBF0E0] px-3 py-2 font-sans text-sm leading-5 text-[var(--rose-deep)]" role="alert">
+                <p className="bg-[#FBF0E0] px-3 py-2 font-sans text-sm leading-5 text-(--rose-deep)" role="alert">
                   {deliveryError}
                 </p>
               ) : null}
             </div>
           </section>
 
-          <aside className="info-section bg-[var(--cream)] p-5 sm:p-6">
-            <p className="font-sans text-[length:var(--step-small)] font-semibold text-[var(--rose-deep)]">
+          <aside className="info-section bg-(--cream) p-5 sm:p-6">
+            <p className="font-sans text-(length:--step-small) font-semibold text-(--rose-deep)">
               Order summary
             </p>
             <div className="mt-5 space-y-4">
@@ -463,23 +463,23 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                     className="size-16 shrink-0"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="font-sans text-sm font-semibold text-[var(--ink)]">{item.product.name}</p>
-                    <p className="mt-1 font-sans text-[length:var(--step-small)] text-[var(--muted)]">
+                    <p className="font-sans text-sm font-semibold text-(--ink)">{item.product.name}</p>
+                    <p className="mt-1 font-sans text-(length:--step-small) text-(--muted)">
                       {item.quantity} × {formatPrice(item.product.price)}
                     </p>
                   </div>
-                  <p className="font-sans text-sm font-semibold text-[var(--ink)]">
+                  <p className="font-sans text-sm font-semibold text-(--ink)">
                     {formatPrice(item.product.price * item.quantity)}
                   </p>
                 </div>
               ))}
             </div>
-            <div className="mt-5 flex items-center justify-between pt-4 font-sans text-sm text-[var(--muted)]">
+            <div className="mt-5 flex items-center justify-between pt-4 font-sans text-sm text-(--muted)">
               <span>{cartCount} item{cartCount === 1 ? "" : "s"}</span>
-              <span className="text-2xl font-semibold text-[var(--ink)]">{formatPrice(cartTotal)}</span>
+              <span className="text-2xl font-semibold text-(--ink)">{formatPrice(cartTotal)}</span>
             </div>
             {paymentStatus ? (
-              <p className="mt-3 bg-[#FBF0E0] px-3 py-2 font-sans text-sm leading-5 text-[var(--muted)]" role="status">
+              <p className="mt-3 bg-[#FBF0E0] px-3 py-2 font-sans text-sm leading-5 text-(--muted)" role="status">
                 {paymentStatus}
               </p>
             ) : null}
@@ -488,12 +488,12 @@ export function CheckoutForm({ products, razorpayEnabled }: CheckoutFormProps) {
                 type="button"
                 onClick={() => void startRazorpayCheckout()}
                 disabled={isRazorpayLoading || missingItems.length > 0 || soldOutItems.length > 0}
-                className="mt-5 w-full bg-[var(--ink)] px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-[var(--rose-deep)] disabled:cursor-not-allowed disabled:bg-[#91817a]"
+                className="mt-5 w-full bg-(--ink) px-5 py-3 font-sans text-sm font-semibold text-white transition hover:bg-(--rose-deep) disabled:cursor-not-allowed disabled:bg-[#91817a]"
               >
                 {isRazorpayLoading ? "Opening Razorpay…" : "Pay securely with Razorpay"}
               </button>
             ) : (
-              <p className="mt-5 bg-[#FBF0E0] px-4 py-3 font-sans text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-5 bg-[#FBF0E0] px-4 py-3 font-sans text-sm leading-6 text-(--muted)">
                 Online payments are temporarily unavailable.
               </p>
             )}

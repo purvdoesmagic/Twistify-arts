@@ -32,11 +32,11 @@ const columns = [
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer px-5 pb-8 pt-[20svh] text-[length:var(--step-small)] sm:px-8">
+    <footer className="site-footer px-5 pb-8 pt-[20svh] text-(length:--step-small) sm:px-8">
       <div className="grid gap-12 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <p className="font-serif text-[length:var(--step-lead)] uppercase leading-none">Twistify Arts</p>
-          <p className="mt-4 max-w-[30ch] text-[var(--muted)]">Handmade crochet by Shraddha Doshi. Custom colours and sizes on request.</p>
+          <p className="font-serif text-(length:--step-lead) uppercase leading-none">Twistify Arts</p>
+          <p className="mt-4 max-w-[30ch] text-(--muted)">Handmade crochet by Shraddha Doshi. Custom colours and sizes on request.</p>
           <a href="mailto:twistifyarts@gmail.com" className="text-link mt-4 inline-flex min-h-11 items-center">
             twistifyarts@gmail.com
           </a>
@@ -56,7 +56,7 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      <p className="mt-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[var(--muted)]">
+      <p className="mt-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-(--muted)">
         <span>© {new Date().getFullYear()} Twistify Arts</span>
         <span>Secure payments by Razorpay · Prices in rupees</span>
       </p>
